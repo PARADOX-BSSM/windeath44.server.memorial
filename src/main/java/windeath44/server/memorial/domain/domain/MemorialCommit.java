@@ -20,7 +20,6 @@ public class MemorialCommit {
   private Memorial memorial;
 
   private String content;
-  private Long likes = 0L;
   private MemorialCommitState state = MemorialCommitState.PENDING;
 
   private LocalDateTime created_at = LocalDateTime.now();
