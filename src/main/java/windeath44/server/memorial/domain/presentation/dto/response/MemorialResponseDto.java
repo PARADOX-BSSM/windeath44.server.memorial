@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record MemorialResponseDto(
-        Long memorial_id,
-        Long character_id,
+        Long memorialId,
+        Long characterId,
         List<String> chiefs,
-        Long bow_count,
-        Long memorial_commit_id,
+        Long bowCount,
+        Long memorialCommitId,
         String content,
         Long likes,
-        LocalDateTime updated_at
+        LocalDateTime updatedAt
 ) {
 }

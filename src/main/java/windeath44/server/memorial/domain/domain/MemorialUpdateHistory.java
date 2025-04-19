@@ -7,19 +7,16 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Setter
+@Getter
 public class MemorialUpdateHistory {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long memorial_update_history_id;
-  private Long user_id;
-  @Setter
-  @Getter
-  @ManyToOne
-  @JoinColumn(name = "memorial_id")
-  private Memorial memorial;
-  @Setter
-  @Getter
+  private Long memorialUpdateHistoryId;
+  private String userId;
+
   @ManyToOne
   @JoinColumn(name = "memorial_commit_id")
-  private MemorialCommit memorial_commit;
-  private LocalDateTime updated_at = LocalDateTime.now();
+  private MemorialCommit memorialCommit;
+
+  private LocalDateTime updatedAt = LocalDateTime.now();
 }
