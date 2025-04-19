@@ -13,10 +13,11 @@ import windeath44.server.memorial.domain.service.mapper.MemorialCommitMapper;
 public class MemorialCommitPostService {
   private final MemorialCommitRepository memorialCommitRepository;
   private final MemorialCommitMapper memorialCommitMapper;
-//  private final MemorialRepository memorialRepository;
+  private final MemorialRepository memorialRepository;
 
   public void createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
-//    Memorial memorial = memorialRepository.findMemorial(memorialCommitRequestDto.memorial_id());
-    memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, null));
+    Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorial_id())
+            .orElseThrow();
+    memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
   }
 }
