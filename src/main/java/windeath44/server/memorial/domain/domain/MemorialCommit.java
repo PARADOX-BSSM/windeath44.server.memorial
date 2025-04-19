@@ -1,34 +1,30 @@
 package windeath44.server.memorial.domain.domain;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemorialCommit {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "")
   private Long memorialCommitId;
 
-  private Long userId;
+  private String userId;
 
   @ManyToOne
   @JoinColumn(name = "memorial_id")
   private Memorial memorial;
 
   private String content;
-  private Long likes;
-  private MemorialCommitState state;
 
-  @Column(name = "created_at")
-  private LocalDateTime createdAt;
+  @Enumerated(EnumType.STRING)
+  private MemorialCommitState state = MemorialCommitState.PENDING;
 
-  public Memorial getMemorial() {
-    return memorial;
-  }
-
-  public void setMemorial(Memorial memorial) {
-    this.memorial = memorial;
-  }
+  private LocalDateTime createdAt = LocalDateTime.now();
 
 }
