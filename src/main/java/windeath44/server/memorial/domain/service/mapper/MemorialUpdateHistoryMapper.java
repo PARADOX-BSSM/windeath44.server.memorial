@@ -13,6 +13,6 @@ import windeath44.server.memorial.domain.presentation.dto.request.MemorialUpdate
 public interface MemorialUpdateHistoryMapper {
   MemorialUpdateHistoryMapper INSTANCE = Mappers.getMapper(MemorialUpdateHistoryMapper.class);
 
-  @Mapping(source = "memorialUpdateHistoryRequestDto.user_id", target = "user_id")
+  @Mapping(source = "memorialUpdateHistoryRequestDto.userId", target = "userId")
   MemorialUpdateHistory toMemorialUpdateHistory(MemorialUpdateHistoryRequestDto memorialUpdateHistoryRequestDto, MemorialCommit memorial_commit);
 }
