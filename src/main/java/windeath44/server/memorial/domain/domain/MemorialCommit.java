@@ -7,19 +7,21 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 public class MemorialCommit {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long memorial_commit_id;
 
-  private Long user_id;
+  private String user_id;
 
-  @Getter
-  @Setter
   @ManyToOne
   @JoinColumn(name = "memorial_id")
   private Memorial memorial;
 
   private String content;
+  @Enumerated(EnumType.STRING)
+
   private MemorialCommitState state = MemorialCommitState.PENDING;
 
   private LocalDateTime created_at = LocalDateTime.now();
