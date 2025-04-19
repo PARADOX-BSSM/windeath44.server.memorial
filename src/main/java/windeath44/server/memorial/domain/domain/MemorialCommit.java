@@ -25,4 +25,16 @@ public class MemorialCommit {
   private MemorialCommitState state = MemorialCommitState.PENDING;
 
   private LocalDateTime created_at = LocalDateTime.now();
+
+  @Override
+  public String toString() {
+    return "MemorialCommit{" +
+            "memorial_commit_id=" + memorial_commit_id +
+            ", user_id='" + user_id + '\'' +
+            ", memorial=" + memorial +
+            ", content='" + content + '\'' +
+            ", state=" + state +
+            ", created_at=" + created_at +
+            '}';
+  }
 }

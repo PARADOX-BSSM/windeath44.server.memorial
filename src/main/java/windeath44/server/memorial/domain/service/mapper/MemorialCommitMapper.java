@@ -12,8 +12,5 @@ import java.util.Optional;
 public interface MemorialCommitMapper {
   MemorialCommitMapper INSTANCE = Mappers.getMapper(MemorialCommitMapper.class);
 
-//  @Mapping(source = "memorialCommitRequestDto.user_id", target = "user_id")
-//  @Mapping(source = "memorialCommitRequestDto.content", target = "content")
-//  @Mapping(source = "memorial", target = )
   MemorialCommit toMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto, Memorial memorial);
 }
