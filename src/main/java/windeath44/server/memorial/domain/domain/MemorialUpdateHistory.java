@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @Getter
 public class MemorialUpdateHistory {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long memorial_update_history_id;
-  private String user_id;
+  private Long memorialUpdateHistoryId;
+  private String userId;
 
   @ManyToOne
   @JoinColumn(name = "memorial_commit_id")
-  private MemorialCommit memorial_commit;
+  private MemorialCommit memorialCommit;
 
-  private LocalDateTime updated_at = LocalDateTime.now();
+  private LocalDateTime updatedAt = LocalDateTime.now();
 }
