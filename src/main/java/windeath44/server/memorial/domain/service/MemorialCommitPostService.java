@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.domain.Memorial;
 import windeath44.server.memorial.domain.domain.MemorialCommit;
+import windeath44.server.memorial.domain.domain.MemorialCommitState;
 import windeath44.server.memorial.domain.domain.MemorialUpdateHistory;
 import windeath44.server.memorial.domain.domain.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
@@ -23,15 +24,28 @@ public class MemorialCommitPostService {
   private final MemorialUpdateHistoryMapper memorialUpdateHistoryMapper;
 
   public void createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
-    Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorial_id())
+    Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
             .orElseThrow();
     memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
   }
 
   public void mergeMemorialCommit(MemorialUpdateHistoryRequestDto memorialUpdateHistoryRequestDto) {
-    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialUpdateHistoryRequestDto.memorial_commit_id())
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialUpdateHistoryRequestDto.memorialCommitId())
             .orElseThrow();
-    Memorial memorial = memorialCommit.getMemorial();
+    MemorialCommit latestMemorialCommit = memorialCommitRepository.findMemorialCommitByMemorialAndState(memorialCommit.getMemorial(), MemorialCommitState.APPROVED);
+    memorialCommitRepository.save(updateMemorialCommitState(latestMemorialCommit, MemorialCommitState.STORED));
+    memorialCommitRepository.save(updateMemorialCommitState(memorialCommit, MemorialCommitState.APPROVED));
     memorialUpdateHistoryRepository.save(memorialUpdateHistoryMapper.toMemorialUpdateHistory(memorialUpdateHistoryRequestDto, memorialCommit));
+  }
+
+  private MemorialCommit updateMemorialCommitState(MemorialCommit memorialCommit, MemorialCommitState state) {
+    return new MemorialCommit(
+            memorialCommit.getMemorialCommitId(),
+            memorialCommit.getUserId(),
+            memorialCommit.getMemorial(),
+            memorialCommit.getContent(),
+            state,
+            memorialCommit.getCreatedAt()
+    );
   }
 }
