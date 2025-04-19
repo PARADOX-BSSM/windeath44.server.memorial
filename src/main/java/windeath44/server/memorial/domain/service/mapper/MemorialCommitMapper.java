@@ -6,8 +6,6 @@ import windeath44.server.memorial.domain.domain.Memorial;
 import windeath44.server.memorial.domain.domain.MemorialCommit;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
 
-import java.util.Optional;
-
 @Mapper(componentModel = "spring")
 public interface MemorialCommitMapper {
   MemorialCommitMapper INSTANCE = Mappers.getMapper(MemorialCommitMapper.class);

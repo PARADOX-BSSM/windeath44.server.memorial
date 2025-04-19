@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.domain.Memorial;
 import windeath44.server.memorial.domain.domain.MemorialCommit;
 import windeath44.server.memorial.domain.domain.MemorialCommitState;
-import windeath44.server.memorial.domain.domain.MemorialUpdateHistory;
 import windeath44.server.memorial.domain.domain.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialUpdateHistoryRepository;
