@@ -16,7 +16,7 @@ import windeath44.server.memorial.domain.service.MemorialCommitPostService;
 public class MemorialCreateController {
   private final MemorialCommitPostService memorialCommitPostService;
 
-  @PostMapping("/memorials/commit")
+  @PostMapping("/commit")
   public ResponseEntity<ResponseDto> commit(@RequestBody MemorialCommitRequestDto dto) {
     memorialCommitPostService.createMemorialCommit(dto);
     return ResponseEntity.ok(new ResponseDto(201, "Memorial Commit is successfully created.", null));
