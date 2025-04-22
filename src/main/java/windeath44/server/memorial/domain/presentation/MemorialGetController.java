@@ -7,8 +7,6 @@ import windeath44.server.memorial.domain.presentation.dto.global.ResponseDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
 import windeath44.server.memorial.domain.service.MemorialGetService;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/memorials")
 @RequiredArgsConstructor

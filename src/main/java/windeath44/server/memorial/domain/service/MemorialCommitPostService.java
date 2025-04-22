@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.domain.Memorial;
 import windeath44.server.memorial.domain.domain.MemorialCommit;
 import windeath44.server.memorial.domain.domain.MemorialCommitState;
+import windeath44.server.memorial.domain.domain.MemorialPullRequest;
 import windeath44.server.memorial.domain.domain.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
-import windeath44.server.memorial.domain.domain.repository.MemorialUpdateHistoryRepository;
+import windeath44.server.memorial.domain.domain.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialUpdateHistoryRequestDto;
+import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
+import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestDto;
 import windeath44.server.memorial.domain.service.mapper.MemorialCommitMapper;
-import windeath44.server.memorial.domain.service.mapper.MemorialUpdateHistoryMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +20,7 @@ public class MemorialCommitPostService {
   private final MemorialCommitRepository memorialCommitRepository;
   private final MemorialCommitMapper memorialCommitMapper;
   private final MemorialRepository memorialRepository;
-  private final MemorialUpdateHistoryRepository memorialUpdateHistoryRepository;
-  private final MemorialUpdateHistoryMapper memorialUpdateHistoryMapper;
+  private final MemorialPullRequestRepository memorialPullRequestRepository;
 
   public void createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
@@ -28,23 +28,34 @@ public class MemorialCommitPostService {
     memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
   }
 
-  public void mergeMemorialCommit(MemorialUpdateHistoryRequestDto memorialUpdateHistoryRequestDto) {
-    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialUpdateHistoryRequestDto.memorialCommitId())
+  public void createMemorialPullRequest(MemorialPullRequestDto memorialPullRequestDto) {
+    System.out.println(memorialPullRequestDto);
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestDto.memorialCommitId())
             .orElseThrow();
-    MemorialCommit latestMemorialCommit = memorialCommitRepository.findMemorialCommitByMemorialAndState(memorialCommit.getMemorial(), MemorialCommitState.APPROVED);
-    memorialCommitRepository.save(updateMemorialCommitState(latestMemorialCommit, MemorialCommitState.STORED));
-    memorialCommitRepository.save(updateMemorialCommitState(memorialCommit, MemorialCommitState.APPROVED));
-    memorialUpdateHistoryRepository.save(memorialUpdateHistoryMapper.toMemorialUpdateHistory(memorialUpdateHistoryRequestDto, memorialCommit));
+    Memorial memorial = memorialCommit.getMemorial();
+
+    MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
+    if (memorialPullRequestExists != null) {
+      return;
+    }
+
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestDto.userId());
+    memorialPullRequestRepository.save(memorialPullRequest);
   }
 
-  private MemorialCommit updateMemorialCommitState(MemorialCommit memorialCommit, MemorialCommitState state) {
-    return new MemorialCommit(
-            memorialCommit.getMemorialCommitId(),
-            memorialCommit.getUserId(),
-            memorialCommit.getMemorial(),
-            memorialCommit.getContent(),
-            state,
-            memorialCommit.getCreatedAt()
-    );
+  public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialMergeRequestDto.memorialCommitId())
+            .orElseThrow();
+    Memorial memorial = memorialCommit.getMemorial();
+
+    MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
+    memorialPullRequest.approve();
+    memorialPullRequest.merger(memorialMergeRequestDto.userId());
+    MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialCommitState.APPROVED);
+    if (latestApprovedMemorialPullRequest != null) {
+      latestApprovedMemorialPullRequest.store();
+      memorialPullRequestRepository.save(latestApprovedMemorialPullRequest);
+    }
+    memorialPullRequestRepository.save(memorialPullRequest);
   }
 }
