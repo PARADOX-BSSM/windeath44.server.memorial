@@ -9,6 +9,8 @@ import windeath44.server.memorial.domain.domain.MemorialPullRequest;
 import windeath44.server.memorial.domain.domain.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
 import windeath44.server.memorial.domain.domain.repository.MemorialPullRequestRepository;
+import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
+import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestDto;
@@ -24,14 +26,13 @@ public class MemorialCommitPostService {
 
   public void createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
-            .orElseThrow();
+            .orElseThrow(MemorialNotFoundException::new);
     memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
   }
 
   public void createMemorialPullRequest(MemorialPullRequestDto memorialPullRequestDto) {
-    System.out.println(memorialPullRequestDto);
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestDto.memorialCommitId())
-            .orElseThrow();
+            .orElseThrow(MemorialCommitNotFoundException::new);
     Memorial memorial = memorialCommit.getMemorial();
 
     MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
@@ -45,7 +46,7 @@ public class MemorialCommitPostService {
 
   public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialMergeRequestDto.memorialCommitId())
-            .orElseThrow();
+            .orElseThrow(MemorialCommitNotFoundException::new);
     Memorial memorial = memorialCommit.getMemorial();
 
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
