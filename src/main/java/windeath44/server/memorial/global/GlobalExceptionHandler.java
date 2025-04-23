@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadyApprovedException;
+import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadySentException;
 
 @Slf4j
 @RestControllerAdvice
@@ -28,6 +29,13 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MemorialPullRequestAlreadyApprovedException.class)
   protected ResponseEntity<ErrorResponseDto> handleMemorialPullRequestAlreadyApprovedException(MemorialPullRequestAlreadyApprovedException e) {
+    log.error(e.getMessage(), e);
+    final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
+    return new ResponseEntity<>(errorResponseDto, HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(MemorialPullRequestAlreadySentException.class)
+  protected ResponseEntity<ErrorResponseDto> handleMemorialPullRequestAlreadySentException(MemorialPullRequestAlreadySentException e) {
     log.error(e.getMessage(), e);
     final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
     return new ResponseEntity<>(errorResponseDto, HttpStatus.CONFLICT);
