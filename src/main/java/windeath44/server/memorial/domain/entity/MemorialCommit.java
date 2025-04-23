@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.domain;
+package windeath44.server.memorial.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

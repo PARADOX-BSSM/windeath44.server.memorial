@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.domain;
+package windeath44.server.memorial.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,7 +25,7 @@ public class MemorialPullRequest {
   private Memorial memorial;
 
   @Enumerated(EnumType.STRING)
-  private MemorialCommitState state = MemorialCommitState.PENDING;
+  private MemorialPullRequestState state = MemorialPullRequestState.PENDING;
 
   private LocalDateTime updatedAt = LocalDateTime.now();
 
@@ -36,18 +36,23 @@ public class MemorialPullRequest {
   }
 
   public void approve() {
-    this.state = MemorialCommitState.APPROVED;
+    this.state = MemorialPullRequestState.APPROVED;
   }
 
   public void reject() {
-    this.state = MemorialCommitState.REJECTED;
+    this.state = MemorialPullRequestState.REJECTED;
   }
 
   public void store() {
-    this.state = MemorialCommitState.STORED;
+    this.state = MemorialPullRequestState.STORED;
   }
 
   public void merger(String userId) {
     this.userId = userId;
   }
+
+  public Boolean isAlreadyApproved() {
+    return this.state == MemorialPullRequestState.APPROVED;
+  }
+
 }
