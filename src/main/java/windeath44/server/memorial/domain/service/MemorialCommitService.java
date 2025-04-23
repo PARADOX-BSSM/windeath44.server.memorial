@@ -2,23 +2,24 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.domain.Memorial;
-import windeath44.server.memorial.domain.domain.MemorialCommit;
-import windeath44.server.memorial.domain.domain.MemorialCommitState;
-import windeath44.server.memorial.domain.domain.MemorialPullRequest;
-import windeath44.server.memorial.domain.domain.repository.MemorialCommitRepository;
-import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
-import windeath44.server.memorial.domain.domain.repository.MemorialPullRequestRepository;
+import windeath44.server.memorial.domain.entity.Memorial;
+import windeath44.server.memorial.domain.entity.MemorialCommit;
+import windeath44.server.memorial.domain.entity.MemorialPullRequestState;
+import windeath44.server.memorial.domain.entity.MemorialPullRequest;
+import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
+import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
+import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
+import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadyApprovedException;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestDto;
-import windeath44.server.memorial.domain.service.mapper.MemorialCommitMapper;
+import windeath44.server.memorial.domain.mapper.MemorialCommitMapper;
 
 @Service
 @RequiredArgsConstructor
-public class MemorialCommitPostService {
+public class MemorialCommitService {
   private final MemorialCommitRepository memorialCommitRepository;
   private final MemorialCommitMapper memorialCommitMapper;
   private final MemorialRepository memorialRepository;
@@ -45,18 +46,22 @@ public class MemorialCommitPostService {
   }
 
   public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
-    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialMergeRequestDto.memorialCommitId())
-            .orElseThrow(MemorialCommitNotFoundException::new);
-    Memorial memorial = memorialCommit.getMemorial();
+    MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
+            .orElseThrow(MemorialNotFoundException::new);
+    Memorial memorial = memorialPullRequest.getMemorial();
 
-    MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
+    if(memorialPullRequest.isAlreadyApproved()) throw new MemorialPullRequestAlreadyApprovedException();
+
     memorialPullRequest.approve();
     memorialPullRequest.merger(memorialMergeRequestDto.userId());
-    MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialCommitState.APPROVED);
+
+    MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
+
     if (latestApprovedMemorialPullRequest != null) {
       latestApprovedMemorialPullRequest.store();
       memorialPullRequestRepository.save(latestApprovedMemorialPullRequest);
     }
+
     memorialPullRequestRepository.save(memorialPullRequest);
   }
 }
