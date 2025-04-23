@@ -2,7 +2,7 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.domain.repository.MemorialRepository;
+import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
 
 import java.util.Arrays;
