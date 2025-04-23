@@ -38,7 +38,7 @@ public class MemorialCommitService {
 
     MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
     if (memorialPullRequestExists != null) {
-      return;
+      ;
     }
 
     MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestDto.userId());
@@ -52,7 +52,7 @@ public class MemorialCommitService {
 
     if(memorialPullRequest.isAlreadyApproved())
       throw new MemorialPullRequestAlreadyApprovedException();
-    
+
     MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
     memorialPullRequest.approve();
     memorialPullRequest.merger(memorialMergeRequestDto.userId());
