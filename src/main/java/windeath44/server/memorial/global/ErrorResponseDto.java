@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.presentation.dto.global;
+package windeath44.server.memorial.global;
 
 public record ErrorResponseDto(
         String detail,
