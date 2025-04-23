@@ -50,12 +50,12 @@ public class MemorialCommitService {
             .orElseThrow(MemorialNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
 
-    if(memorialPullRequest.isAlreadyApproved()) throw new MemorialPullRequestAlreadyApprovedException();
-
+    if(memorialPullRequest.isAlreadyApproved())
+      throw new MemorialPullRequestAlreadyApprovedException();
+    
+    MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
     memorialPullRequest.approve();
     memorialPullRequest.merger(memorialMergeRequestDto.userId());
-
-    MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
 
     if (latestApprovedMemorialPullRequest != null) {
       latestApprovedMemorialPullRequest.store();
