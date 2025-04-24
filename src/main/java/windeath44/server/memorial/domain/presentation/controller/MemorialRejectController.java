@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.presentation;
+package windeath44.server.memorial.domain.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
