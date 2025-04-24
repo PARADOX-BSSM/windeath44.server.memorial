@@ -4,12 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import windeath44.server.memorial.global.diff_match_patch;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-
-
-import java.util.LinkedList;
 
 @Entity
 @Setter
@@ -31,6 +28,7 @@ public class MemorialPullRequest {
   @Enumerated(EnumType.STRING)
   private MemorialPullRequestState state = MemorialPullRequestState.PENDING;
 
+  @UpdateTimestamp
   private LocalDateTime updatedAt = LocalDateTime.now();
 
   public MemorialPullRequest(MemorialCommit memorialCommit, Memorial memorial, String userId) {
