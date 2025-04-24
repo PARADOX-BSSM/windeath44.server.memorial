@@ -7,19 +7,21 @@ import windeath44.server.memorial.domain.entity.MemorialCommit;
 import windeath44.server.memorial.domain.entity.MemorialPullRequest;
 import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
-import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
 import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadySentException;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestDto;
+import windeath44.server.memorial.domain.mapper.MemorialPullRequestMapper;
+import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestRequestDto;
+import windeath44.server.memorial.domain.presentation.dto.response.MemorialPullRequestResponseDto;
 
 @Service
 @RequiredArgsConstructor
 public class MemorialPullRequestService {
   private final MemorialCommitRepository memorialCommitRepository;
   private final MemorialPullRequestRepository memorialPullRequestRepository;
+  private final MemorialPullRequestMapper memorialPullRequestMapper;
 
-  public void createMemorialPullRequest(MemorialPullRequestDto memorialPullRequestDto) {
-    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestDto.memorialCommitId())
+  public MemorialPullRequestResponseDto createMemorialPullRequest(MemorialPullRequestRequestDto memorialPullRequestRequestDto) {
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestRequestDto.memorialCommitId())
             .orElseThrow(MemorialCommitNotFoundException::new);
     Memorial memorial = memorialCommit.getMemorial();
 
@@ -28,7 +30,8 @@ public class MemorialPullRequestService {
       throw new MemorialPullRequestAlreadySentException();
     }
 
-    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestDto.userId());
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId());
     memorialPullRequestRepository.save(memorialPullRequest);
+    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
 }
