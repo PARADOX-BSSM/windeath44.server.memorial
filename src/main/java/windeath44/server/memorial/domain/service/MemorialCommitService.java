@@ -107,8 +107,10 @@ public class MemorialCommitService {
       if (diff.operation == diff_match_patch.Operation.DELETE && next.operation == diff_match_patch.Operation.INSERT) {
         mergeable = false;
         i += 1;
-        conflict.append(diff.text);
-        conflict.append(next.text);
+        conflict.append("\n\n>>>>>>>>>>>>>>>>>>>> original\n");
+        conflict.append(diff.text).append("\n");
+        conflict.append(">>>>>>>>>>>>>>>>>>>> changed\n");
+        conflict.append(next.text).append("\n\n");
       }
       else conflict.append(diff.text);
     }
