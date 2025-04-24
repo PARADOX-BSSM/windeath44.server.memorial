@@ -24,4 +24,9 @@ public class MemorialCommitService {
     MemorialCommit memorialCommit = memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
     return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
   }
+
+  public MemorialCommitResponseDto findMemorialCommitById(Long memorialCommitId) {
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialCommitId).orElseThrow(MemorialCommitNotFoundException::new);
+    return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
+  }
 }

@@ -9,6 +9,7 @@ import windeath44.server.memorial.domain.entity.repository.MemorialCommitReposit
 import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadySentException;
+import windeath44.server.memorial.domain.exception.MemorialPullRequestNotFoundException;
 import windeath44.server.memorial.domain.mapper.MemorialPullRequestMapper;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialPullRequestResponseDto;
@@ -32,6 +33,12 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId());
     memorialPullRequestRepository.save(memorialPullRequest);
+    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
+  }
+
+  public MemorialPullRequestResponseDto findMemorialPullRequestById(Long memorialPullRequestId) {
+    MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialPullRequestId)
+            .orElseThrow(MemorialPullRequestNotFoundException::new);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
 }
