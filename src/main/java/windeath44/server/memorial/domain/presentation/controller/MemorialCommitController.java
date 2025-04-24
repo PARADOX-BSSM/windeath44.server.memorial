@@ -25,26 +25,4 @@ public class MemorialCommitController {
     memorialCommitService.createMemorialCommit(dto);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial Commit is successfully created.", null));
   }
-
-  @PostMapping("/pull-request")
-  public ResponseEntity<ResponseDto> pullRequest(@RequestBody MemorialPullRequestDto dto) {
-    memorialPullRequestService.createMemorialPullRequest(dto);
-    return ResponseEntity.status(201).body(new ResponseDto("Memorial Commit is successfully requested to pull.", null));
-  }
-
-  @PostMapping("/mergeable")
-  public ResponseEntity<ResponseDto> mergeable(@RequestBody MemorialMergeRequestDto dto) {
-    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(dto);
-    Boolean mergeable = memorialMergeableResponseDto.mergeable();
-    if(mergeable) {
-      return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is mergeable.", memorialMergeableResponseDto));
-    }
-    return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request cannot be merged automatically.", memorialMergeableResponseDto));
-  }
-
-  @PatchMapping("/merge")
-  public ResponseEntity<ResponseDto> merge(@RequestBody MemorialMergeRequestDto dto) {
-    memorialMergeService.mergeMemorialCommit(dto);
-    return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is successfully merged.", null));
-  }
 }
