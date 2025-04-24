@@ -9,12 +9,16 @@ import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeR
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialMergeableResponseDto;
 import windeath44.server.memorial.domain.service.MemorialCommitService;
+import windeath44.server.memorial.domain.service.MemorialMergeService;
+import windeath44.server.memorial.domain.service.MemorialPullRequestService;
 
 @RestController
 @RequestMapping("/memorials")
 @RequiredArgsConstructor
 public class MemorialCommitController {
   private final MemorialCommitService memorialCommitService;
+  private final MemorialPullRequestService memorialPullRequestService;
+  private final MemorialMergeService memorialMergeService;
 
   @PostMapping("/commit")
   public ResponseEntity<ResponseDto> commit(@RequestBody MemorialCommitRequestDto dto) {
@@ -24,13 +28,13 @@ public class MemorialCommitController {
 
   @PostMapping("/pull-request")
   public ResponseEntity<ResponseDto> pullRequest(@RequestBody MemorialPullRequestDto dto) {
-    memorialCommitService.createMemorialPullRequest(dto);
+    memorialPullRequestService.createMemorialPullRequest(dto);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial Commit is successfully requested to pull.", null));
   }
 
   @PostMapping("/mergeable")
   public ResponseEntity<ResponseDto> mergeable(@RequestBody MemorialMergeRequestDto dto) {
-    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialCommitService.validateMergeable(dto);
+    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(dto);
     Boolean mergeable = memorialMergeableResponseDto.mergeable();
     if(mergeable) {
       return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is mergeable.", memorialMergeableResponseDto));
@@ -40,7 +44,7 @@ public class MemorialCommitController {
 
   @PatchMapping("/merge")
   public ResponseEntity<ResponseDto> merge(@RequestBody MemorialMergeRequestDto dto) {
-    memorialCommitService.mergeMemorialCommit(dto);
+    memorialMergeService.mergeMemorialCommit(dto);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is successfully merged.", null));
   }
 }
