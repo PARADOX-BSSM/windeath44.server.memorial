@@ -20,4 +20,9 @@ public class MemorialCommit {
   private String content;
   private LocalDateTime createdAt = LocalDateTime.now();
 
+  public MemorialCommit(String userId, Memorial memorial, String content) {
+    this.userId = userId;
+    this.memorial = memorial;
+    this.content = content;
+  }
 }

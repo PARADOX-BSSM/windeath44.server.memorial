@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class MemorialPullRequest {
   @Enumerated(EnumType.STRING)
   private MemorialPullRequestState state = MemorialPullRequestState.PENDING;
 
+  @UpdateTimestamp
   private LocalDateTime updatedAt = LocalDateTime.now();
 
   public MemorialPullRequest(MemorialCommit memorialCommit, Memorial memorial, String userId) {
@@ -54,5 +56,4 @@ public class MemorialPullRequest {
   public Boolean isAlreadyApproved() {
     return this.state == MemorialPullRequestState.APPROVED;
   }
-
 }

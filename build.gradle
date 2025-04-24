@@ -33,6 +33,7 @@ dependencies {
     implementation 'com.mysql:mysql-connector-j:8.2.0'
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {

@@ -9,7 +9,6 @@ public record MemorialCommitResponseDto(
         String userId,
         Long memorialId,
         String content,
-        MemorialPullRequestState state,
         LocalDateTime createdAt
 ) {
 }
