@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import windeath44.server.memorial.global.diff_match_patch;
 
 import java.time.LocalDateTime;
+
+
+import java.util.LinkedList;
 
 @Entity
 @Setter
@@ -54,5 +58,4 @@ public class MemorialPullRequest {
   public Boolean isAlreadyApproved() {
     return this.state == MemorialPullRequestState.APPROVED;
   }
-
 }
