@@ -12,7 +12,7 @@ import windeath44.server.memorial.domain.service.MemorialMergeService;
 @RequiredArgsConstructor
 @RequestMapping("/memorials")
 public class MemorialMergeController {
-  MemorialMergeService memorialMergeService;
+  private final MemorialMergeService memorialMergeService;
 
   @PostMapping("/mergeable")
   public ResponseEntity<ResponseDto> mergeable(@RequestBody MemorialMergeRequestDto dto) {

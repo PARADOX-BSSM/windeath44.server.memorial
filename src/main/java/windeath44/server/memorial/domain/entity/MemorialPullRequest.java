@@ -37,6 +37,14 @@ public class MemorialPullRequest {
     this.userId = userId;
   }
 
+  public MemorialPullRequest(MemorialCommit memorialCommit, Memorial memorial, String userId, MemorialPullRequestState state) {
+    this.memorialCommit = memorialCommit;
+    this.memorial = memorial;
+    this.userId = userId;
+    this.state = state;
+  }
+
+
   public void approve() {
     this.state = MemorialPullRequestState.APPROVED;
   }

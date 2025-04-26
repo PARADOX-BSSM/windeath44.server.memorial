@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.entity.Memorial;
 import windeath44.server.memorial.domain.entity.MemorialCommit;
 import windeath44.server.memorial.domain.entity.MemorialPullRequest;
+import windeath44.server.memorial.domain.entity.MemorialPullRequestState;
 import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
@@ -28,6 +29,8 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
     if (memorialPullRequestExists != null) {
+      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId(), MemorialPullRequestState.REJECTED);
+      memorialPullRequestRepository.save(memorialPullRequest);
       throw new MemorialPullRequestAlreadySentException();
     }
 
