@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,8 @@ import windeath44.server.memorial.domain.service.MemorialPullRequestService;
 @RequiredArgsConstructor
 @RequestMapping("/memorials")
 public class MemorialPullRequestController {
-  MemorialPullRequestService memorialPullRequestService;
+
+  private final MemorialPullRequestService memorialPullRequestService;
   @PostMapping("/pull-request")
   public ResponseEntity<ResponseDto> pullRequest(@RequestBody MemorialPullRequestRequestDto dto) {
     memorialPullRequestService.createMemorialPullRequest(dto);
