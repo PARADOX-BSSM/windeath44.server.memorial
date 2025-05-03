@@ -16,7 +16,8 @@ public class MemorialRejectService {
   public void rejectMemorialPullRequest(MemorialRejectRequestDto memorialRejectRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialRejectRequestDto.memorialPullRequestId())
             .orElseThrow((MemorialPullRequestNotFoundException::new));
-    memorialPullRequest.reject();
+    memorialPullRequest.reject(memorialRejectRequestDto.userId());
+
     memorialPullRequestRepository.save(memorialPullRequest);
   }
 }

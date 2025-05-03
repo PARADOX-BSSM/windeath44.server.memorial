@@ -49,8 +49,9 @@ public class MemorialPullRequest {
     this.state = MemorialPullRequestState.APPROVED;
   }
 
-  public void reject() {
+  public void reject(String userId) {
     this.state = MemorialPullRequestState.REJECTED;
+    this.userId = userId;
   }
 
   public void store() {

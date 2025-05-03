@@ -29,12 +29,12 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
     if (memorialPullRequestExists != null) {
-      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId(), MemorialPullRequestState.REJECTED);
+      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, null, MemorialPullRequestState.REJECTED);
       memorialPullRequestRepository.save(memorialPullRequest);
       throw new MemorialPullRequestAlreadySentException();
     }
 
-    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId());
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, null);
     memorialPullRequestRepository.save(memorialPullRequest);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
