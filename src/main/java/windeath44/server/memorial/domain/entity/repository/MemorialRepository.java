@@ -1,9 +1,9 @@
-package windeath44.server.memorial.domain.domain.repository;
+package windeath44.server.memorial.domain.entity.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import windeath44.server.memorial.domain.domain.Memorial;
+import windeath44.server.memorial.domain.entity.Memorial;
 
 import java.util.List;
 
