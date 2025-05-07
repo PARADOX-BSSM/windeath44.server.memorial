@@ -10,7 +10,9 @@ public record MemorialResponseDto(
         Long bowCount,
         Long memorialCommitId,
         String content,
-        Long likes,
+        String userId,
+        LocalDateTime createdAt,
+        String mergerId,
         LocalDateTime updatedAt
 ) {
 }
