@@ -12,3 +12,13 @@ spring:
       ddl-auto: update
 server:
   port: ${SERVER_PORT}
+
+logging:
+  level:
+    org:
+      hibernate:
+        sql: debug
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
