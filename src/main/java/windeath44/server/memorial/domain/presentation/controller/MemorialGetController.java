@@ -13,8 +13,9 @@ import windeath44.server.memorial.domain.service.MemorialGetService;
 public class MemorialGetController {
   private final MemorialGetService memorialGetService;
 
-  @GetMapping("/")
-  public ResponseEntity<ResponseDto> commit(@RequestBody MemorialResponseDto dto) {
-    return null;
+  @GetMapping("/{memorialId}")
+  public ResponseEntity<ResponseDto> findByMemorialId(@PathVariable Long memorialId) {
+    MemorialResponseDto memorialResponseDto = memorialGetService.findMemorialById(memorialId);
+    return ResponseEntity.ok(new ResponseDto("memorialId: " + memorialId + " Successfully Found", memorialResponseDto));
   }
 }
