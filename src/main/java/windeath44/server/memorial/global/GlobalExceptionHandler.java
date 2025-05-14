@@ -44,4 +44,11 @@ public class GlobalExceptionHandler {
     final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
     return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
   }
+
+  @ExceptionHandler(UndefinedOrderByException.class)
+  protected ResponseEntity<ErrorResponseDto> handleUndefinedOrderByException(UndefinedOrderByException e) {
+    log.error(e.getMessage(), e);
+    final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
+    return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+  }
 }
