@@ -1,9 +1,11 @@
 package windeath44.server.memorial.domain.presentation.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import windeath44.server.memorial.domain.presentation.dto.ResponseDto;
+import windeath44.server.memorial.domain.presentation.dto.request.MemorialCharacterFilterRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
 import windeath44.server.memorial.domain.service.MemorialGetService;
@@ -29,5 +31,16 @@ public class MemorialGetController {
   ) {
     List<MemorialListResponseDto> memorialListResponseDtoList = memorialGetService.findMemorials(orderBy, page);
     return ResponseEntity.ok(new ResponseDto("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page, memorialListResponseDtoList));
+  }
+
+  @PostMapping("/character-filtered")
+  public ResponseEntity<ResponseDto> findFiltered(
+          @RequestBody MemorialCharacterFilterRequestDto memorialCharacterFilterRequestDto
+          ) {
+    String orderBy = memorialCharacterFilterRequestDto.orderBy();
+    Long page = memorialCharacterFilterRequestDto.page();
+    List<Long> characters = memorialCharacterFilterRequestDto.characters();
+    List<MemorialListResponseDto> memorialListResponseDtoList = memorialGetService.findMemorialsFiltered(orderBy, page, characters);
+    return ResponseEntity.ok(new ResponseDto("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page + ", With Filter : " + characters, memorialListResponseDtoList));
   }
 }
