@@ -25,16 +25,29 @@ public class MemorialGetService {
   }
 
   public List<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
+    validateOrderBy(orderBy);
+    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
+    if (memorialListResponseDtoList.isEmpty()) {
+      throw new MemorialNotFoundException();
+    }
+    return memorialListResponseDtoList;
+  }
+
+  public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
+    validateOrderBy(orderBy);
+    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
+    if (memorialListResponseDtoList.isEmpty()) {
+      throw new MemorialNotFoundException();
+    }
+    return memorialListResponseDtoList;
+  }
+
+  private void validateOrderBy(String orderBy) {
     if (orderBy==null || orderBy.isEmpty()) {
       throw new UndefinedOrderByException();
     }
     if (!orderBy.equals("recently-updated") && !orderBy.equals("lately-updated") && !orderBy.equals("ascending-bow-count") && !orderBy.equals("descending-bow-count")) {
       throw new UndefinedOrderByException();
     }
-    List<MemorialListResponseDto> memorialListResponseDtos = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
-    if (memorialListResponseDtos.isEmpty()) {
-      throw new MemorialNotFoundException();
-    }
-    return memorialListResponseDtos;
   }
 }
