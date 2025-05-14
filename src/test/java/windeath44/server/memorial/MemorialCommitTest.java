@@ -12,17 +12,13 @@ import windeath44.server.memorial.domain.entity.MemorialPullRequestState;
 import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
-import windeath44.server.memorial.domain.exception.MemorialCommitNotFoundException;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
-import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadySentException;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
 import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialMergeableResponseDto;
 import windeath44.server.memorial.domain.service.MemorialCommitService;
 import windeath44.server.memorial.domain.service.MemorialMergeService;
 import windeath44.server.memorial.domain.service.MemorialPullRequestService;
-import windeath44.server.memorial.domain.service.MemorialResolveService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,8 +33,6 @@ public class MemorialCommitTest {
   private MemorialPullRequestService memorialPullRequestService;
   @Autowired
   private MemorialMergeService memorialMergeService;
-  @Autowired
-  private MemorialResolveService memorialResolveService;
 
   @Autowired
   private MemorialRepository memorialRepository;

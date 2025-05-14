@@ -1,0 +1,83 @@
+package windeath44.server.memorial.domain.entity.repository.impl;
+
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import windeath44.server.memorial.domain.entity.MemorialPullRequestState;
+import windeath44.server.memorial.domain.entity.repository.MemorialRepositoryCustom;
+import windeath44.server.memorial.domain.mapper.MemorialMapper;
+import windeath44.server.memorial.domain.presentation.dto.response.MemorialListResponseDto;
+import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
+
+import java.util.List;
+import java.util.Map;
+
+import static windeath44.server.memorial.domain.entity.QMemorial.memorial;
+import static windeath44.server.memorial.domain.entity.QMemorialPullRequest.memorialPullRequest;
+import static windeath44.server.memorial.domain.entity.QMemorialCommit.memorialCommit;
+
+@RequiredArgsConstructor
+public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
+  private final JPAQueryFactory queryFactory;
+  private final MemorialMapper memorialMapper;
+
+  @Override
+  public MemorialResponseDto findMemorialById(Long memorialId) {
+    Tuple result = queryFactory
+            .select(memorial.memorialId,
+                    memorial.characterId,
+                    memorial.bowCount,
+                    memorialCommit.memorialCommitId,
+                    memorialCommit.content,
+                    memorialCommit.userId,
+                    memorialCommit.createdAt,
+                    memorialPullRequest.userId,
+                    memorialPullRequest.updatedAt)
+            .from(memorial)
+            .where(memorial.memorialId.eq(memorialId))
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+            )
+            .fetchOne();
+    StringPath chief = Expressions.stringPath("chief");
+    List<String> chiefList = queryFactory
+            .select(chief)
+            .from(memorial)
+            .join(memorial.chiefs, chief)
+            .where(memorial.memorialId.eq(memorialId))
+            .fetch();
+
+    MemorialResponseDto memorialResponseDto = memorialMapper.toMemorialResponseDto(result, memorial, memorialPullRequest, memorialCommit, chiefList);
+    return memorialResponseDto;
+  }
+
+  @Override
+  public List<MemorialListResponseDto> findMemorialsOrderByAndPage(String orderBy, Long page, Long pageSize) {
+    Map<String, OrderSpecifier<? extends Comparable<? extends Comparable<?>>>> orderSpecifiers = Map.of(
+            "recently-updated", memorialPullRequest.updatedAt.desc(),
+            "lately-updated", memorialPullRequest.updatedAt.asc(),
+            "ascending-bow-count", memorial.bowCount.asc(),
+            "descending-bow-count", memorial.bowCount.desc()
+    );
+    List<Tuple> result = queryFactory
+            .select(memorial.memorialId,
+                    memorial.characterId,
+                    memorial.bowCount,
+                    memorialPullRequest.updatedAt)
+            .from(memorial)
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+            )
+            .orderBy(orderSpecifiers.get(orderBy))
+            .limit(10).offset((page-1) * pageSize)
+            .fetch();
+    return memorialMapper.toMemorialListResponseDto(result, memorial);
+  }
+}

@@ -18,7 +18,7 @@ public class Memorial {
   private Long characterId;
 
   @ElementCollection
-  private List<Long> chiefs;
+  private List<String> chiefs;
 
   private Long bowCount = 0L;
 
