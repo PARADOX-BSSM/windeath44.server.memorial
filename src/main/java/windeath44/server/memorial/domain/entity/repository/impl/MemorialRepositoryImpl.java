@@ -80,4 +80,30 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .fetch();
     return memorialMapper.toMemorialListResponseDto(result, memorial);
   }
+
+  @Override
+  public List<MemorialListResponseDto> findMemorialsOrderByAndPageCharacterFiltered(String orderBy, Long page, Long pageSize, List<Long> characters) {
+    Map<String, OrderSpecifier<? extends Comparable<? extends Comparable<?>>>> orderSpecifiers = Map.of(
+            "recently-updated", memorialPullRequest.updatedAt.desc(),
+            "lately-updated", memorialPullRequest.updatedAt.asc(),
+            "ascending-bow-count", memorial.bowCount.asc(),
+            "descending-bow-count", memorial.bowCount.desc()
+    );
+    List<Tuple> result = queryFactory
+            .select(memorial.memorialId,
+                    memorial.characterId,
+                    memorial.bowCount,
+                    memorialPullRequest.updatedAt)
+            .from(memorial)
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+                            .and(memorial.characterId.in(characters))
+            )
+            .orderBy(orderSpecifiers.get(orderBy))
+            .limit(10).offset((page-1) * pageSize)
+            .fetch();
+    return memorialMapper.toMemorialListResponseDto(result, memorial);
+  }
 }
