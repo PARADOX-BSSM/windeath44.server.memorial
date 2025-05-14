@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import windeath44.server.memorial.domain.entity.QMemorial;
 import windeath44.server.memorial.domain.entity.QMemorialCommit;
 import windeath44.server.memorial.domain.entity.QMemorialPullRequest;
+import windeath44.server.memorial.domain.presentation.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
 
 import java.util.List;
@@ -18,7 +19,6 @@ public interface MemorialMapper {
                                                     @Context QMemorialCommit memorialCommit,
                                                     List<String> chiefs) {
     if (tuple == null) return null;
-    System.out.println(chiefs);
     return new MemorialResponseDto(
             tuple.get(memorial.memorialId),
             tuple.get(memorial.characterId),
@@ -32,4 +32,12 @@ public interface MemorialMapper {
             tuple.get(memorialPullRequest.updatedAt)
     );
   };
+
+  default List<MemorialListResponseDto> toMemorialListResponseDto(List<Tuple> tuples,
+                                                                  @Context QMemorial memorial) {
+    return tuples.stream().map(x -> new MemorialListResponseDto(
+            x.get(memorial.memorialId),
+            x.get(memorial.characterId)
+    )).toList();
+  }
 }
