@@ -6,5 +6,5 @@ import windeath44.server.memorial.domain.model.MemorialBow;
 
 @Repository
 public interface MemorialBowRepository extends JpaRepository<MemorialBow, Long> {
-  MemorialBow findMemorialBowByUserId(String userId);
+  MemorialBow findMemorialBowByUserIdAndMemorialId(String userId, Long memorialId);
 }
