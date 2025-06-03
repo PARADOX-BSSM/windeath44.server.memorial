@@ -2,6 +2,7 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.repository.MemorialRepository;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.exception.UndefinedOrderByException;
@@ -48,5 +49,10 @@ public class MemorialGetService {
     if (!orderBy.equals("recently-updated") && !orderBy.equals("lately-updated") && !orderBy.equals("ascending-bow-count") && !orderBy.equals("descending-bow-count")) {
       throw new UndefinedOrderByException();
     }
+  }
+
+  public Memorial findById(Long memorialId) {
+    return memorialRepository.findById(memorialId)
+            .orElseThrow(MemorialNotFoundException::new);
   }
 }
