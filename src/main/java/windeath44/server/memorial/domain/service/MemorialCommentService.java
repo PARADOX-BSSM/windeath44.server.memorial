@@ -33,12 +33,9 @@ public class MemorialCommentService {
     memorialCommentRepository.save(comment);
   }
 
-  public List<MemorialCommentResponse> getComment() {
-    List<MemorialCommentResponse> memorialCommentResponseList = memorialCommentRepository.findAll()
-            .stream()
-            .map(memorialCommentMapper::toMemorialCommentResponse)
-            .toList();
-    return memorialCommentResponseList;
+  public List<MemorialComment> getComment() {
+    List<MemorialComment> memorialCommentList = memorialCommentRepository.findAll();
+    return memorialCommentList;
   }
 
   @Transactional

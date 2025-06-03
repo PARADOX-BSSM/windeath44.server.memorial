@@ -7,6 +7,7 @@ import windeath44.server.memorial.domain.dto.ResponseDto;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentUpdateRequestDto;
 import windeath44.server.memorial.domain.dto.response.MemorialCommentResponse;
+import windeath44.server.memorial.domain.facade.MemorialCommentFacade;
 import windeath44.server.memorial.domain.service.MemorialCommentService;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/memorials/comment")
 public class MemorialCommentController {
   private final MemorialCommentService memorialCommentService;
+  private final MemorialCommentFacade memorialCommentFacade;
 
   @PostMapping
   public ResponseEntity<ResponseDto> comment(@RequestBody final MemorialCommentRequestDto dto, @RequestHeader("user-id") final String userId) {
@@ -25,7 +27,7 @@ public class MemorialCommentController {
 
   @GetMapping
   public ResponseEntity<ResponseDto> getComment() {
-    List<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentService.getComment();
+    List<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentFacade.getComment();
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Found.", memorialCommentResponsesList));
   }
 

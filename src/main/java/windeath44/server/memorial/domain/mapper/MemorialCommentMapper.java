@@ -12,12 +12,13 @@ public class MemorialCommentMapper {
     return MemorialComment.of(memorial, userId, content, parentCommentId);
   }
 
-  public MemorialCommentResponse toMemorialCommentResponse(MemorialComment memorialComment) {
+  public MemorialCommentResponse toMemorialCommentResponse(MemorialComment memorialComment, Long likes) {
     return MemorialCommentResponse.builder()
             .commentId(memorialComment.getCommentId())
             .userId(memorialComment.getUserId())
             .content(memorialComment.getContent())
             .createdAt(memorialComment.getCreatedAt())
+            .likes(likes)
             .memorialId(memorialComment.getMemorialId())
             .parentId(memorialComment.getParentId())
             .build();
