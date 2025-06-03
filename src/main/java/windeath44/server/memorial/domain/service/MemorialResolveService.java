@@ -2,18 +2,17 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.entity.Memorial;
-import windeath44.server.memorial.domain.entity.MemorialPullRequest;
-import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
-import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
-import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadySentException;
+import windeath44.server.memorial.domain.model.Memorial;
+import windeath44.server.memorial.domain.model.MemorialPullRequest;
+import windeath44.server.memorial.domain.repository.MemorialCommitRepository;
+import windeath44.server.memorial.domain.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestNotFoundException;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialPullRequestRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialResolveRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialCommitResponseDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialPullRequestResponseDto;
+import windeath44.server.memorial.domain.dto.request.MemorialCommitRequestDto;
+import windeath44.server.memorial.domain.dto.request.MemorialMergeRequestDto;
+import windeath44.server.memorial.domain.dto.request.MemorialPullRequestRequestDto;
+import windeath44.server.memorial.domain.dto.request.MemorialResolveRequestDto;
+import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialPullRequestResponseDto;
 
 @Service
 @RequiredArgsConstructor

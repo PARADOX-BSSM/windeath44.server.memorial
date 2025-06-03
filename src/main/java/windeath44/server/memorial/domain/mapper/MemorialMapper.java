@@ -6,8 +6,8 @@ import org.mapstruct.Mapper;
 import windeath44.server.memorial.domain.entity.QMemorial;
 import windeath44.server.memorial.domain.entity.QMemorialCommit;
 import windeath44.server.memorial.domain.entity.QMemorialPullRequest;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialListResponseDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
 
 import java.util.List;
 

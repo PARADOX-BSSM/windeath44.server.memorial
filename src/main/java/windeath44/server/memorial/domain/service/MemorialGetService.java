@@ -2,13 +2,12 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
+import windeath44.server.memorial.domain.repository.MemorialRepository;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.exception.UndefinedOrderByException;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialListResponseDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service

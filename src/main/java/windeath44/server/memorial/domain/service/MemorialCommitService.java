@@ -2,14 +2,14 @@ package windeath44.server.memorial.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.entity.Memorial;
-import windeath44.server.memorial.domain.entity.MemorialCommit;
-import windeath44.server.memorial.domain.entity.repository.MemorialCommitRepository;
-import windeath44.server.memorial.domain.entity.repository.MemorialRepository;
+import windeath44.server.memorial.domain.model.Memorial;
+import windeath44.server.memorial.domain.model.MemorialCommit;
+import windeath44.server.memorial.domain.repository.MemorialCommitRepository;
+import windeath44.server.memorial.domain.repository.MemorialRepository;
 import windeath44.server.memorial.domain.exception.*;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
+import windeath44.server.memorial.domain.dto.request.MemorialCommitRequestDto;
 import windeath44.server.memorial.domain.mapper.MemorialCommitMapper;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialCommitResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
 
 @Service
 @RequiredArgsConstructor
