@@ -53,4 +53,9 @@ public class MemorialCommentService {
   public void delete(Long commentId) {
     memorialCommentRepository.deleteById(commentId);
   }
+
+  public MemorialComment findCommentById(Long commentId) {
+    return memorialCommentRepository.findById(commentId)
+            .orElseThrow(MemorialCommentNotFoundException::new);
+  }
 }

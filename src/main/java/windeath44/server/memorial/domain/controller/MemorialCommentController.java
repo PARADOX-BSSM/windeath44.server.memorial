@@ -18,7 +18,7 @@ public class MemorialCommentController {
   private final MemorialCommentService memorialCommentService;
 
   @PostMapping
-  public ResponseEntity<ResponseDto> comment(@@RequestBody final MemorialCommentRequestDto dto, @RequestHeader("user-id") final String userId) {
+  public ResponseEntity<ResponseDto> comment(@RequestBody final MemorialCommentRequestDto dto, @RequestHeader("user-id") final String userId) {
     memorialCommentService.comment(dto, userId);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial comment is successfully created.", null));
   }

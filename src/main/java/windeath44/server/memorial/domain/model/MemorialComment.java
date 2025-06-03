@@ -44,4 +44,8 @@ public class MemorialComment {
   public void rewrite(String content) {
     this.content = content;
   }
+
+  public MemorialCommentLikesPrimaryKey likesKey(String userId) {
+    return MemorialCommentLikesPrimaryKey.of(this, userId);
+  }
 }
