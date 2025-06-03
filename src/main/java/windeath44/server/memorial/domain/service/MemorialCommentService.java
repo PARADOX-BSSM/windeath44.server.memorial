@@ -42,11 +42,15 @@ public class MemorialCommentService {
   }
 
   @Transactional
-  public void update(Long commentId, MemorialCommentUpdateRequestDto dto) {
+  public void rewrite(Long commentId, MemorialCommentUpdateRequestDto dto) {
     String content = dto.content();
 
     MemorialComment comment = memorialCommentRepository.findById(commentId)
             .orElseThrow(MemorialCommentNotFoundException::new);
     comment.rewrite(content);
+  }
+
+  public void delete(Long commentId) {
+    memorialCommentRepository.deleteById(commentId);
   }
 }

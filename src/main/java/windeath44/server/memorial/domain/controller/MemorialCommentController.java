@@ -30,8 +30,14 @@ public class MemorialCommentController {
   }
 
   @PatchMapping("/{comment-id}")
-  public ResponseEntity<ResponseDto> update(@PathVariable("comment-id") Long commentId, @RequestBody MemorialCommentUpdateRequestDto dto) {
-    memorialCommentService.update(commentId, dto);
+  public ResponseEntity<ResponseDto> rewrite(@PathVariable("comment-id") Long commentId, @RequestBody MemorialCommentUpdateRequestDto dto) {
+    memorialCommentService.rewrite(commentId, dto);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Update.", null));
+  }
+
+  @DeleteMapping("/comment-id")
+  public ResponseEntity<ResponseDto> delete(@PathVariable("comment-id") Long commentId) {
+    memorialCommentService.delete(commentId);
+    return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully delete.", null));
   }
 }
