@@ -4,7 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentRequestDto;
+import windeath44.server.memorial.domain.dto.request.MemorialCommentUpdateRequestDto;
 import windeath44.server.memorial.domain.dto.response.MemorialCommentResponse;
+import windeath44.server.memorial.domain.exception.MemorialCommentNotFoundException;
+import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.mapper.MemorialCommentMapper;
 import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialComment;
@@ -36,5 +39,14 @@ public class MemorialCommentService {
             .map(memorialCommentMapper::toMemorialCommentResponse)
             .toList();
     return memorialCommentResponseList;
+  }
+
+  @Transactional
+  public void update(Long commentId, MemorialCommentUpdateRequestDto dto) {
+    String content = dto.content();
+
+    MemorialComment comment = memorialCommentRepository.findById(commentId)
+            .orElseThrow(MemorialCommentNotFoundException::new);
+    comment.rewrite(content);
   }
 }

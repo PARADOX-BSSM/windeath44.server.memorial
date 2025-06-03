@@ -40,4 +40,8 @@ public class MemorialComment {
   public Long getMemorialId() {
     return this.memorial.getMemorialId();
   }
+
+  public void rewrite(String content) {
+    this.content = content;
+  }
 }
