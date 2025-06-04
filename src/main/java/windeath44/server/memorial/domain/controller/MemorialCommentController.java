@@ -20,14 +20,14 @@ public class MemorialCommentController {
   private final MemorialCommentFacade memorialCommentFacade;
 
   @PostMapping
-  public ResponseEntity<ResponseDto> comment(@RequestBody final MemorialCommentRequestDto dto, @RequestHeader("user-id") final String userId) {
+  public ResponseEntity<ResponseDto> comment(@RequestBody MemorialCommentRequestDto dto, @RequestHeader("user-id") String userId) {
     memorialCommentService.comment(dto, userId);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial comment is successfully created.", null));
   }
 
   @GetMapping
-  public ResponseEntity<ResponseDto> getComment() {
-    List<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentFacade.getComment();
+  public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId) {
+    List<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentFacade.getComment(userId);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Found.", memorialCommentResponsesList));
   }
 

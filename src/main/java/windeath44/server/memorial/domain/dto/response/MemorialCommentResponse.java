@@ -12,6 +12,7 @@ public record MemorialCommentResponse (
         String userId,
         String content,
         Long likes,
+        Boolean isLiked,
         Long parentId,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDateTime createdAt

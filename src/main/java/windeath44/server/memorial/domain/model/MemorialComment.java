@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Getter
 public class MemorialComment {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long commentId;
   @ManyToOne
   @JoinColumn(name="memorialId")

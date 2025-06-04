@@ -23,7 +23,7 @@ public class MemorialCommentService {
   private final MemorialCommentRepository memorialCommentRepository;
 
   @Transactional
-  public void comment(final MemorialCommentRequestDto dto, final String userId) {
+  public void comment(MemorialCommentRequestDto dto, String userId) {
     Long memorialId = dto.memorialId();
     Memorial memorial = memorialGetService.findById(memorialId);
 

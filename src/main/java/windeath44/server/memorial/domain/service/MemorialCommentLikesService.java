@@ -35,8 +35,8 @@ public class MemorialCommentLikesService {
     memorialCommentLikesRepository.deleteById(memorialCommentLikesPrimaryKey);
   }
 
-  public MemorialCommentLikesCountList getLikesCountByCommentIds(List<Long> commentIds) {
-    List<MemorialCommentLikesCount> memorialCommentLikesCounts = memorialCommentLikesRepository.findLikesCountGroupedByCommentIds(commentIds);
+  public MemorialCommentLikesCountList getLikesCountByCommentIds(List<Long> commentIds, String userId) {
+    List<MemorialCommentLikesCount> memorialCommentLikesCounts = memorialCommentLikesRepository.findLikesCountGroupedByCommentIds(commentIds, userId);
     return MemorialCommentLikesCountList.of(memorialCommentLikesCounts);
   }
 

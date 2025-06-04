@@ -15,9 +15,10 @@ import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
 import java.util.List;
 import java.util.Map;
 
-import static windeath44.server.memorial.domain.entity.QMemorial.memorial;
-import static windeath44.server.memorial.domain.entity.QMemorialPullRequest.memorialPullRequest;
-import static windeath44.server.memorial.domain.entity.QMemorialCommit.memorialCommit;
+
+import static windeath44.server.memorial.domain.model.QMemorialPullRequest.memorialPullRequest;
+import static windeath44.server.memorial.domain.model.QMemorialCommit.memorialCommit;
+import static windeath44.server.memorial.domain.model.QMemorial.memorial;
 
 @RequiredArgsConstructor
 public class MemorialRepositoryImpl implements MemorialRepositoryCustom {

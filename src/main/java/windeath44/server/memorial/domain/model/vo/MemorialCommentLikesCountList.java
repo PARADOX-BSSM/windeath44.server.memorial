@@ -13,11 +13,17 @@ public class MemorialCommentLikesCountList {
     return new MemorialCommentLikesCountList(memorialCommentLikesCountList);
   }
 
-  public Long get(Long commentId) {
+  public Long getLike(Long commentId) {
     for(MemorialCommentLikesCount memorialCommentLikesCount : memorialCommentLikesCountList) {
       if (memorialCommentLikesCount.commentId() == commentId) return memorialCommentLikesCount.likesCount();
     }
     return 0L;
   }
 
+  public Boolean getIsLiked(Long commentId) {
+    for(MemorialCommentLikesCount memorialCommentLikesCount : memorialCommentLikesCountList) {
+      if (memorialCommentLikesCount.commentId() == commentId) return memorialCommentLikesCount.isLiked();
+    }
+    return false;
+  }
 }
