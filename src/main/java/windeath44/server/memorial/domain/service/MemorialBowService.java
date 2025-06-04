@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.dto.request.MemorialBowRequestDto;
@@ -18,6 +19,7 @@ public class MemorialBowService {
   private final MemorialRepository memorialRepository;
   private final MemorialBowMapper memorialBowMapper;
 
+  @Transactional
   public void bow(MemorialBowRequestDto memorialBowRequestDto) {
     String userId = memorialBowRequestDto.userId();
     Long memorialId = memorialBowRequestDto.memorialId();
