@@ -2,10 +2,10 @@ package windeath44.server.memorial.domain.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import windeath44.server.memorial.domain.entity.Memorial;
-import windeath44.server.memorial.domain.entity.MemorialCommit;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialCommitRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialCommitResponseDto;
+import windeath44.server.memorial.domain.model.Memorial;
+import windeath44.server.memorial.domain.model.MemorialCommit;
+import windeath44.server.memorial.domain.dto.request.MemorialCommitRequestDto;
+import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
 
 @Mapper(componentModel = "spring")
 public interface MemorialCommitMapper {
