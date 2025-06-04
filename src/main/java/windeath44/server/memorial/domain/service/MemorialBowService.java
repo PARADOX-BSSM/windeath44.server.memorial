@@ -35,4 +35,13 @@ public class MemorialBowService {
       memorialBowRepository.save(memorialBow);
     }
   }
+
+  public Long BowCountByMemorialId(Long memorialId) {
+    Memorial memorial = memorialRepository.findById(memorialId).orElse(null);
+    if(memorial == null) {
+      throw new MemorialNotFoundException();
+    }
+    Long bowCount = memorialBowRepository.sumBowCount(memorialId);
+    return bowCount == null ? 0 : bowCount;
+  }
 }
