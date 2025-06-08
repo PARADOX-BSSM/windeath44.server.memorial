@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.model.Memorial;
@@ -18,6 +19,7 @@ public class MemorialCommitService {
   private final MemorialCommitMapper memorialCommitMapper;
   private final MemorialRepository memorialRepository;
 
+  @Transactional
   public MemorialCommitResponseDto createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
             .orElseThrow(MemorialNotFoundException::new);
