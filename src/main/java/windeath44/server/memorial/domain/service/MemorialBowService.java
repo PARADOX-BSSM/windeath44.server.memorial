@@ -7,7 +7,6 @@ import windeath44.server.memorial.domain.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.dto.response.MemorialBowResponseDto;
 import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.mapper.MemorialBowMapper;
-import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialBow;
 import windeath44.server.memorial.domain.repository.MemorialBowRepository;
 import windeath44.server.memorial.domain.repository.MemorialRepository;
@@ -51,9 +50,6 @@ public class MemorialBowService {
   }
 
   private void validateMemorial(Long memorialId) {
-    Memorial memorial = memorialRepository.findById(memorialId).orElse(null);
-    if(memorial == null) {
-      throw new MemorialNotFoundException();
-    }
+    memorialRepository.findById(memorialId).orElseThrow(MemorialNotFoundException::new);
   }
 }
