@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.model.Memorial;
@@ -22,6 +23,7 @@ public class MemorialPullRequestService {
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final MemorialPullRequestMapper memorialPullRequestMapper;
 
+  @Transactional
   public MemorialPullRequestResponseDto createMemorialPullRequest(MemorialPullRequestRequestDto memorialPullRequestRequestDto) {
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestRequestDto.memorialCommitId())
             .orElseThrow(MemorialCommitNotFoundException::new);
