@@ -16,6 +16,8 @@ import windeath44.server.memorial.domain.mapper.MemorialPullRequestMapper;
 import windeath44.server.memorial.domain.dto.request.MemorialPullRequestRequestDto;
 import windeath44.server.memorial.domain.dto.response.MemorialPullRequestResponseDto;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemorialPullRequestService {
@@ -45,5 +47,11 @@ public class MemorialPullRequestService {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialPullRequestId)
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
+  }
+
+  @Transactional
+  public void deleteMemorialPullRequestsByMemorialId(Long memorialId) {
+    List<MemorialPullRequest> memorialPullRequests = memorialPullRequestRepository.findMemorialPullRequestsByMemorial_MemorialId(memorialId);
+    memorialPullRequestRepository.deleteAll(memorialPullRequests);
   }
 }
