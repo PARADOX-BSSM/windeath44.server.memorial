@@ -19,12 +19,13 @@ public class MemorialCreateService {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @Transactional
-  public void createMemorial(MemorialCreationAvroSchema memorialCreationAvroSchema) {
+  public Long createMemorial(MemorialCreationAvroSchema memorialCreationAvroSchema) {
     Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId());
     memorialRepository.save(memorial);
     MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialCreationAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
     MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
     MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCreationAvroSchema.getApproverId(), memorialCommitResponseDto.memorialCommitId());
     memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
+    return memorial.getMemorialId();
   }
 }
