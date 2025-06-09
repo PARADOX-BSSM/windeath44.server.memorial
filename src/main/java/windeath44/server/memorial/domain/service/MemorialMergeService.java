@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.model.Memorial;
@@ -46,6 +47,7 @@ public class MemorialMergeService {
     );
   }
 
+  @Transactional
   public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
