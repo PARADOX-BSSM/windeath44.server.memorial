@@ -1,16 +1,17 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import windeath44.server.memorial.domain.entity.Memorial;
-import windeath44.server.memorial.domain.entity.MemorialPullRequest;
-import windeath44.server.memorial.domain.entity.MemorialPullRequestState;
-import windeath44.server.memorial.domain.entity.repository.MemorialPullRequestRepository;
+import windeath44.server.memorial.domain.model.Memorial;
+import windeath44.server.memorial.domain.model.MemorialPullRequest;
+import windeath44.server.memorial.domain.model.MemorialPullRequestState;
+import windeath44.server.memorial.domain.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestAlreadyApprovedException;
 import windeath44.server.memorial.domain.exception.MemorialPullRequestNotFoundException;
-import windeath44.server.memorial.domain.presentation.dto.request.MemorialMergeRequestDto;
-import windeath44.server.memorial.domain.presentation.dto.response.CompareContentsResponseDto;
-import windeath44.server.memorial.domain.presentation.dto.response.MemorialMergeableResponseDto;
+import windeath44.server.memorial.domain.dto.request.MemorialMergeRequestDto;
+import windeath44.server.memorial.domain.dto.response.CompareContentsResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialMergeableResponseDto;
 import windeath44.server.memorial.global.diff_match_patch;
 
 import java.util.LinkedList;
@@ -46,6 +47,7 @@ public class MemorialMergeService {
     );
   }
 
+  @Transactional
   public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
