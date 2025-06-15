@@ -9,6 +9,9 @@ import windeath44.server.memorial.domain.model.MemorialCommentLikes;
 import windeath44.server.memorial.domain.model.MemorialCommentLikesPrimaryKey;
 import windeath44.server.memorial.domain.repository.MemorialCommentLikesRepository;
 
+import java.util.Collections;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class MemorialCommentLikesService {
@@ -31,7 +34,10 @@ public class MemorialCommentLikesService {
     memorialCommentLikesRepository.deleteById(memorialCommentLikesPrimaryKey);
   }
 
-  public Boolean userDidLiked(MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey) {
-    return memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey);
+  public Set<Long> getLikedCommentIds(String userId, Set<Long> commentIds) {
+    if (commentIds == null || commentIds.isEmpty()) {
+      return Collections.emptySet();
+    }
+    return memorialCommentLikesRepository.findLikedCommentIdsByUserIdAndCommentIds(userId, commentIds);
   }
 }

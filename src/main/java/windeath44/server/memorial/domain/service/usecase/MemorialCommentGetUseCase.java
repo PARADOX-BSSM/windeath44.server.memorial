@@ -11,8 +11,10 @@ import windeath44.server.memorial.domain.service.MemorialCommentLikesService;
 import windeath44.server.memorial.domain.service.MemorialCommentService;
 import windeath44.server.memorial.global.dto.CursorPage;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -36,15 +38,25 @@ public class MemorialCommentGetUseCase {
     return new CursorPage<>(memorialRootCommentListSlice.hasNext(), memorialCommentResponseList);
 }
 
-  private List<MemorialCommentResponse> transformMemorialCommentResponse(String userId, List<MemorialComment> memorialRootCommentList) {
-    return memorialRootCommentList.stream()
-            .map((memorialComment) -> {
-                      MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey = memorialComment.likesKey(userId);
-                      Boolean didLiked = memorialCommentLikesService.userDidLiked(memorialCommentLikesPrimaryKey);
-                      MemorialCommentResponse memorialCommentResponse = memorialCommentMapper.toMemorialCommentResponse(memorialComment, didLiked);
-                      return memorialCommentResponse;
-                    }
-            )
+  private List<MemorialCommentResponse> transformMemorialCommentResponse(
+          String userId,
+          List<MemorialComment> rootComments
+  ) {
+    Set<Long> allCommentIds = extractAllCommentIds(rootComments);
+    Set<Long> likedCommentIds = memorialCommentLikesService.getLikedCommentIds(userId, allCommentIds);
+
+    return rootComments.stream()
+            .map(comment -> memorialCommentMapper.toMemorialCommentResponse(comment, likedCommentIds))
             .toList();
   }
+
+  private Set<Long> extractAllCommentIds(List<MemorialComment> comments) {
+    Set<Long> ids = new HashSet<>();
+    for (MemorialComment comment : comments) {
+      ids.add(comment.getCommentId());
+      ids.addAll(extractAllCommentIds(comment.getChildren()));
+    }
+    return ids;
+  }
+
 }

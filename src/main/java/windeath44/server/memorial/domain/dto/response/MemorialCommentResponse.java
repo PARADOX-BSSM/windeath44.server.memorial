@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 public record MemorialCommentResponse (
@@ -13,7 +15,9 @@ public record MemorialCommentResponse (
         Long likes,
         Boolean isLiked,
         Long parentId,
+        List<MemorialCommentResponse> children,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         LocalDateTime createdAt
+
 ) {
 }
