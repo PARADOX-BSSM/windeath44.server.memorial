@@ -15,9 +15,9 @@ public record MemorialCommentResponse (
         Long likes,
         Boolean isLiked,
         Long parentId,
-        List<MemorialCommentResponse> children,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<MemorialCommentResponse> children
 
 ) {
 }

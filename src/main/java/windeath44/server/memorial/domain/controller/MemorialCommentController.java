@@ -27,7 +27,7 @@ public class MemorialCommentController {
   }
 
   @GetMapping("/{memorial-id}")
-  public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId, @PathVariable("memorial-id") Long memorialId,@PathVariable("cursor-id") Long cursorId, @PathVariable("size") Integer size) {
+  public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId, @PathVariable("memorial-id") Long memorialId, @RequestParam(value = "cursor-id", required = false) Long cursorId, @RequestParam(value = "size", defaultValue = "10") Integer size) {
     CursorPage<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentGetUseCase.getComment(userId, memorialId, cursorId, size);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Found.", memorialCommentResponsesList));
   }

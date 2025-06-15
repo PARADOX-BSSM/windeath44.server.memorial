@@ -24,7 +24,6 @@ public class MemorialCommentLikesService {
     MemorialComment comment = memorialCommentService.findCommentById(commentId);
 
     MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey = comment.likesKey(userId);
-
     if (memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey)) return;
 
     MemorialCommentLikes memorialCommentLikes = memorialCommentLikesMapper.toMemorialCommentLikes(memorialCommentLikesPrimaryKey);

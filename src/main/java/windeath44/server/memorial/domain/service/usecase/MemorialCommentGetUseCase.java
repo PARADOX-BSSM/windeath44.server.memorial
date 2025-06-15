@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.service.usecase;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import windeath44.server.memorial.domain.dto.response.MemorialCommentResponse;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MemorialCommentGetUseCase {
   private final MemorialCommentService memorialCommentService;
   private final MemorialCommentMapper memorialCommentMapper;
@@ -26,12 +28,12 @@ public class MemorialCommentGetUseCase {
 
   public CursorPage<MemorialCommentResponse> getComment(String userId, Long memorialId, Long cursorId, Integer size) {
     Slice<MemorialComment> memorialRootCommentListSlice = memorialCommentService.getRootComment(memorialId, cursorId, size);
+
     List<MemorialComment> memorialRootCommentList = memorialRootCommentListSlice.getContent();
 
     List<Long> rootIds = memorialRootCommentList.stream()
             .map(MemorialComment::getCommentId)
             .toList();
-
     memorialCommentService.connectChild(memorialRootCommentList, rootIds);
     List<MemorialCommentResponse> memorialCommentResponseList = transformMemorialCommentResponse(userId, memorialRootCommentList);
 

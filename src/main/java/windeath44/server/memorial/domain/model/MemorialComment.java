@@ -30,10 +30,12 @@ public class MemorialComment {
   @ManyToOne
   @JoinColumn(name="parentId")
   private MemorialComment parentComment;
+  @Builder.Default
   private Long likesCount = 0L;
   @CreatedDate
   private LocalDateTime createdAt;
 
+  @Builder.Default
   @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemorialComment> children = new ArrayList<>();
 

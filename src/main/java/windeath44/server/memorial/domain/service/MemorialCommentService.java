@@ -33,7 +33,9 @@ public class MemorialCommentService {
 
     String content = dto.content();
     Long parentCommentId = dto.parentCommentId();
-    MemorialComment parentMemorialComment = memorialCommentRepository.findById(parentCommentId)
+    MemorialComment parentMemorialComment = parentCommentId == null
+            ? null
+            : memorialCommentRepository.findById(parentCommentId)
             .orElseThrow(MemorialCommentNotFoundException::new);
 
     MemorialComment comment = memorialCommentMapper.toMemorialComment(memorial, userId, content, parentMemorialComment);
@@ -49,18 +51,23 @@ public class MemorialCommentService {
     comment.rewrite(content);
   }
 
+  @Transactional
   public void delete(Long commentId) {
-    memorialCommentRepository.deleteById(commentId);
+    MemorialComment memorialComment = memorialCommentRepository.findById(commentId)
+                    .orElseThrow(MemorialCommentNotFoundException::new);
+    memorialCommentRepository.delete(memorialComment);
   }
 
   public MemorialComment findCommentById(Long commentId) {
-    return memorialCommentRepository.findById(commentId)
+    return memorialCommentRepository.findFetchById(commentId)
             .orElseThrow(MemorialCommentNotFoundException::new);
   }
 
   public Slice<MemorialComment> getRootComment(Long memorialId, Long cursorId, Integer size) {
     Pageable pageable = PageRequest.of(0, size);
-    Slice<MemorialComment> memorialRootCommentSlice = memorialCommentRepository.findRootComment(memorialId, cursorId, pageable);
+    Slice<MemorialComment> memorialRootCommentSlice = cursorId == null
+            ? memorialCommentRepository.findRootComment(memorialId, pageable)
+            : memorialCommentRepository.findRootCommentByCursorId(memorialId, cursorId, pageable);
     return memorialRootCommentSlice;
   }
 

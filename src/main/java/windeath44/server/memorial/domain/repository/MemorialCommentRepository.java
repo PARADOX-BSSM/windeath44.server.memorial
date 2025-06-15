@@ -10,14 +10,22 @@ import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialComment;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemorialCommentRepository extends JpaRepository<MemorialComment, Long> {
-  List<MemorialComment> memorial(Memorial memorial);
 
-  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.parentComment is null and mc.memorial.memorialId = :memorialId and mc.commentId <= :cursorId")
-  Slice<MemorialComment> findRootComment(@Param("memorialId") Long memorialId, @Param("cursorId") Long cursorId, Pageable pageable);
+
+
+  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.parentComment is null and mc.memorial.memorialId = :memorialId and mc.commentId <= :cursorId order by mc.commentId desc")
+  Slice<MemorialComment> findRootCommentByCursorId(@Param("memorialId") Long memorialId, @Param("cursorId") Long cursorId, Pageable pageable);
+
+  @Query("select mc from MemorialComment mc where mc.parentComment is null and mc.memorial.memorialId = :memorialId order by mc.commentId desc")
+  Slice<MemorialComment> findRootComment(Long memorialId, Pageable pageable);
 
   @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.parentComment.commentId in :rootIds")
   List<MemorialComment> findAllByParentCommentId(List<Long> rootIds);
+
+  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.commentId = :commentId")
+  Optional<MemorialComment> findFetchById(@Param("commentId") Long commentId);
 }
