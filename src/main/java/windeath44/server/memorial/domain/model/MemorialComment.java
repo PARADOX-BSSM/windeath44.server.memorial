@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -25,16 +27,22 @@ public class MemorialComment {
   private Memorial memorial;
   private String userId;
   private String content;
-  private Long parentId;
+  @ManyToOne
+  @JoinColumn(name="parentId")
+  private MemorialComment parentComment;
+  private Long likesCount = 0L;
   @CreatedDate
   private LocalDateTime createdAt;
 
-  public static MemorialComment of(final Memorial memorial, final String userId, final String content, final Long parentCommentId) {
+  @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<MemorialComment> children = new ArrayList<>();
+
+  public static MemorialComment of(final Memorial memorial, final String userId, final String content, final MemorialComment parentComment) {
     return MemorialComment.builder()
             .memorial(memorial)
             .userId(userId)
             .content(content)
-            .parentId(parentCommentId)
+            .parentComment(parentComment)
             .build();
   }
 
@@ -48,5 +56,13 @@ public class MemorialComment {
 
   public MemorialCommentLikesPrimaryKey likesKey(String userId) {
     return MemorialCommentLikesPrimaryKey.of(this, userId);
+  }
+
+  public Long getParentCommentId() {
+    return this.parentComment == null ? null : this.parentComment.getCommentId();
+  }
+
+  public void addChild(List<MemorialComment> child) {
+    this.children.addAll(child);
   }
 }

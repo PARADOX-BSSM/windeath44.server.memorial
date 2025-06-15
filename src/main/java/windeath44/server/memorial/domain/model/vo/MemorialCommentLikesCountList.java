@@ -1,7 +1,6 @@
 package windeath44.server.memorial.domain.model.vo;
 
 import lombok.AllArgsConstructor;
-import windeath44.server.memorial.domain.model.MemorialCommentLikesCount;
 
 import java.util.List;
 

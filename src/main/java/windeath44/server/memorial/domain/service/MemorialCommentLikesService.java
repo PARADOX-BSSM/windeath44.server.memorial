@@ -4,14 +4,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.mapper.MemorialCommentLikesMapper;
-import windeath44.server.memorial.domain.model.MemorialCommentLikesCount;
 import windeath44.server.memorial.domain.model.MemorialComment;
 import windeath44.server.memorial.domain.model.MemorialCommentLikes;
 import windeath44.server.memorial.domain.model.MemorialCommentLikesPrimaryKey;
-import windeath44.server.memorial.domain.model.vo.MemorialCommentLikesCountList;
 import windeath44.server.memorial.domain.repository.MemorialCommentLikesRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +31,7 @@ public class MemorialCommentLikesService {
     memorialCommentLikesRepository.deleteById(memorialCommentLikesPrimaryKey);
   }
 
-  public MemorialCommentLikesCountList getLikesCountByCommentIds(List<Long> commentIds, String userId) {
-    List<MemorialCommentLikesCount> memorialCommentLikesCounts = memorialCommentLikesRepository.findLikesCountGroupedByCommentIds(commentIds, userId);
-    return MemorialCommentLikesCountList.of(memorialCommentLikesCounts);
+  public Boolean userDidLiked(MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey) {
+    return memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey);
   }
-
 }

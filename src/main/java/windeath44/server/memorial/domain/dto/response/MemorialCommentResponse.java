@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Builder
 public record MemorialCommentResponse (
         Long commentId,
-        Long memorialId,
         String userId,
         String content,
         Long likes,

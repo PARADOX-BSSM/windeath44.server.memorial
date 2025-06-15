@@ -7,8 +7,9 @@ import windeath44.server.memorial.domain.dto.ResponseDto;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentUpdateRequestDto;
 import windeath44.server.memorial.domain.dto.response.MemorialCommentResponse;
-import windeath44.server.memorial.domain.facade.MemorialCommentFacade;
 import windeath44.server.memorial.domain.service.MemorialCommentService;
+import windeath44.server.memorial.domain.service.usecase.MemorialCommentGetUseCase;
+import windeath44.server.memorial.global.dto.CursorPage;
 
 import java.util.List;
 
@@ -17,17 +18,17 @@ import java.util.List;
 @RequestMapping("/memorials/comment")
 public class MemorialCommentController {
   private final MemorialCommentService memorialCommentService;
-  private final MemorialCommentFacade memorialCommentFacade;
+  private final MemorialCommentGetUseCase memorialCommentGetUseCase;
 
-  @PostMapping
-  public ResponseEntity<ResponseDto> comment(@RequestBody MemorialCommentRequestDto dto, @RequestHeader("user-id") String userId) {
-    memorialCommentService.comment(dto, userId);
+  @PostMapping("/{memorial-id}")
+  public ResponseEntity<ResponseDto> comment(@RequestBody MemorialCommentRequestDto dto, @RequestHeader("user-id") String userId, @PathVariable("memorial-id") Long memorialId) {
+    memorialCommentService.comment(dto, userId, memorialId);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial comment is successfully created.", null));
   }
 
-  @GetMapping
-  public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId) {
-    List<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentFacade.getComment(userId);
+  @GetMapping("/{memorial-id}")
+  public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId, @PathVariable("memorial-id") Long memorialId,@PathVariable("cursor-id") Long cursorId, @PathVariable("size") Integer size) {
+    CursorPage<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentGetUseCase.getComment(userId, memorialId, cursorId, size);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Found.", memorialCommentResponsesList));
   }
 
@@ -37,7 +38,7 @@ public class MemorialCommentController {
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Update.", null));
   }
 
-  @DeleteMapping("/comment-id")
+  @DeleteMapping("/{comment-id}")
   public ResponseEntity<ResponseDto> delete(@PathVariable("comment-id") Long commentId) {
     memorialCommentService.delete(commentId);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully delete.", null));
