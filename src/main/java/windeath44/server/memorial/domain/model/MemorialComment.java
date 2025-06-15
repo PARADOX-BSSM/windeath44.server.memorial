@@ -65,4 +65,12 @@ public class MemorialComment {
   public void addChild(List<MemorialComment> child) {
     this.children.addAll(child);
   }
+
+  public void upLikes() {
+    this.likesCount++;
+  }
+
+  public void downLikes() {
+    if (likesCount > 0) this.likesCount--;
+  }
 }

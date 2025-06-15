@@ -22,16 +22,25 @@ public class MemorialCommentLikesService {
   @Transactional
   public void like(Long commentId, String userId) {
     MemorialComment comment = memorialCommentService.findCommentById(commentId);
+
     MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey = comment.likesKey(userId);
+
+    if (memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey)) return;
+
     MemorialCommentLikes memorialCommentLikes = memorialCommentLikesMapper.toMemorialCommentLikes(memorialCommentLikesPrimaryKey);
     memorialCommentLikesRepository.save(memorialCommentLikes);
+    comment.upLikes();
   }
 
   @Transactional
   public void unlike(Long commentId, String userId) {
     MemorialComment comment = memorialCommentService.findCommentById(commentId);
+
     MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey = comment.likesKey(userId);
+    if (!memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey)) return;
+
     memorialCommentLikesRepository.deleteById(memorialCommentLikesPrimaryKey);
+    comment.downLikes();
   }
 
   public Set<Long> getLikedCommentIds(String userId, Set<Long> commentIds) {
