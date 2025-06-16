@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.service;
 
 import com.example.avro.MemorialAvroSchema;
+import com.example.avro.MemorialCreationAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,13 @@ public class MemorialCreateService {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @Transactional
-  public void createMemorial(MemorialAvroSchema memorialAvroSchema) {
-    Memorial memorial = new Memorial(memorialAvroSchema.getCharacterId());
+  public Long createMemorial(MemorialCreationAvroSchema memorialCreationAvroSchema) {
+    Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId());
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialAvroSchema.getContent());
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialCreationAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
     MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialAvroSchema.getApproverId(), memorialCommitResponseDto.memorialCommitId());
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCreationAvroSchema.getApproverId(), memorialCommitResponseDto.memorialCommitId());
     memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
+    return memorial.getMemorialId();
   }
 }
