@@ -18,7 +18,7 @@ public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 
   @GetMapping
-  public ResponseEntity<ResponseDto> getMemorialTracing(@PathVariable("user-id") String userId, @RequestParam("size") Integer size) {
+  public ResponseEntity<ResponseDto> getMemorialTracing(@RequestHeader("user-id") String userId, @RequestParam(value = "size", defaultValue = "5") Integer size) {
     List<MemorialTracingResponse> memorialTracingList = memorialTraceService.findRecentByUserId(userId, size);
     ResponseDto responseDto = new ResponseDto("Memorial Tracing is Successfully Found", memorialTracingList);
     return ResponseEntity.ok(responseDto);

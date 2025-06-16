@@ -21,6 +21,7 @@ public class MemorialGetService {
 
   public MemorialResponseDto findMemorialById(Long memorialId, String userId) {
     MemorialResponseDto memorial = memorialRepository.findMemorialById(memorialId);
+
     if (memorial==null) {
       throw new MemorialNotFoundException();
     }
