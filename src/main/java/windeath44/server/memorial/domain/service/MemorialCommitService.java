@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.model.Memorial;
@@ -11,6 +12,8 @@ import windeath44.server.memorial.domain.dto.request.MemorialCommitRequestDto;
 import windeath44.server.memorial.domain.mapper.MemorialCommitMapper;
 import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemorialCommitService {
@@ -18,6 +21,7 @@ public class MemorialCommitService {
   private final MemorialCommitMapper memorialCommitMapper;
   private final MemorialRepository memorialRepository;
 
+  @Transactional
   public MemorialCommitResponseDto createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
             .orElseThrow(MemorialNotFoundException::new);
@@ -28,5 +32,11 @@ public class MemorialCommitService {
   public MemorialCommitResponseDto findMemorialCommitById(Long memorialCommitId) {
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialCommitId).orElseThrow(MemorialCommitNotFoundException::new);
     return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
+  }
+
+  @Transactional
+  public void deleteMemorialCommitsByMemorialId(Long memorialId) {
+    List<MemorialCommit> memorialCommits = memorialCommitRepository.findMemorialCommitsByMemorial_MemorialId(memorialId);
+    memorialCommitRepository.deleteAll(memorialCommits);
   }
 }

@@ -6,10 +6,6 @@ import org.mapstruct.Mapper;
 import windeath44.server.memorial.domain.model.QMemorial;
 import windeath44.server.memorial.domain.model.QMemorialCommit;
 
-import windeath44.server.memorial.domain.model.QMemorialPullRequest;
-import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
-import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")
