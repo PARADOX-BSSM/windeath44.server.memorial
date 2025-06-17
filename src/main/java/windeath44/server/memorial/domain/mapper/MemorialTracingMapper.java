@@ -6,6 +6,7 @@ import windeath44.server.memorial.domain.model.MemorialTracing;
 import windeath44.server.memorial.domain.model.event.MemorialTracingEvent;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Component
 public class MemorialTracingMapper {
@@ -15,7 +16,7 @@ public class MemorialTracingMapper {
 
   public MemorialTracingResponse toMemorialTracingResponse(MemorialTracing memorialTracing) {
     Long memorialId = memorialTracing.getMemorialId();
-    LocalDateTime viewedAt = memorialTracing.getViewed();
+    Date viewedAt = memorialTracing.getViewed();
 
     return MemorialTracingResponse.builder()
             .memorialId(memorialId)

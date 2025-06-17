@@ -1,6 +1,5 @@
 package windeath44.server.memorial.domain.service;
 
-import com.example.avro.MemorialAvroSchema;
 import com.example.avro.MemorialCreationAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
