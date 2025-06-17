@@ -18,8 +18,8 @@ public class MemorialGetController {
   private final MemorialGetService memorialGetService;
 
   @GetMapping("/{memorialId}")
-  public ResponseEntity<ResponseDto> findByMemorialId(@PathVariable Long memorialId) {
-    MemorialResponseDto memorialResponseDto = memorialGetService.findMemorialById(memorialId);
+  public ResponseEntity<ResponseDto> findByMemorialId(@PathVariable Long memorialId, @RequestHeader(value = "user-id", required = false) String userId) {
+    MemorialResponseDto memorialResponseDto = memorialGetService.findMemorialById(memorialId, userId);
     return ResponseEntity.ok(new ResponseDto("memorialId: " + memorialId + " Successfully Found", memorialResponseDto));
   }
 

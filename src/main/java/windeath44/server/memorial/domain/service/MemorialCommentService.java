@@ -2,6 +2,9 @@ package windeath44.server.memorial.domain.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.dto.request.MemorialCommentUpdateRequestDto;
@@ -14,6 +17,8 @@ import windeath44.server.memorial.domain.model.MemorialComment;
 import windeath44.server.memorial.domain.repository.MemorialCommentRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,19 +28,18 @@ public class MemorialCommentService {
   private final MemorialCommentRepository memorialCommentRepository;
 
   @Transactional
-  public void comment(final MemorialCommentRequestDto dto, final String userId) {
-    Long memorialId = dto.memorialId();
+  public void comment(MemorialCommentRequestDto dto, String userId, Long memorialId) {
     Memorial memorial = memorialGetService.findById(memorialId);
 
     String content = dto.content();
     Long parentCommentId = dto.parentCommentId();
-    MemorialComment comment = memorialCommentMapper.toMemorialComment(memorial, userId, content, parentCommentId);
-    memorialCommentRepository.save(comment);
-  }
+    MemorialComment parentMemorialComment = parentCommentId == null
+            ? null
+            : memorialCommentRepository.findById(parentCommentId)
+            .orElseThrow(MemorialCommentNotFoundException::new);
 
-  public List<MemorialComment> getComment() {
-    List<MemorialComment> memorialCommentList = memorialCommentRepository.findAll();
-    return memorialCommentList;
+    MemorialComment comment = memorialCommentMapper.toMemorialComment(memorial, userId, content, parentMemorialComment);
+    memorialCommentRepository.save(comment);
   }
 
   @Transactional
@@ -47,12 +51,35 @@ public class MemorialCommentService {
     comment.rewrite(content);
   }
 
+  @Transactional
   public void delete(Long commentId) {
-    memorialCommentRepository.deleteById(commentId);
+    MemorialComment memorialComment = memorialCommentRepository.findById(commentId)
+                    .orElseThrow(MemorialCommentNotFoundException::new);
+    memorialCommentRepository.delete(memorialComment);
   }
 
   public MemorialComment findCommentById(Long commentId) {
-    return memorialCommentRepository.findById(commentId)
+    return memorialCommentRepository.findFetchById(commentId)
             .orElseThrow(MemorialCommentNotFoundException::new);
+  }
+
+  public Slice<MemorialComment> getRootComment(Long memorialId, Long cursorId, Integer size) {
+    Pageable pageable = PageRequest.of(0, size);
+    Slice<MemorialComment> memorialRootCommentSlice = cursorId == null
+            ? memorialCommentRepository.findRootComment(memorialId, pageable)
+            : memorialCommentRepository.findRootCommentByCursorId(memorialId, cursorId, pageable);
+    return memorialRootCommentSlice;
+  }
+
+  public void connectChild(List<MemorialComment> memorialRootCommentList, List<Long> rootIds) {
+    List<MemorialComment> memorialChildCommentList = memorialCommentRepository.findAllByParentCommentId(rootIds);
+
+    Map<Long, List<MemorialComment>> memorialChildCommentMap = memorialChildCommentList.stream()
+            .collect(Collectors.groupingBy(MemorialComment::getParentCommentId));
+
+    for (MemorialComment root : memorialRootCommentList) {
+      root.addChild(memorialChildCommentMap.getOrDefault(root.getCommentId(), List.of()));
+    }
+
   }
 }

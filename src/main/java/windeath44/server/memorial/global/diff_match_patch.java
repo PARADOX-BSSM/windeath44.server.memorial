@@ -503,7 +503,7 @@ public class diff_match_patch {
     List<String> lineArray = new ArrayList<String>();
     Map<String, Integer> lineHash = new HashMap<String, Integer>();
     // e.g. linearray[4] == "Hello\n"
-    // e.g. linehash.get("Hello\n") == 4
+    // e.g. linehash.getLike("Hello\n") == 4
 
     // "\x00" is a valid character, but various debuggers don't like it.
     // So we'll insert a junk entry to avoid generating a null character.
@@ -1987,7 +1987,7 @@ public class diff_match_patch {
           text = text.substring(0, start_loc) + diff_text2(aPatch.diffs)
                   + text.substring(start_loc + text1.length());
         } else {
-          // Imperfect match.  Run a diff to get a framework of equivalent
+          // Imperfect match.  Run a diff to getLike a framework of equivalent
           // indices.
           LinkedList<Diff> diffs = diff_main(text1, text2, false);
           if (text1.length() > this.Match_MaxBits
