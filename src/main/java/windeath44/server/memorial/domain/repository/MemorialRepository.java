@@ -6,5 +6,5 @@ import windeath44.server.memorial.domain.model.Memorial;
 
 @Repository
 public interface MemorialRepository extends JpaRepository<Memorial, Long>, MemorialRepositoryCustom {
-
+  Memorial findMemorialByCharacterId(Long characterId);
 }

@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import windeath44.server.memorial.domain.model.MemorialPullRequestState;
+import windeath44.server.memorial.domain.model.QMemorialCommit;
 import windeath44.server.memorial.domain.repository.MemorialRepositoryCustom;
 import windeath44.server.memorial.domain.mapper.MemorialMapper;
 import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
@@ -15,10 +16,10 @@ import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
 import java.util.List;
 import java.util.Map;
 
-
 import static windeath44.server.memorial.domain.model.QMemorialPullRequest.memorialPullRequest;
 import static windeath44.server.memorial.domain.model.QMemorialCommit.memorialCommit;
 import static windeath44.server.memorial.domain.model.QMemorial.memorial;
+
 
 @RequiredArgsConstructor
 public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
