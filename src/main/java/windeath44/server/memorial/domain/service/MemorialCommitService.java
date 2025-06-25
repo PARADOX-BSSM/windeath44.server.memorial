@@ -26,12 +26,17 @@ public class MemorialCommitService {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
             .orElseThrow(MemorialNotFoundException::new);
     MemorialCommit memorialCommit = memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
-    return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
+    return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit, memorial);
   }
 
   public MemorialCommitResponseDto findMemorialCommitById(Long memorialCommitId) {
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialCommitId).orElseThrow(MemorialCommitNotFoundException::new);
-    return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
+    return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit, memorialCommit.getMemorial());
+  }
+
+  public List<MemorialCommitResponseDto> findMemorialCommitsByMemorialId(Long memorialId) {
+    List<MemorialCommit> memorialCommits = memorialCommitRepository.findMemorialCommitsByMemorial_MemorialId(memorialId);
+    return memorialCommits.stream().map(x -> memorialCommitMapper.toMemorialCommitResponseDto(x, x.getMemorial())).toList();
   }
 
   @Transactional
