@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.exception.UnauthorizedMergerException;
 import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialPullRequest;
 import windeath44.server.memorial.domain.model.MemorialPullRequestState;
@@ -48,11 +49,13 @@ public class MemorialMergeService {
   }
 
   @Transactional
-  public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
+  public void mergeMemorialCommit(String userId, MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
-
+    if (!memorial.getChiefs().contains(userId)) {
+      throw new UnauthorizedMergerException();
+    }
     if(memorialPullRequest.isAlreadyApproved())
       throw new MemorialPullRequestAlreadyApprovedException();
 

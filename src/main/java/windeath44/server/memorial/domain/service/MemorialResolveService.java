@@ -35,6 +35,6 @@ public class MemorialResolveService {
     MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(userId, memorialCommitResponseDto.memorialCommitId());
     MemorialPullRequestResponseDto memorialPullRequestResponseDto = memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
     MemorialMergeRequestDto memorialMergeRequestDto = new MemorialMergeRequestDto(userId, memorialPullRequestResponseDto.memorialPullRequestId());
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto);
   }
 }
