@@ -8,14 +8,14 @@ spring:
     url: ${DB_URL}
   data:
     mongodb:
-      uri: mongodb://localhost:27017/paradox
+      uri: mongodb://${MONGODB_URL}/admin
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
   kafka:
     # ===== 외부 접속을 위한 설정 (필요시 주석 해제) =====
-    bootstrap-servers: ${KAFKA_EXTERNAL_HOST:localhost}:9092
+    bootstrap-servers: ${KAFKA_EXTERNAL_URL}
     # =============================================
 
     producer:
@@ -29,7 +29,7 @@ spring:
       auto-offset-reset: earliest  # 추가 권장 설정
       enable-auto-commit: false    # 추가 권장 설정
       properties:
-        schema.registry.url: http://localhost:8081
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
         specific.avro.reader: true
 
 server:
