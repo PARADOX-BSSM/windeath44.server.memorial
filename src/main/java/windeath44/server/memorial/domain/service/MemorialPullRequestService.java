@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.mapper.MemorialCommitMapper;
 import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialCommit;
 import windeath44.server.memorial.domain.model.MemorialPullRequest;
@@ -17,11 +18,13 @@ import windeath44.server.memorial.domain.dto.request.MemorialPullRequestRequestD
 import windeath44.server.memorial.domain.dto.response.MemorialPullRequestResponseDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemorialPullRequestService {
   private final MemorialCommitRepository memorialCommitRepository;
+  private final MemorialCommitMapper memorialCommitMapper;
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final MemorialPullRequestMapper memorialPullRequestMapper;
 
@@ -40,13 +43,19 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId());
     memorialPullRequestRepository.save(memorialPullRequest);
-    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
+    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest, memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit, memorial));
   }
 
   public MemorialPullRequestResponseDto findMemorialPullRequestById(Long memorialPullRequestId) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialPullRequestId)
             .orElseThrow(MemorialPullRequestNotFoundException::new);
-    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
+    System.out.println(memorialCommitMapper.toMemorialCommitResponseDto(memorialPullRequest.getMemorialCommit(), memorialPullRequest.getMemorial()).memorialId());
+    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest, memorialCommitMapper.toMemorialCommitResponseDto(memorialPullRequest.getMemorialCommit(), memorialPullRequest.getMemorial()));
+  }
+
+  public List<MemorialPullRequestResponseDto> findMemorialPullRequestsByMemorialId(Long memorialId) {
+    List<MemorialPullRequest> memorialPullRequests = memorialPullRequestRepository.findMemorialPullRequestsByMemorial_MemorialId(memorialId);
+    return memorialPullRequests.stream().map(x -> memorialPullRequestMapper.toMemorialPullRequestResponseDto(x, memorialCommitMapper.toMemorialCommitResponseDto(x.getMemorialCommit(), x.getMemorial()))).toList();
   }
 
   @Transactional
