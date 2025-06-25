@@ -25,8 +25,8 @@ public class MemorialMergeController {
   }
 
   @PatchMapping("/merge")
-  public ResponseEntity<ResponseDto> merge(@RequestBody MemorialMergeRequestDto dto) {
-    memorialMergeService.mergeMemorialCommit(dto);
+  public ResponseEntity<ResponseDto> merge(@RequestBody MemorialMergeRequestDto dto, @RequestHeader String userId) {
+    memorialMergeService.mergeMemorialCommit(userId, dto);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is successfully merged.", null));
   }
 
