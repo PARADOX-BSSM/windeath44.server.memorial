@@ -51,4 +51,11 @@ public class GlobalExceptionHandler {
     final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
     return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(UnauthorizedMergerException.class)
+  protected ResponseEntity<ErrorResponseDto> handleUnauthorizedMergerException(UnauthorizedMergerException e) {
+    log.error(e.getMessage(), e);
+    final ErrorResponseDto errorResponseDto = new ErrorResponseDto(e.getMessage());
+    return new ResponseEntity<>(errorResponseDto, HttpStatus.UNAUTHORIZED);
+  }
 }
