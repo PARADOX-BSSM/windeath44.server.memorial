@@ -14,8 +14,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-log
-
   kafka:
     # ===== 외부 접속을 위한 설정 (필요시 주석 해제) =====
     bootstrap-servers: ${KAFKA_EXTERNAL_HOST:localhost}:9092
@@ -40,5 +38,5 @@ server:
 
 logging:
   level:
-    root: trace
+    windeath44.server.memorial : trace
 
