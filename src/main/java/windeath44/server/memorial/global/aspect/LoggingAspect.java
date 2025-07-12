@@ -21,9 +21,9 @@ public class LoggingAspect {
 
     @Around("memorialServiceMethodLogging()")
     public Object memorialServiceMethodLogging(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.trace("Entering {} by {}", joinPoint.getSignature().getName(), count.get());
+        log.debug("Entering {} by {}", joinPoint.getSignature().getName(), count.get());
         Object result = joinPoint.proceed();
-        log.trace("Exiting {} by {}", joinPoint.getSignature().getName(), count.getAndIncrement());
+        log.debug("Exiting {} by {}", joinPoint.getSignature().getName(), count.getAndIncrement());
         return result;
     }
 }

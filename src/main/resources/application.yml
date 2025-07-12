@@ -13,6 +13,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+log
+
   kafka:
     # ===== 외부 접속을 위한 설정 (필요시 주석 해제) =====
     bootstrap-servers: ${KAFKA_EXTERNAL_HOST:localhost}:9092
@@ -37,11 +40,5 @@ server:
 
 logging:
   level:
-    org:
-      hibernate:
-        sql: debug
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
+    root: trace
 
