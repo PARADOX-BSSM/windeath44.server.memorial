@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import windeath44.server.memorial.domain.exception.*;
+import windeath44.server.memorial.global.dto.ErrorResponseDto;
 
 @Slf4j
 @RestControllerAdvice
