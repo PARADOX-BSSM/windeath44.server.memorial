@@ -16,12 +16,13 @@ public class Memorial {
   private Long memorialId;
   private Long characterId;
 
-  @ElementCollection
-  private List<String> chiefs;
-
   private Long bowCount = 0L;
 
   public Memorial(Long characterId) {
     this.characterId = characterId;
+  }
+
+  public void plusBowCount() {
+    bowCount++;
   }
 }
