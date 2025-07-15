@@ -2,12 +2,9 @@ package windeath44.server.memorial.domain.repository.impl;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import windeath44.server.memorial.domain.model.MemorialPullRequestState;
-import windeath44.server.memorial.domain.model.QMemorialCommit;
 import windeath44.server.memorial.domain.repository.MemorialRepositoryCustom;
 import windeath44.server.memorial.domain.mapper.MemorialMapper;
 import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
@@ -19,6 +16,7 @@ import java.util.Map;
 import static windeath44.server.memorial.domain.model.QMemorialPullRequest.memorialPullRequest;
 import static windeath44.server.memorial.domain.model.QMemorialCommit.memorialCommit;
 import static windeath44.server.memorial.domain.model.QMemorial.memorial;
+import static windeath44.server.memorial.domain.model.QMemorialChiefs.memorialChiefs;
 
 
 @RequiredArgsConstructor
@@ -46,12 +44,10 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
                     memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
             )
             .fetchOne();
-    StringPath chief = Expressions.stringPath("chief");
     List<String> chiefList = queryFactory
-            .select(chief)
-            .from(memorial)
-            .join(memorial.chiefs, chief)
-            .where(memorial.memorialId.eq(memorialId))
+            .select(memorialChiefs.userId)
+            .from(memorialChiefs)
+            .where(memorialChiefs.memorial.memorialId.eq(memorialId))
             .fetch();
 
     MemorialResponseDto memorialResponseDto = memorialMapper.toMemorialResponseDto(result, memorial, memorialPullRequest, memorialCommit, chiefList);
