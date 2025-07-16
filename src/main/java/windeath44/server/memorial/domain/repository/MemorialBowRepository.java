@@ -13,4 +13,7 @@ public interface MemorialBowRepository extends JpaRepository<MemorialBow, Long> 
   MemorialBow findMemorialBowByUserIdAndMemorialId(String userId, Long memorialId);
   @Query("select sum(m.bowCount) from MemorialBow m where m.memorialId = :memorialId")
   Long sumBowCount(@Param("memorialId") Long memorialId);
+
+  @Query("select userId from MemorialBow where memorialId = :memorialId order by bowCount desc limit 3")
+  List<String> top3UserIds(@Param("memorialId") Long memorialId);
 }
