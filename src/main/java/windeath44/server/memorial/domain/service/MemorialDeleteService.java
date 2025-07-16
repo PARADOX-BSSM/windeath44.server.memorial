@@ -1,6 +1,6 @@
 package windeath44.server.memorial.domain.service;
 
-import com.example.avro.MemorialDeletionAvroSchema;
+import com.example.avro.CharacterAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +15,8 @@ public class MemorialDeleteService {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @Transactional
-  public void deleteMemorial(MemorialDeletionAvroSchema memorialDeletionAvroSchema) {
-    Memorial memorial = memorialRepository.findMemorialByCharacterId(memorialDeletionAvroSchema.getCharacterId());
+  public void deleteMemorial(CharacterAvroSchema characterAvroSchema) {
+    Memorial memorial = memorialRepository.findMemorialByCharacterId(characterAvroSchema.getCharacterId());
     if (memorial != null) {
       memorialCommitService.deleteMemorialCommitsByMemorialId(memorial.getMemorialId());
       memorialPullRequestService.deleteMemorialPullRequestsByMemorialId(memorial.getMemorialId());
