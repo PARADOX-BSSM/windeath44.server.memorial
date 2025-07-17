@@ -25,7 +25,7 @@ public class MemorialCreateService {
     MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialCreationAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
     MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
     MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCreationAvroSchema.getApproverId(), memorialCommitResponseDto.memorialCommitId());
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
+    memorialPullRequestService.createMemorialPullRequestByEvent(memorialPullRequestRequestDto);
     return memorial.getMemorialId();
   }
 }
