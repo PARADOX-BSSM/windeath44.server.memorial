@@ -20,8 +20,7 @@ public class MemorialBowService {
   private final MemorialBowMapper memorialBowMapper;
 
   @Transactional
-  public void bow(MemorialBowRequestDto memorialBowRequestDto) {
-    String userId = memorialBowRequestDto.userId();
+  public void bow(String userId, MemorialBowRequestDto memorialBowRequestDto) {
     Long memorialId = memorialBowRequestDto.memorialId();
     Memorial memorial = memorialRepository.findById(memorialId).orElseThrow(MemorialNotFoundException::new);
     MemorialBow memorialBow = memorialBowRepository.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
