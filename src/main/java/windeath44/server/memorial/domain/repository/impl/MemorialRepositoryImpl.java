@@ -18,7 +18,6 @@ import static windeath44.server.memorial.domain.model.QMemorialCommit.memorialCo
 import static windeath44.server.memorial.domain.model.QMemorial.memorial;
 import static windeath44.server.memorial.domain.model.QMemorialChiefs.memorialChiefs;
 
-
 @RequiredArgsConstructor
 public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
   private final JPAQueryFactory queryFactory;

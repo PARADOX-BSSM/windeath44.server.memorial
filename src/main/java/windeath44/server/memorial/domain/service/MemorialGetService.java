@@ -10,7 +10,6 @@ import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.exception.UndefinedOrderByException;
 import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
-
 import java.util.List;
 
 @Service
