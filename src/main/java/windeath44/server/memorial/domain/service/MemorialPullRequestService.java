@@ -38,7 +38,7 @@ public class MemorialPullRequestService {
       throw new MemorialPullRequestAlreadySentException();
     }
 
-    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId());
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId(), MemorialPullRequestState.APPROVED);
     memorialPullRequestRepository.save(memorialPullRequest);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }

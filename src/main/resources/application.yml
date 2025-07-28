@@ -6,18 +6,25 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: ${JDBC_DRIVER_SOURCE}
     url: ${DB_URL}
+#  data:
+#    mongodb:
+#      uri: mongodb://${MONGODB_URL}
+#      database: windeath44
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+
   kafka:
     # ===== 외부 접속을 위한 설정 (필요시 주석 해제) =====
-    bootstrap-servers: ${KAFKA_EXTERNAL_HOST:localhost}:9092
+    bootstrap-servers: ${KAFKA_URL}
     # =============================================
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      properties:
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
 
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -26,7 +33,7 @@ spring:
       auto-offset-reset: earliest  # 추가 권장 설정
       enable-auto-commit: false    # 추가 권장 설정
       properties:
-        schema.registry.url: http://localhost:8081
+        schema.registry.url: ${SCHEMA_REGISTRY_URL}
         specific.avro.reader: true
 
 server:
@@ -34,10 +41,5 @@ server:
 
 logging:
   level:
-    org:
-      hibernate:
-        sql: debug
-        type:
-          descriptor:
-            sql:
-              BasicBinder: trace
+    windeath44.server.memorial : trace
+

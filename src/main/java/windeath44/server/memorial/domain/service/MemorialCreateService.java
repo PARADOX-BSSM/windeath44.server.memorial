@@ -1,7 +1,7 @@
 package windeath44.server.memorial.domain.service;
 
+import com.example.avro.MemorialApplicationAvroSchema;
 import com.example.avro.MemorialAvroSchema;
-import com.example.avro.MemorialCreationAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class MemorialCreateService {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @Transactional
-  public Long createMemorial(MemorialCreationAvroSchema memorialCreationAvroSchema) {
+  public Long createMemorial(MemorialApplicationAvroSchema memorialCreationAvroSchema) {
     Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId());
     memorialRepository.save(memorial);
     MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialCreationAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
