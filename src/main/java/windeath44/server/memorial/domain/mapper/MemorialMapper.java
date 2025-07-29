@@ -3,8 +3,11 @@ package windeath44.server.memorial.domain.mapper;
 import com.querydsl.core.Tuple;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
 import windeath44.server.memorial.domain.model.QMemorial;
 import windeath44.server.memorial.domain.model.QMemorialCommit;
+import windeath44.server.memorial.domain.model.QMemorialPullRequest;
 
 import java.util.List;
 
