@@ -18,6 +18,7 @@ public class ChiefUpdateController {
 
   @GetMapping("")
   public ResponseEntity<ResponseDto> update(@RequestHeader("role") String role) {
+    role = role.substring(2, role.length() - 2);
     if (!role.equals("ADMIN")) {
       throw new AuthenticationFailedException();
     }

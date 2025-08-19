@@ -14,12 +14,14 @@ public class MemorialCommentLikesController {
 
   @PostMapping
   public ResponseEntity<ResponseDto> like(@PathVariable("comment-id") Long commentId, @RequestHeader("user-id") String userId) {
+    userId = userId.substring(2, userId.length() - 2);
     memorialCommentLikesService.like(commentId, userId);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial comment is successfully liked.", null));
   }
 
   @DeleteMapping
   public ResponseEntity<ResponseDto> unlike(@PathVariable("comment-id") Long commentId, @RequestHeader("user-id") String userId) {
+    userId = userId.substring(2, userId.length() - 2);
     memorialCommentLikesService.unlike(commentId, userId);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully unliked.", null));
   }

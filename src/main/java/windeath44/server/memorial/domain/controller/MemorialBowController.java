@@ -16,6 +16,7 @@ public class MemorialBowController {
 
   @PostMapping("/bow")
   public ResponseEntity<ResponseDto> bow(@RequestHeader("user-id") String userId, @RequestBody MemorialBowRequestDto memorialBowRequestDto) {
+    userId = userId.substring(2, userId.length() - 2);
     memorialBowService.bow(userId, memorialBowRequestDto);
     return ResponseEntity.status(201).body(new ResponseDto("User id: " + userId + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId(), null));
   }

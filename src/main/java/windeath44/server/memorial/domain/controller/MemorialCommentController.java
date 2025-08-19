@@ -22,12 +22,14 @@ public class MemorialCommentController {
 
   @PostMapping("/{memorial-id}")
   public ResponseEntity<ResponseDto> comment(@RequestBody MemorialCommentRequestDto dto, @RequestHeader("user-id") String userId, @PathVariable("memorial-id") Long memorialId) {
+    userId = userId.substring(2, userId.length() - 2);
     memorialCommentService.comment(dto, userId, memorialId);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial comment is successfully created.", null));
   }
 
   @GetMapping("/{memorial-id}")
   public ResponseEntity<ResponseDto> getComment(@RequestHeader(value = "user-id", required = false) String userId, @PathVariable("memorial-id") Long memorialId, @RequestParam(value = "cursorId", required = false) Long cursorId, @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    userId = userId.substring(2, userId.length() - 2);
     CursorPage<MemorialCommentResponse> memorialCommentResponsesList = memorialCommentGetUseCase.getComment(userId, memorialId, cursorId, size);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial comment is successfully Found.", memorialCommentResponsesList));
   }
