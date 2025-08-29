@@ -1,6 +1,7 @@
 package windeath44.server.memorial;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,14 +42,21 @@ public class MemorialCommitTest {
   @Autowired
   private MemorialPullRequestRepository memorialPullRequestRepository;
 
+  private String userId;
+
+  @BeforeEach
+  public void setUp() {
+    userId = "test";
+  }
+
   @Test
   void createMemorialCommitSuccess() {
     // 메모리얼 커밋 성공
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto dto = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(dto);
+    MemorialCommitRequestDto dto = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, dto);
 
     MemorialCommit memorialCommit = memorialCommitRepository.findById(1L)
             .orElse(null);
@@ -61,8 +69,8 @@ public class MemorialCommitTest {
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto dto = new MemorialCommitRequestDto("test", 2L, "test");
-    assertThrows(MemorialNotFoundException.class, () -> memorialCommitService.createMemorialCommit(dto));
+    MemorialCommitRequestDto dto = new MemorialCommitRequestDto(2L, "test");
+    assertThrows(MemorialNotFoundException.class, () -> memorialCommitService.createMemorialCommit(userId, dto));
   }
 
   @Test
@@ -70,12 +78,12 @@ public class MemorialCommitTest {
     // 이전에 APPROVE 된 PR이 없을 때
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto("test", 1L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
-    MemorialMergeRequestDto memorialMergeRequestDto = new MemorialMergeRequestDto("test", 1L);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto);
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(1L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto);
+    MemorialMergeRequestDto memorialMergeRequestDto = new MemorialMergeRequestDto( 1L);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto);
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(1L)
             .orElse(null);
     assertNotNull(memorialPullRequest);

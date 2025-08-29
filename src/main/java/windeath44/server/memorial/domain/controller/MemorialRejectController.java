@@ -2,10 +2,7 @@ package windeath44.server.memorial.domain.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import windeath44.server.memorial.domain.dto.ResponseDto;
 import windeath44.server.memorial.domain.dto.request.MemorialRejectRequestDto;
 import windeath44.server.memorial.domain.service.MemorialRejectService;

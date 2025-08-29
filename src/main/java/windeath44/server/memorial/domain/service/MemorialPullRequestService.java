@@ -26,19 +26,19 @@ public class MemorialPullRequestService {
   private final MemorialPullRequestMapper memorialPullRequestMapper;
 
   @Transactional
-  public MemorialPullRequestResponseDto createMemorialPullRequest(MemorialPullRequestRequestDto memorialPullRequestRequestDto) {
+  public MemorialPullRequestResponseDto createMemorialPullRequest(String userId, MemorialPullRequestRequestDto memorialPullRequestRequestDto) {
     MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestRequestDto.memorialCommitId())
             .orElseThrow(MemorialCommitNotFoundException::new);
     Memorial memorial = memorialCommit.getMemorial();
 
     MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
     if (memorialPullRequestExists != null) {
-      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId(), MemorialPullRequestState.REJECTED);
+      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, userId, MemorialPullRequestState.REJECTED);
       memorialPullRequestRepository.save(memorialPullRequest);
       throw new MemorialPullRequestAlreadySentException();
     }
 
-    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, memorialPullRequestRequestDto.userId(), MemorialPullRequestState.APPROVED);
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, userId, MemorialPullRequestState.APPROVED);
     memorialPullRequestRepository.save(memorialPullRequest);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }

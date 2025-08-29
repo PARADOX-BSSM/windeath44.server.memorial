@@ -22,7 +22,7 @@ public class MemorialMergeService {
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final diff_match_patch dmp = new diff_match_patch();
 
-  public MemorialMergeableResponseDto validateMergeable(MemorialMergeRequestDto memorialMergeRequestDto) {
+  public MemorialMergeableResponseDto validateMergeable(String userId, MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
@@ -48,7 +48,7 @@ public class MemorialMergeService {
   }
 
   @Transactional
-  public void mergeMemorialCommit(MemorialMergeRequestDto memorialMergeRequestDto) {
+  public void mergeMemorialCommit(String userId, MemorialMergeRequestDto memorialMergeRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
@@ -58,7 +58,7 @@ public class MemorialMergeService {
 
     MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
     memorialPullRequest.approve();
-    memorialPullRequest.merger(memorialMergeRequestDto.userId());
+    memorialPullRequest.merger(userId);
 
     if (latestApprovedMemorialPullRequest != null) {
       latestApprovedMemorialPullRequest.store();

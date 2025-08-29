@@ -15,9 +15,10 @@ public class MemorialResolveController {
 
   @PatchMapping("/resolve")
   public ResponseEntity<ResponseDto> resolve(
+          @RequestHeader("user-id") String userId,
           @RequestBody MemorialResolveRequestDto memorialResolveRequestDto
           ) {
-    memorialResolveService.resolve(memorialResolveRequestDto);
+    memorialResolveService.resolve(userId, memorialResolveRequestDto);
     return ResponseEntity.ok(new ResponseDto("Memorial Pull Request is successfully resolved and merged", null));
   }
 }
