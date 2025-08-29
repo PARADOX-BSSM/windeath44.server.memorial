@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChiefUpdateService {
+public class MemorialChiefService {
   private final MemorialBowRepository memorialBowRepository;
   private final MemorialRepository memorialRepository;
   private final MemorialChiefsRepository memorialChiefsRepository;
@@ -32,5 +32,9 @@ public class ChiefUpdateService {
 
       memorialChiefsRepository.saveAll(chiefs);
     }
+  }
+
+  public List<String> getChiefs(Long memorialId) {
+    return memorialBowRepository.top3UserIds(memorialId);
   }
 }

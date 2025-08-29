@@ -14,7 +14,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-
+    database-platform: ${DB_PLATFORM}
   kafka:
     # ===== 외부 접속을 위한 설정 (필요시 주석 해제) =====
     bootstrap-servers: ${KAFKA_URL}
