@@ -22,10 +22,10 @@ public class MemorialCommitService {
   private final MemorialRepository memorialRepository;
 
   @Transactional
-  public MemorialCommitResponseDto createMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto) {
+  public MemorialCommitResponseDto createMemorialCommit(String userId, MemorialCommitRequestDto memorialCommitRequestDto) {
     Memorial memorial = memorialRepository.findById(memorialCommitRequestDto.memorialId())
             .orElseThrow(MemorialNotFoundException::new);
-    MemorialCommit memorialCommit = memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(memorialCommitRequestDto, memorial));
+    MemorialCommit memorialCommit = memorialCommitRepository.save(memorialCommitMapper.toMemorialCommit(userId, memorialCommitRequestDto, memorial));
     return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit);
   }
 

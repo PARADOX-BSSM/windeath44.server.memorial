@@ -1,6 +1,7 @@
 package windeath44.server.memorial;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,15 +33,22 @@ public class MemorialPullRequestTest {
   @Autowired
   private MemorialPullRequestRepository memorialPullRequestRepository;
 
+  String userId;
+
+  @BeforeEach
+  public void setUp() {
+    userId = "test";
+  }
+
   @Test
   void createMemorialPullRequestSuccess() {
     // 커밋 PR 성공
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto("test", 1L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(1L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto);
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(1L)
             .orElse(null);
     assertNotNull(memorialPullRequest);
@@ -51,10 +59,10 @@ public class MemorialPullRequestTest {
     // 커밋 PR 실패(메모리얼 커밋 Not Found)
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto("test", 2L);
-    assertThrows(MemorialCommitNotFoundException.class, () -> memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto));
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto( 2L);
+    assertThrows(MemorialCommitNotFoundException.class, () -> memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto));
   }
 
   @Test
@@ -62,11 +70,11 @@ public class MemorialPullRequestTest {
     // 커밋 PR 실패(해당 메모리얼 커밋이 이미 풀 리퀘스트 보내짐)
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto("test", 1L);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto("test", 1L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto1);
-    assertThrows(MemorialPullRequestAlreadySentException.class, () -> memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto2));
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto(1L);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto(1L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto1);
+    assertThrows(MemorialPullRequestAlreadySentException.class, () -> memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto2));
   }
 }

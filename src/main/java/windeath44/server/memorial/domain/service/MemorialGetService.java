@@ -38,7 +38,7 @@ public class MemorialGetService {
     }
     return memorialListResponseDtoList;
   }
-
+ 
   public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
     List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
