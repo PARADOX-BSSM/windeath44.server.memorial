@@ -1,11 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.4'
+    id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.github.davidmc24.gradle.plugin.avro' version '1.5.0'
+    id 'com.google.protobuf' version '0.9.4'
+    id 'com.github.davidmc24.gradle.plugin.avro' version '1.9.1'
 }
 
-group = 'windeath44'
+group = 'windeath44' // 필요시 com.example 등으로 변경
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -22,73 +23,107 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url "https://packages.confluent.io/maven" } // ✅ Confluent repo 추가
+    maven { url "https://packages.confluent.io/maven" }
+}
+
+/** Avro 설정 */
+avro {
+    stringType = "String"
+}
+
+/** QueryDSL 생성 경로 */
+def querydslDir = "$buildDir/generated/querydsl"
+
+/** 소스셋: Proto/GRPC/Avro/QueryDSL 생성물 포함 */
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated/source/proto/main/java'
+            srcDirs += 'build/generated/source/proto/main/grpc'
+            srcDirs += 'build/generated-main-avro-java'
+            srcDirs += querydslDir
+        }
+    }
+}
+
+/** 생성 작업 의존성 */
+compileJava.dependsOn tasks.named('generateProto')
+compileJava.dependsOn tasks.named('generateAvroJava')
+
+/** annotation processor 출력 경로(QueryDSL 등) */
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    // implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'javax.annotation:javax.annotation-api:1.3.2'
 
-    // Lombok
+    // ---- Spring Boot ----
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // ---- DB ----
+    runtimeOnly 'com.mysql:mysql-connector-j'           // 버전은 Spring BOM에 위임
+    testImplementation 'com.h2database:h2'
+
+    // ---- Kafka + Avro (Confluent) ----
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+    implementation 'io.confluent:kafka-avro-serializer:7.4.0'
+    implementation 'org.apache.avro:avro:1.11.1'
+
+    // ---- gRPC / Protobuf ----
+    implementation platform('io.grpc:grpc-bom:1.62.2')
+    implementation 'io.grpc:grpc-netty-shaded'
+    implementation 'io.grpc:grpc-protobuf'
+    implementation 'io.grpc:grpc-stub'
+    implementation 'io.grpc:grpc-api'
+    implementation 'com.google.protobuf:protobuf-java:3.25.2'
+    // Spring 통합 gRPC 서버
+    implementation 'net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE'
+
+    // ---- AWS SDK (v2) ----
+    implementation platform("software.amazon.awssdk:bom:2.25.1")
+    implementation "software.amazon.awssdk:s3"
+
+    // ---- Lombok ----
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // JPA
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    // JUnit
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // Mysql
-    implementation 'com.mysql:mysql-connector-j:8.2.0'
-
-    // mapstruct
+    // ---- MapStruct ----
     implementation 'org.mapstruct:mapstruct:1.5.3.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
-    // H2
-    testImplementation 'com.h2database:h2'
-
-    // Query DSL
+    // ---- QueryDSL (Jakarta) ----
     implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-
-    // Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
-    implementation "io.confluent:kafka-avro-serializer:7.4.0"
-
-    // Avro
-    implementation "org.apache.avro:avro:1.11.1"
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-test {
-    enabled = false
-}
-
-compileJava {
-    dependsOn generateAvroJava
-}
-
-// 1. Q 클래스 생성 경로 정의
-def querydslDir = "$buildDir/generated/querydsl"
-
-// 2. Q 클래스 생성 경로를 컴파일 소스에 추가
-sourceSets {
-    main {
-        java {
-            srcDirs += querydslDir
+/** Protobuf & gRPC 코드 생성 */
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.2"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.62.2"
         }
     }
-}
-
-// 3. annotation processor가 생성한 파일이 위 디렉토리에 저장되도록 설정
-tasks.withType(JavaCompile).configureEach {
-    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                grpc {}
+            }
+        }
+    }
 }
