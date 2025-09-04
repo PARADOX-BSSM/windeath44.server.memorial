@@ -1,8 +1,0 @@
-{
-  "type": "record",
-  "name": "EventResultAvroSchema",
-  "namespace": "com.example.avro",
-  "fields": [
-    {"name": "result", "type": "boolean"}
-  ]
-}

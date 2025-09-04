@@ -23,18 +23,18 @@ public class MemorialResolveService {
   private final MemorialPullRequestService memorialPullRequestService;
   private final MemorialMergeService memorialMergeService;
 
-  public void resolve(MemorialResolveRequestDto memorialResolveRequestDto) {
+  public void resolve(String userId, MemorialResolveRequestDto memorialResolveRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialResolveRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
     Long memorialId = memorial.getMemorialId();
-    String userId = memorialResolveRequestDto.userId();
     String resolved = memorialResolveRequestDto.resolved();
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(userId, memorialId, resolved);
-    MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(userId, memorialCommitResponseDto.memorialCommitId());
-    MemorialPullRequestResponseDto memorialPullRequestResponseDto = memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
-    MemorialMergeRequestDto memorialMergeRequestDto = new MemorialMergeRequestDto(userId, memorialPullRequestResponseDto.memorialPullRequestId());
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialId, resolved);
+    MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
+
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCommitResponseDto.memorialCommitId());
+    MemorialPullRequestResponseDto memorialPullRequestResponseDto = memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto);
+    MemorialMergeRequestDto memorialMergeRequestDto = new MemorialMergeRequestDto(memorialPullRequestResponseDto.memorialPullRequestId());
     memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto);
   }
 }

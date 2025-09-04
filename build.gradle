@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    // implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // Lombok
@@ -74,4 +74,21 @@ test {
 
 compileJava {
     dependsOn generateAvroJava
+}
+
+// 1. Q 클래스 생성 경로 정의
+def querydslDir = "$buildDir/generated/querydsl"
+
+// 2. Q 클래스 생성 경로를 컴파일 소스에 추가
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslDir
+        }
+    }
+}
+
+// 3. annotation processor가 생성한 파일이 위 디렉토리에 저장되도록 설정
+tasks.withType(JavaCompile).configureEach {
+    options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
 }

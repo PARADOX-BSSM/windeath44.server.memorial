@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.service;
 
-import com.example.avro.MemorialCreationAvroSchema;
+import com.example.avro.MemorialApplicationAvroSchema;
+import com.example.avro.MemorialAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +19,18 @@ public class MemorialCreateService {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @Transactional
-  public Long createMemorial(MemorialCreationAvroSchema memorialCreationAvroSchema) {
+  public Long createMemorial(MemorialApplicationAvroSchema memorialCreationAvroSchema) {
     Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId());
     memorialRepository.save(memorial);
-    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialCreationAvroSchema.getApplicantId(), memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
-    MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(memorialCommitRequestDto);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCreationAvroSchema.getApproverId(), memorialCommitResponseDto.memorialCommitId());
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto);
+    MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
+
+    String applicantId = memorialCreationAvroSchema.getApplicantId();
+
+    MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(applicantId, memorialCommitRequestDto);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCommitResponseDto.memorialCommitId());
+
+    String approvedId = memorialCreationAvroSchema.getApproverId();
+    memorialPullRequestService.createMemorialPullRequest(approvedId, memorialPullRequestRequestDto);
     return memorial.getMemorialId();
   }
 }

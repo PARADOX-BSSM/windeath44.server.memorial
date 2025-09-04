@@ -1,6 +1,7 @@
 package windeath44.server.memorial;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,26 +38,33 @@ public class MemorialMergeTest {
   @Autowired
   private MemorialPullRequestRepository memorialPullRequestRepository;
 
+  String userId;
+
+  @BeforeEach
+  public void setUp() {
+    userId = "test";
+  }
+
   @Test
   void mergeMemorialCommitCase2() {
     // 이전에 APPROVED 된 PR이 있을 때
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto("test", 1L, "test");
-    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto("test", 1L, "test");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto1);
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto2);
+    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto( 1L, "test");
+    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto(1L, "test");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto1);
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto2);
 
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto("test1", 1L);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto("test2", 2L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto1);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto2);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto( 1L);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto( 2L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto1);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto2);
 
-    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto("test", 1L);
-    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto("test", 2L);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto1);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto2);
+    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto(1L);
+    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto(2L);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto1);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto2);
 
     MemorialPullRequest memorialPullRequest1 = memorialPullRequestRepository.findById(1L)
             .orElse(null);
@@ -75,19 +83,19 @@ public class MemorialMergeTest {
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto("test", 1L, "test");
-    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto("test", 1L, "testtest");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto1);
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto2);
+    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto( 1L, "test");
+    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto(1L, "testtest");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto1);
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto2);
 
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto("test1", 1L);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto("test2", 2L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto1);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto2);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto( 1L);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto(2L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto1);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto2);
 
-    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto("test", 1L);
-    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto("test", 2L);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto1);
+    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto( 1L);
+    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto( 2L);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto1);
     MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(memorialMergeRequestDto2);
 
     assertNotNull(memorialMergeableResponseDto);
@@ -100,20 +108,20 @@ public class MemorialMergeTest {
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto("test", 1L, "test");
-    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto("test", 1L, "");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto1);
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto2);
+    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto(1L, "test");
+    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto(1L, "");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto1);
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto2);
 
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto("test1", 1L);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto("test2", 2L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto1);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto2);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto( 1L);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto(2L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto1);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto2);
 
-    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto("test", 1L);
-    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto("test", 2L);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto1);
-    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(memorialMergeRequestDto2);
+    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto(1L);
+    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto(2L);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto1);
+    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(userId, memorialMergeRequestDto2);
 
     assertNotNull(memorialMergeableResponseDto);
     assertEquals(true, memorialMergeableResponseDto.mergeable());
@@ -125,20 +133,20 @@ public class MemorialMergeTest {
     Memorial memorial = new Memorial(1L);
     memorialRepository.save(memorial);
 
-    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto("test", 1L, "test");
-    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto("test", 1L, "asdf");
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto1);
-    memorialCommitService.createMemorialCommit(memorialCommitRequestDto2);
+    MemorialCommitRequestDto memorialCommitRequestDto1 = new MemorialCommitRequestDto(1L, "test");
+    MemorialCommitRequestDto memorialCommitRequestDto2 = new MemorialCommitRequestDto(1L, "asdf");
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto1);
+    memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto2);
 
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto("test1", 1L);
-    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto("test2", 2L);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto1);
-    memorialPullRequestService.createMemorialPullRequest(memorialPullRequestRequestDto2);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto1 = new MemorialPullRequestRequestDto(1L);
+    MemorialPullRequestRequestDto memorialPullRequestRequestDto2 = new MemorialPullRequestRequestDto( 2L);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto1);
+    memorialPullRequestService.createMemorialPullRequest(userId, memorialPullRequestRequestDto2);
 
-    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto("test", 1L);
-    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto("test", 2L);
-    memorialMergeService.mergeMemorialCommit(memorialMergeRequestDto1);
-    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(memorialMergeRequestDto2);
+    MemorialMergeRequestDto memorialMergeRequestDto1 = new MemorialMergeRequestDto( 1L);
+    MemorialMergeRequestDto memorialMergeRequestDto2 = new MemorialMergeRequestDto(2L);
+    memorialMergeService.mergeMemorialCommit(userId, memorialMergeRequestDto1);
+    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(userId, memorialMergeRequestDto2);
 
     assertNotNull(memorialMergeableResponseDto);
     assertEquals(false, memorialMergeableResponseDto.mergeable());

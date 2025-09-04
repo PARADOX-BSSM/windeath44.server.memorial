@@ -17,8 +17,8 @@ public class MemorialPullRequestController {
   private final MemorialPullRequestService memorialPullRequestService;
 
   @PostMapping("/pull-request")
-  public ResponseEntity<ResponseDto> pullRequest(@RequestBody MemorialPullRequestRequestDto dto) {
-    memorialPullRequestService.createMemorialPullRequest(dto);
+  public ResponseEntity<ResponseDto> pullRequest(@RequestHeader("user-id") String userId, @RequestBody MemorialPullRequestRequestDto dto) {
+    memorialPullRequestService.createMemorialPullRequest(userId, dto);
     return ResponseEntity.status(201).body(new ResponseDto("Memorial Commit is successfully requested to pull.", null));
   }
 

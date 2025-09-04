@@ -10,7 +10,6 @@ import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.exception.UndefinedOrderByException;
 import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
-
 import java.util.List;
 
 @Service
@@ -39,13 +38,10 @@ public class MemorialGetService {
     }
     return memorialListResponseDtoList;
   }
-
+ 
   public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
     List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
-    if (memorialListResponseDtoList.isEmpty()) {
-      throw new MemorialNotFoundException();
-    }
     return memorialListResponseDtoList;
   }
 

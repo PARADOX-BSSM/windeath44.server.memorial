@@ -15,9 +15,9 @@ public class MemorialBowController {
   private final MemorialBowService memorialBowService;
 
   @PostMapping("/bow")
-  public ResponseEntity<ResponseDto> bow(@RequestBody MemorialBowRequestDto memorialBowRequestDto) {
-    memorialBowService.bow(memorialBowRequestDto);
-    return ResponseEntity.status(201).body(new ResponseDto("User id: " + memorialBowRequestDto.userId() + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId(), null));
+  public ResponseEntity<ResponseDto> bow(@RequestHeader("user-id") String userId, @RequestBody MemorialBowRequestDto memorialBowRequestDto) {
+    memorialBowService.bow(userId, memorialBowRequestDto);
+    return ResponseEntity.status(201).body(new ResponseDto("User id: " + userId + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId(), null));
   }
 
   @GetMapping("/bow/{memorialId}")

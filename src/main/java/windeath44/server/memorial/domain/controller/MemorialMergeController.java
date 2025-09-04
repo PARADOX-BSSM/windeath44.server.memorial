@@ -15,8 +15,8 @@ public class MemorialMergeController {
   private final MemorialMergeService memorialMergeService;
 
   @PostMapping("/mergeable")
-  public ResponseEntity<ResponseDto> mergeable(@RequestBody MemorialMergeRequestDto dto) {
-    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(dto);
+  public ResponseEntity<ResponseDto> mergeable(@RequestHeader("user-id") String userId, @RequestBody MemorialMergeRequestDto dto) {
+    MemorialMergeableResponseDto memorialMergeableResponseDto = memorialMergeService.validateMergeable(userId, dto);
     Boolean mergeable = memorialMergeableResponseDto.mergeable();
     if(mergeable) {
       return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is mergeable.", memorialMergeableResponseDto));
@@ -25,7 +25,7 @@ public class MemorialMergeController {
   }
 
   @PatchMapping("/merge")
-  public ResponseEntity<ResponseDto> merge(@RequestBody MemorialMergeRequestDto dto, @RequestHeader String userId) {
+  public ResponseEntity<ResponseDto> merge(@RequestHeader("user-id") String userId, @RequestBody MemorialMergeRequestDto dto) {
     memorialMergeService.mergeMemorialCommit(userId, dto);
     return ResponseEntity.status(200).body(new ResponseDto("Memorial Pull Request is successfully merged.", null));
   }

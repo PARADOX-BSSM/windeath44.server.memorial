@@ -12,8 +12,6 @@ import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
 public interface MemorialCommitMapper {
   MemorialCommitMapper INSTANCE = Mappers.getMapper(MemorialCommitMapper.class);
 
-  MemorialCommit toMemorialCommit(MemorialCommitRequestDto memorialCommitRequestDto, Memorial memorial);
-
-  @Mapping(source = "memorial.memorialId", target = "memorialId")
-  MemorialCommitResponseDto toMemorialCommitResponseDto(MemorialCommit memorialCommit, Memorial memorial);
+  MemorialCommit toMemorialCommit(String userId, MemorialCommitRequestDto memorialCommitRequestDto, Memorial memorial);
+  MemorialCommitResponseDto toMemorialCommitResponseDto(MemorialCommit memorialCommit);
 }
