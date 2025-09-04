@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import windeath44.server.memorial.domain.dto.response.MemorialCommitResponseDto;
 import windeath44.server.memorial.domain.model.MemorialCommit;
 import windeath44.server.memorial.domain.model.MemorialPullRequest;
 import windeath44.server.memorial.domain.dto.request.MemorialPullRequestRequestDto;

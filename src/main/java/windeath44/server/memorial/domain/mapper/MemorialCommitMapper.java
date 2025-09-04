@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import windeath44.server.memorial.domain.model.Memorial;
 import windeath44.server.memorial.domain.model.MemorialCommit;

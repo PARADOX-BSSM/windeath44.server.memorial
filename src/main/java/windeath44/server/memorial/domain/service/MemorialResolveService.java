@@ -29,7 +29,6 @@ public class MemorialResolveService {
     Memorial memorial = memorialPullRequest.getMemorial();
     Long memorialId = memorial.getMemorialId();
     String resolved = memorialResolveRequestDto.resolved();
-
     MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorialId, resolved);
     MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(userId, memorialCommitRequestDto);
 
