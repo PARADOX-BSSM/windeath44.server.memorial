@@ -39,7 +39,7 @@ public class MemorialBowService {
     memorialRepository.save(memorial);
   }
 
-  public Long BowCountByMemorialId(Long memorialId) {
+  public Long bowCountByMemorialId(Long memorialId) {
     validateMemorial(memorialId);
     Long bowCount = memorialBowRepository.sumBowCount(memorialId);
     return bowCount == null ? 0 : bowCount;

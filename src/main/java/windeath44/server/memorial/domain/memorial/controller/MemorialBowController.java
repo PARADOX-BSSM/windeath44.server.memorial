@@ -22,7 +22,7 @@ public class MemorialBowController {
 
   @GetMapping("/bow/{memorialId}")
   public ResponseEntity<ResponseDto> getBowByUserId(@PathVariable Long memorialId) {
-    Long bowCount = memorialBowService.BowCountByMemorialId(memorialId);
+    Long bowCount = memorialBowService.bowCountByMemorialId(memorialId);
     return ResponseEntity.ok(new ResponseDto("Memorial id: " + memorialId + " bow count: " + bowCount, bowCount));
   }
 
