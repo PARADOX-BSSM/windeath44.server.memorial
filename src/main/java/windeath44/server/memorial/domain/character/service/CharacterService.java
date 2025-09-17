@@ -9,7 +9,7 @@ import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
-import windeath44.server.memorial.domain.character.repository.jpa.CharacterRepository;
+import windeath44.server.memorial.domain.character.repository.CharacterRepository;
 import windeath44.server.memorial.global.dto.CursorPage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

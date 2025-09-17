@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.character.repository.jpa;
+package windeath44.server.memorial.domain.character.repository;
 
 import windeath44.server.memorial.domain.character.model.Character;
 import org.springframework.data.domain.Page;

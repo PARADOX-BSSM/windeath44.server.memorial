@@ -8,7 +8,7 @@ public class HttpUtil {
         return new ResponseDto<>(message, data);
     }
 
-    public static <T>ResponseDto<T> success(String message) {
+    public static ResponseDto<Void> success(String message) {
         return new ResponseDto<>(message, null);
     }
 }
