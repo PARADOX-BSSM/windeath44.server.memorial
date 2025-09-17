@@ -1,7 +1,10 @@
 package windeath44.server.memorial.domain.memorial.exception;
 
-public class MemorialPullRequestNotFoundException extends RuntimeException {
+import windeath44.server.memorial.global.error.exception.ErrorCode;
+import windeath44.server.memorial.global.error.exception.GlobalException;
+
+public class MemorialPullRequestNotFoundException extends GlobalException {
   public MemorialPullRequestNotFoundException() {
-    super("Memorial pull request not found.");
+    super(ErrorCode.MEMORIAL_PULL_REQUEST_NOT_FOUND);
   }
 }

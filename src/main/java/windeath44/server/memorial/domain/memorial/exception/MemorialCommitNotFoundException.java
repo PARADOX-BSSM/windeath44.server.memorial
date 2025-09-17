@@ -1,7 +1,10 @@
 package windeath44.server.memorial.domain.memorial.exception;
 
-public class MemorialCommitNotFoundException extends RuntimeException {
+import windeath44.server.memorial.global.error.exception.ErrorCode;
+import windeath44.server.memorial.global.error.exception.GlobalException;
+
+public class MemorialCommitNotFoundException extends GlobalException {
   public MemorialCommitNotFoundException() {
-    super("Memorial Commit Not Found");
+    super(ErrorCode.MEMORIAL_COMMIT_NOT_FOUND);
   }
 }
