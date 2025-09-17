@@ -16,12 +16,14 @@ import windeath44.server.memorial.domain.memorial.service.MemorialDeleteService;
 public class KafkaEventListener {
   private final MemorialCreateService memorialCreateService;
   private final MemorialDeleteService memorialDeleteService;
+
   private final KafkaTemplate<String, Object> kafkaTemplate;
 
   @KafkaListener(topics = "memorial-creation-request", groupId = "memorial")
   @Transactional
   public void memorialCreation(MemorialApplicationAvroSchema memorialApplicationAvroSchema) {
     Long memorialId = memorialCreateService.createMemorial(memorialApplicationAvroSchema);
+
     kafkaTemplate.send("memorial-creation-response", new MemorialAvroSchema(memorialId, memorialApplicationAvroSchema.getApplicantId(), memorialApplicationAvroSchema.getContent(), memorialApplicationAvroSchema.getCharacterId()));
   }
 

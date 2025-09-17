@@ -4,7 +4,7 @@ import windeath44.server.memorial.domain.anime.model.Anime;
 import windeath44.server.memorial.domain.anime.service.AnimeService;
 import windeath44.server.memorial.domain.character.dto.request.CharacterRequest;
 import windeath44.server.memorial.domain.character.dto.response.CharacterIdResponse;
-import windeath44.server.memorial.domain.character.service.CharacterService;
+import windeath44.server.memorial.domain.character.service.CharacterCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CreateCharacterUseCase {
   private final AnimeService animeService;
-  private final CharacterService characterService;
+  private final CharacterCommandService characterService;
 
   public CharacterIdResponse execute(CharacterRequest characterRequest) {
     Long animeId = characterRequest.animeId();

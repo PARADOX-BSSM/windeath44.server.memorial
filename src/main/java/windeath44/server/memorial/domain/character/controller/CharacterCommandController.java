@@ -2,7 +2,7 @@ package windeath44.server.memorial.domain.character.controller;
 
 import windeath44.server.memorial.domain.character.dto.request.CharacterRequest;
 import windeath44.server.memorial.domain.character.dto.response.CharacterIdResponse;
-import windeath44.server.memorial.domain.character.service.CharacterService;
+import windeath44.server.memorial.domain.character.service.CharacterCommandService;
 import windeath44.server.memorial.domain.character.service.usecase.CharacterImageUploadUseCase;
 import windeath44.server.memorial.domain.character.service.usecase.CreateCharacterUseCase;
 import windeath44.server.memorial.global.dto.ResponseDto;
@@ -18,7 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @RequestMapping("/animes/characters")
 public class CharacterCommandController {
-  private final CharacterService characterService;
+  private final CharacterCommandService characterCommandService;
+
   private final CreateCharacterUseCase createCharacterUseCase;
   private final CharacterImageUploadUseCase characterImageUploadUseCase;
 
@@ -38,14 +39,14 @@ public class CharacterCommandController {
 
   @DeleteMapping("/{character-id}")
   public ResponseEntity<ResponseDto<Void>> delete(@PathVariable("character-id") Long characterId) {
-    characterService.deleteById(characterId);
+    characterCommandService.deleteById(characterId);
     ResponseDto<Void> responseDto = HttpUtil.success("delete character by id");
     return ResponseEntity.ok(responseDto);
   }
 
   @PatchMapping("/{character-id}")
   public ResponseEntity<ResponseDto<Void>> update(@PathVariable("character-id") Long characterId, @RequestBody @Valid CharacterRequest characterUpdateRequest) {
-    characterService.update(characterUpdateRequest, characterId);
+    characterCommandService.update(characterUpdateRequest, characterId);
     ResponseDto<Void> responseDto = HttpUtil.success("update character by id");
     return ResponseEntity.ok(responseDto);
   }

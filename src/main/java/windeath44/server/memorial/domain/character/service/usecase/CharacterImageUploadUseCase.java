@@ -1,7 +1,7 @@
 package windeath44.server.memorial.domain.character.service.usecase;
 
 import windeath44.server.memorial.domain.character.exception.UploadFileFailException;
-import windeath44.server.memorial.domain.character.service.CharacterService;
+import windeath44.server.memorial.domain.character.service.CharacterCommandService;
 import windeath44.server.memorial.global.storage.FileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CharacterImageUploadUseCase {
   private final FileStorage fileStorage;
-  private final CharacterService characterService;
+  private final CharacterCommandService characterService;
 
   public void upload(Long characterId, MultipartFile image) {
     String imageUrl = "";

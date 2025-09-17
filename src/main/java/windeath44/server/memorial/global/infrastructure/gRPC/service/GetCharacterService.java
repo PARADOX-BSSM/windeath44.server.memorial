@@ -6,7 +6,7 @@ import com.example.grpc.GetCharacterServiceGrpc;
 import windeath44.server.memorial.domain.character.exception.NotFoundCharacterException;
 import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
-import windeath44.server.memorial.domain.character.service.CharacterService;
+import windeath44.server.memorial.domain.character.service.CharacterCommandService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import net.devh.boot.grpc.server.service.GrpcService;
 @RequiredArgsConstructor
 @Slf4j
 public class GetCharacterService extends GetCharacterServiceGrpc.GetCharacterServiceImplBase {
-  private final CharacterService characterService;
+  private final CharacterCommandService characterService;
   private final CharacterMapper characterMapper;
 
   @Override
