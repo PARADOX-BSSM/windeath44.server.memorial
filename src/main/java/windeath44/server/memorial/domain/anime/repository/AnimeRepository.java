@@ -1,7 +1,6 @@
-package windeath44.server.memorial.domain.anime.repository.jpa;
+package windeath44.server.memorial.domain.anime.repository;
 
 import windeath44.server.memorial.domain.anime.model.Anime;
-import windeath44.server.memorial.domain.anime.repository.jdbc.JdbcAnimeRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;

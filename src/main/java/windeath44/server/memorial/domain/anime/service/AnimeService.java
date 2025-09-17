@@ -4,7 +4,7 @@ import windeath44.server.memorial.domain.anime.dto.response.AnimeResponse;
 import windeath44.server.memorial.domain.anime.exception.NotFoundAnimeException;
 import windeath44.server.memorial.domain.anime.mapper.AnimeMapper;
 import windeath44.server.memorial.domain.anime.model.Anime;
-import windeath44.server.memorial.domain.anime.repository.jpa.AnimeRepository;
+import windeath44.server.memorial.domain.anime.repository.AnimeRepository;
 import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.global.dto.LaftelResultResponse;
 import lombok.RequiredArgsConstructor;

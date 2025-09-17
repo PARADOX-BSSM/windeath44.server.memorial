@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.anime.repository.jdbc;
+package windeath44.server.memorial.domain.anime.repository;
 
 import windeath44.server.memorial.domain.anime.model.Anime;
 

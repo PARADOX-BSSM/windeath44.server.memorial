@@ -1,7 +1,7 @@
-package windeath44.server.memorial.domain.anime.repository.jdbc.impl;
+package windeath44.server.memorial.domain.anime.repository.impl;
 
 import windeath44.server.memorial.domain.anime.model.Anime;
-import windeath44.server.memorial.domain.anime.repository.jdbc.JdbcAnimeRepository;
+import windeath44.server.memorial.domain.anime.repository.JdbcAnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
