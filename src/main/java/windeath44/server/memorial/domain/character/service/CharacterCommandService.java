@@ -18,12 +18,6 @@ public class CharacterCommandService {
   private final CharacterRepository characterRepository;
   private final CharacterMapper characterMapper;
 
-  private Character findCharacterById(Long characterId) {
-    return characterRepository.findById(characterId)
-            .orElseThrow(NotFoundCharacterException::getInstance);
-  }
-
-
   public CharacterIdResponse create(CharacterRequest characterRequest, Anime anime) {
     Character character = characterMapper.toCharacter(characterRequest, anime);
     Character savedCharacter = characterRepository.save(character);
@@ -32,8 +26,7 @@ public class CharacterCommandService {
   }
 
   public void memorializing(Long characterId) {
-    Character character = characterRepository.findById(characterId)
-            .orElseThrow(NotFoundCharacterException::getInstance);
+    Character character = findCharacterById(characterId);
     character.memorializing();
   }
 
@@ -50,5 +43,10 @@ public class CharacterCommandService {
   public void updateImage(Long characterId, String imageUrl) {
     Character character = findCharacterById(characterId);
     character.updateImage(imageUrl);
+  }
+
+  private Character findCharacterById(Long characterId) {
+    return characterRepository.findById(characterId)
+            .orElseThrow(NotFoundCharacterException::getInstance);
   }
 }
