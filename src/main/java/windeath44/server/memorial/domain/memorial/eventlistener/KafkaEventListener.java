@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import windeath44.server.memorial.domain.character.service.usecase.MemorializingCharacterUseCase;
 import windeath44.server.memorial.domain.memorial.service.MemorialCreateService;
 import windeath44.server.memorial.domain.memorial.service.MemorialDeleteService;
 
@@ -16,6 +17,7 @@ import windeath44.server.memorial.domain.memorial.service.MemorialDeleteService;
 public class KafkaEventListener {
   private final MemorialCreateService memorialCreateService;
   private final MemorialDeleteService memorialDeleteService;
+  private final MemorializingCharacterUseCase memorializingCharacterUseCase;
 
   private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -23,8 +25,9 @@ public class KafkaEventListener {
   @Transactional
   public void memorialCreation(MemorialApplicationAvroSchema memorialApplicationAvroSchema) {
     Long memorialId = memorialCreateService.createMemorial(memorialApplicationAvroSchema);
-
-    kafkaTemplate.send("memorial-creation-response", new MemorialAvroSchema(memorialId, memorialApplicationAvroSchema.getApplicantId(), memorialApplicationAvroSchema.getContent(), memorialApplicationAvroSchema.getCharacterId()));
+    Long characterId = memorialApplicationAvroSchema.getCharacterId();
+    memorializingCharacterUseCase.memorializing(characterId);
+    kafkaTemplate.send("memorial-creation-response", new MemorialAvroSchema(memorialId, memorialApplicationAvroSchema.getApplicantId(), memorialApplicationAvroSchema.getContent(), characterId));
   }
 
   @KafkaListener(topics = "memorial-deletion-request", groupId = "memorial")
