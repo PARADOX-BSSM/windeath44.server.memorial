@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LoggingAspect {
     private static AtomicLong count = new AtomicLong(0);
 
-    @Pointcut("execution(* windeath44.server.memorial.domain.*.service..*.*(..))")
+    @Pointcut("execution(* windeath44.server.memorial.domain.service..*.*(..))")
     public void memorialServiceMethodLogging() {}
 
     @Around("memorialServiceMethodLogging()")

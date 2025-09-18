@@ -10,19 +10,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
-import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
-import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundException;
-import windeath44.server.memorial.domain.memorial.exception.UndefinedOrderByException;
-import windeath44.server.memorial.domain.memorial.model.Memorial;
-import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEvent;
-import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
-import windeath44.server.memorial.domain.memorial.service.MemorialGetService;
+import windeath44.server.memorial.domain.dto.response.MemorialListResponseDto;
+import windeath44.server.memorial.domain.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.domain.exception.MemorialNotFoundException;
+import windeath44.server.memorial.domain.exception.UndefinedOrderByException;
+import windeath44.server.memorial.domain.model.Memorial;
+import windeath44.server.memorial.domain.model.event.MemorialTracingEvent;
+import windeath44.server.memorial.domain.repository.MemorialRepository;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
