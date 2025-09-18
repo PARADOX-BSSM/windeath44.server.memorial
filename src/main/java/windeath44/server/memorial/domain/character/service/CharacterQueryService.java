@@ -90,7 +90,6 @@ public class CharacterQueryService {
 
     public CursorPage<CharacterResponse> findAllByDeathReason(String deathReason, Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size);
-
         CauseOfDeath causeOfDeath = CauseOfDeath.valueOfDeathReason(deathReason);
 
         Slice<windeath44.server.memorial.domain.character.model.Character> characterSlice = cursorId == null
