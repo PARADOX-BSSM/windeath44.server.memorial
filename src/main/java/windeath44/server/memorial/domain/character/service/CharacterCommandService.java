@@ -45,6 +45,10 @@ public class CharacterCommandService {
     character.updateImage(imageUrl);
   }
 
+  public Character findById(Long characterId) {
+    return findCharacterById(characterId);
+  }
+
   private Character findCharacterById(Long characterId) {
     return characterRepository.findById(characterId)
             .orElseThrow(NotFoundCharacterException::getInstance);
