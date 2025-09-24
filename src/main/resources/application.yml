@@ -6,10 +6,10 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: ${JDBC_DRIVER_SOURCE}
     url: ${DB_URL}
-#  data:
-#    mongodb:
-#      uri: mongodb://${MONGODB_URL}
-#      database: windeath44
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_URL}
+      database: windeath44
   jpa:
     show-sql: true
     hibernate:
@@ -43,3 +43,13 @@ logging:
   level:
     windeath44.server.memorial : trace
 
+grpc:
+  server:
+    address: ${GRPC_SERVER_ADDRESS}
+    port: ${GRPC_SERVER_PORT}
+
+storage:
+  access-key: ${STORAGE_ACCESS_KEY}
+  secret-key: ${STORAGE_SECRET_KEY}
+  bucket-name: ${STORAGE_BUCKET_NAME}
+  region: ap-northeast-2
