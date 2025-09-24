@@ -71,6 +71,9 @@ dependencies {
     // ---- DB ----
     runtimeOnly 'com.mysql:mysql-connector-j'           // 버전은 Spring BOM에 위임
     testImplementation 'com.h2database:h2'
+    
+    // ---- MongoDB ----
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     // ---- Kafka + Avro (Confluent) ----
     implementation 'org.springframework.kafka:spring-kafka'
