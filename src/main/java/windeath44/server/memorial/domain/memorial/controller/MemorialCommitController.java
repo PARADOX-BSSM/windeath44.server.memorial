@@ -18,9 +18,9 @@ public class MemorialCommitController {
   private final MemorialCommitService memorialCommitService;
 
   @PostMapping("/commit")
-  public ResponseEntity<ResponseDto<Void>> commit(@RequestHeader("user-id") String userId, @RequestBody MemorialCommitRequestDto dto) {
-    memorialCommitService.createMemorialCommit(userId, dto);
-    return ResponseEntity.status(201).body(HttpUtil.success("Memorial Commit is successfully created."));
+  public ResponseEntity<ResponseDto> commit(@RequestHeader("user-id") String userId, @RequestBody MemorialCommitRequestDto dto) {
+    MemorialCommitResponseDto memorialCommitResponseDto = memorialCommitService.createMemorialCommit(userId, dto);
+    return ResponseEntity.status(201).body(new ResponseDto("Memorial Commit is successfully created.", memorialCommitResponseDto.memorialCommitId()));
   }
 
   @GetMapping("/commits/{memorialId}")
