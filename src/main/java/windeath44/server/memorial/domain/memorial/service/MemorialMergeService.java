@@ -74,20 +74,22 @@ public class MemorialMergeService {
     Boolean mergeable = true;
     StringBuilder conflict = new StringBuilder();
 
-    for (int i = 0; i < diffs.size()-1; i++) {
+    for (int i = 0; i < diffs.size(); i++) {
       diff_match_patch.Diff diff = diffs.get(i);
-      diff_match_patch.Diff next = diffs.get(i+1);
-      if (diff.operation == diff_match_patch.Operation.DELETE && next.operation == diff_match_patch.Operation.INSERT) {
-        mergeable = false;
-        i += 1;
-        conflict.append("\n\n>>>>>>>>>>>>>>>>>>>> original\n");
-        conflict.append(diff.text).append("\n");
-        conflict.append(">>>>>>>>>>>>>>>>>>>> changed\n");
-        conflict.append(next.text).append("\n\n");
+      if (i < diffs.size() - 1) {
+        diff_match_patch.Diff next = diffs.get(i + 1);
+        if (diff.operation == diff_match_patch.Operation.DELETE && next.operation == diff_match_patch.Operation.INSERT) {
+          mergeable = false;
+          conflict.append("\n\n>>>>>>>>>>>>>>>>>>>> original\n");
+          conflict.append(diff.text).append("\n");
+          conflict.append(">>>>>>>>>>>>>>>>>>>> changed\n");
+          conflict.append(next.text).append("\n\n");
+          i += 1; // skip the next diff as it's already processed
+          continue;
+        }
       }
-      else conflict.append(diff.text);
+      conflict.append(diff.text);
     }
-    conflict.append(diffs.getLast().text);
 
     return new CompareContentsResponseDto(mergeable, conflict.toString());
   }
