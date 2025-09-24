@@ -54,4 +54,11 @@ public class MemorialPullRequestService {
     List<MemorialPullRequest> memorialPullRequests = memorialPullRequestRepository.findMemorialPullRequestsByMemorial_MemorialId(memorialId);
     memorialPullRequestRepository.deleteAll(memorialPullRequests);
   }
+
+  public List<MemorialPullRequestResponseDto> findMemorialPullRequestsByMemorialId(Long memorialId) {
+    List<MemorialPullRequest> memorialPullRequests = memorialPullRequestRepository.findMemorialPullRequestsByMemorial_MemorialId(memorialId);
+    return memorialPullRequests.stream()
+            .map(memorialPullRequestMapper::toMemorialPullRequestResponseDto)
+            .toList();
+  }
 }
