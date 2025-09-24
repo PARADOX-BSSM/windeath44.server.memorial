@@ -11,6 +11,7 @@ import windeath44.server.memorial.domain.memorial.repository.MemorialChiefsRepos
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,5 +37,12 @@ public class MemorialChiefService {
 
   public List<String> getChiefs(Long memorialId) {
     return memorialBowRepository.top3UserIds(memorialId);
+  }
+
+  public List<Long> findMyMemorialIds(String userId) {
+    List<MemorialChiefs> chiefsList = memorialChiefsRepository.findByUserId(userId);
+    return chiefsList.stream()
+            .map(chiefs -> chiefs.getMemorial().getMemorialId())
+            .collect(Collectors.toList());
   }
 }
