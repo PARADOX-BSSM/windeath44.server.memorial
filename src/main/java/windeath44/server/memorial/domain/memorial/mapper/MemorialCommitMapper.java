@@ -14,4 +14,5 @@ public interface MemorialCommitMapper {
 
   MemorialCommit toMemorialCommit(String userId, MemorialCommitRequestDto memorialCommitRequestDto, Memorial memorial);
   MemorialCommitResponseDto toMemorialCommitResponseDto(MemorialCommit memorialCommit);
+  MemorialCommitResponseDto toMemorialCommitResponseDto(MemorialCommit memorialCommit, Memorial memorial);
 }
