@@ -1,0 +1,61 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Build artifacts
+build/
+.gradle/
+
+# IDE files
+.idea/
+.vscode/
+*.iws
+*.iml
+*.ipr
+out/
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Documentation
+HELP.md
+*.md
+README*
+
+# Test files
+src/test/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Other
+result.txt
+windeath44.server.memorial.iml
