@@ -83,7 +83,8 @@ public class MemorialMergeService {
           conflict.append("\n\n>>>>>>>>>>>>>>>>>>>> original\n");
           conflict.append(diff.text).append("\n");
           conflict.append(">>>>>>>>>>>>>>>>>>>> changed\n");
-          conflict.append(next.text).append("\n\n");
+          conflict.append(next.text).append("\n");
+          conflict.append("<<<<<<<<<<<<<<<<<<<< end\n");
           i += 1; // skip the next diff as it's already processed
           continue;
         }
