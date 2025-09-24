@@ -1,10 +1,12 @@
 package windeath44.server.memorial.domain.memorial.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class MemorialChiefs {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
