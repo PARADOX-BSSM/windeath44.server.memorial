@@ -1,5 +1,5 @@
 # 1단계: Build
-FROM gradle:8.4-jdk17 AS build
+FROM gradle:8.4-jdk21 AS build
 WORKDIR /app
 
 # 빌드 스크립트만 먼저 복사해서 캐시 활용
@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew bootJar --no-daemon -x test --stacktrace
 
 # 2단계: Runtime
-FROM openjdk:17-jdk
+FROM openjdk:21-jdk
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
