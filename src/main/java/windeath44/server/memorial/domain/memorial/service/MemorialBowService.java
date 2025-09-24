@@ -5,12 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowResponseDto;
+import windeath44.server.memorial.domain.memorial.exception.BowedWithin24HoursException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialBowMapper;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialBow;
 import windeath44.server.memorial.domain.memorial.repository.MemorialBowRepository;
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +35,9 @@ public class MemorialBowService {
       memorialBowRepository.save(newMemorialBow);
     }
     else {
+      if(memorialBow.getLastBowedAt().isAfter(LocalDateTime.now().minusDays(1))) {
+        throw new BowedWithin24HoursException();
+      }
       memorialBow.plusBowCount();
       memorialBowRepository.save(memorialBow);
     }
