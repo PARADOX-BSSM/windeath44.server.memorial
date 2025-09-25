@@ -12,7 +12,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/memorial-tracing/{user-id}")
+@RequestMapping("/memorials/memorial-tracing/{user-id}")
 public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 
