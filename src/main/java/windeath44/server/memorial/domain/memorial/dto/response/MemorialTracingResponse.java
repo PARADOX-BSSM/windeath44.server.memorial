@@ -1,0 +1,15 @@
+package windeath44.server.memorial.domain.memorial.dto.response;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Builder
+public record MemorialTracingResponse (
+        Long memorialId,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd/HH:mm")
+        Date viewedAt
+) {
+}

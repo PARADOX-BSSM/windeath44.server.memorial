@@ -5,11 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import windeath44.server.memorial.domain.dto.request.MemorialRejectRequestDto;
-import windeath44.server.memorial.domain.exception.MemorialPullRequestNotFoundException;
-import windeath44.server.memorial.domain.model.MemorialPullRequest;
-import windeath44.server.memorial.domain.model.MemorialPullRequestState;
-import windeath44.server.memorial.domain.repository.MemorialPullRequestRepository;
+import windeath44.server.memorial.domain.memorial.dto.request.MemorialRejectRequestDto;
+import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestNotFoundException;
+import windeath44.server.memorial.domain.memorial.model.MemorialPullRequest;
+import windeath44.server.memorial.domain.memorial.model.MemorialPullRequestState;
+import windeath44.server.memorial.domain.memorial.repository.MemorialPullRequestRepository;
+import windeath44.server.memorial.domain.memorial.service.MemorialRejectService;
 
 import static org.junit.jupiter.api.Assertions.*;
 
