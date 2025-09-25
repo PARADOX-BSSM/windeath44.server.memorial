@@ -56,4 +56,3 @@ public class MemorialTraceService {
     return new CursorPage<>(hasNext, responses);
   }
 }
-
