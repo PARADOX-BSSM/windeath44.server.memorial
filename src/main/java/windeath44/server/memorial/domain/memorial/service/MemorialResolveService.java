@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialPullRequest;
+import windeath44.server.memorial.domain.memorial.model.MemorialPullRequestState;
 import windeath44.server.memorial.domain.memorial.repository.MemorialCommitRepository;
 import windeath44.server.memorial.domain.memorial.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestNotFoundException;
@@ -26,6 +27,7 @@ public class MemorialResolveService {
   public void resolve(String userId, MemorialResolveRequestDto memorialResolveRequestDto) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialResolveRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
+    memorialPullRequest.setState(MemorialPullRequestState.RESOLVED);
     Memorial memorial = memorialPullRequest.getMemorial();
     Long memorialId = memorial.getMemorialId();
     String resolved = memorialResolveRequestDto.resolved();

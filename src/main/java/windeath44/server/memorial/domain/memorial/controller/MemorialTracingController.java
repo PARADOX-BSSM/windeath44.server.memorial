@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/memorial-tracing")
+@RequestMapping("/memorials/memorial-tracing/{user-id}")
 public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 

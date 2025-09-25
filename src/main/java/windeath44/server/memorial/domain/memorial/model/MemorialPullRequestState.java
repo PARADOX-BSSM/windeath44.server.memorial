@@ -4,5 +4,6 @@ public enum MemorialPullRequestState {
   REJECTED,
   APPROVED,
   STORED,
-  PENDING;
+  PENDING,
+  RESOLVED;
 }
