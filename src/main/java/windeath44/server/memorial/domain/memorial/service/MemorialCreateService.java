@@ -1,6 +1,6 @@
 package windeath44.server.memorial.domain.memorial.service;
 
-import com.example.avro.MemorialApplicationAvroSchema;
+import windeath44.server.memorial.avro.MemorialApplicationAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
