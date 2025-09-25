@@ -2,16 +2,15 @@ package windeath44.server.memorial.domain.memorial.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialTracingResponse;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialTracingMapper;
 import windeath44.server.memorial.domain.memorial.model.MemorialTracing;
 import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEvent;
 import windeath44.server.memorial.domain.memorial.repository.MemorialTracingRepository;
-
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,13 +26,34 @@ public class MemorialTraceService {
     memorialTracingRepository.save(memorialTracing);
   }
 
+  public CursorPage<MemorialTracingResponse> findRecentByUserId(String userId, int size) {
+    List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserId(userId, size + 1);
 
-  public List<MemorialTracingResponse> findRecentByUserId(String userId, Integer size) {
-    Pageable pageable = PageRequest.of(0, size);
-    List<MemorialTracingResponse> memorialTracingResponseList = memorialTracingRepository.findRecentByUserId(userId, pageable)
-            .stream()
+    boolean hasNext = memorialTracings.size() > size;
+    if (hasNext) {
+      memorialTracings = memorialTracings.subList(0, size);
+    }
+
+    List<MemorialTracingResponse> responses = memorialTracings.stream()
             .map(memorialTracingMapper::toMemorialTracingResponse)
             .toList();
-    return memorialTracingResponseList;
+
+    return new CursorPage<>(hasNext, responses);
+  }
+
+  public CursorPage<MemorialTracingResponse> findRecentByUserIdWithCursor(String userId, int size, Date cursor) {
+    List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserIdWithCursor(userId, cursor, size + 1);
+
+    boolean hasNext = memorialTracings.size() > size;
+    if (hasNext) {
+      memorialTracings = memorialTracings.subList(0, size);
+    }
+
+    List<MemorialTracingResponse> responses = memorialTracings.stream()
+            .map(memorialTracingMapper::toMemorialTracingResponse)
+            .toList();
+
+    return new CursorPage<>(hasNext, responses);
   }
 }
+
