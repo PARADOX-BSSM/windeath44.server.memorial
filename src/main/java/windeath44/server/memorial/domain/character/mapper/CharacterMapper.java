@@ -74,11 +74,13 @@ public class CharacterMapper {
 
     String name = character.getName();
     String state = character.getState().toString();
+    String characterSaying = character.getSaying();
 
     GetCharacterResponse response = GetCharacterResponse.newBuilder()
             .setAnimeId(animeId)
             .setAnimeName(animeName)
             .setName(name)
+            .setContent(characterSaying)
             .setState(state)
             .build();
     return response;
