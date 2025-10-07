@@ -6,9 +6,9 @@ import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentRe
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialComment;
 import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentCountProjection;
+import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentWithLikeProjection;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class MemorialCommentMapper {
@@ -16,14 +16,12 @@ public class MemorialCommentMapper {
     return MemorialComment.of(memorial, userId, content, memorialComment);
   }
 
-  public MemorialCommentResponse toMemorialCommentResponse(
-          MemorialComment comment,
-          Set<Long> likedCommentIds
-  ) {
-    boolean isLiked = likedCommentIds.contains(comment.getCommentId());
+  public MemorialCommentResponse toMemorialCommentResponse(MemorialCommentWithLikeProjection projection) {
+    MemorialComment comment = projection.getComment();
+    Boolean isLiked = projection.getIsLiked();
 
     List<MemorialCommentResponse> children = comment.getChildren().stream()
-            .map(child -> toMemorialCommentResponse(child, likedCommentIds))
+            .map(child -> toMemorialCommentResponseForChild(child))
             .toList();
 
     return MemorialCommentResponse.builder()
@@ -35,6 +33,19 @@ public class MemorialCommentMapper {
             .isLiked(isLiked)
             .parentId(comment.getParentCommentId())
             .children(children)
+            .build();
+  }
+
+  private MemorialCommentResponse toMemorialCommentResponseForChild(MemorialComment child) {
+    return MemorialCommentResponse.builder()
+            .commentId(child.getCommentId())
+            .userId(child.getUserId())
+            .content(child.getContent())
+            .createdAt(child.getCreatedAt())
+            .likes(child.getLikesCount())
+            .isLiked(false)
+            .parentId(child.getParentCommentId())
+            .children(List.of())
             .build();
   }
 

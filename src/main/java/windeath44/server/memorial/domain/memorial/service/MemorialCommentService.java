@@ -14,9 +14,9 @@ import windeath44.server.memorial.domain.memorial.mapper.MemorialCommentMapper;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialComment;
 import windeath44.server.memorial.domain.memorial.repository.MemorialCommentRepository;
+import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentWithLikeProjection;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,11 +62,11 @@ public class MemorialCommentService {
             .orElseThrow(MemorialCommentNotFoundException::new);
   }
 
-  public Slice<MemorialComment> getRootComment(Long memorialId, Long cursorId, Integer size) {
+  public Slice<MemorialCommentWithLikeProjection> getRootCommentWithLikes(String userId, Long memorialId, Long cursorId, Integer size) {
     Pageable pageable = PageRequest.of(0, size);
-    Slice<MemorialComment> memorialRootCommentSlice = cursorId == null
-            ? memorialCommentRepository.findRootComment(memorialId, pageable)
-            : memorialCommentRepository.findRootCommentByCursorId(memorialId, cursorId, pageable);
+    Slice<MemorialCommentWithLikeProjection> memorialRootCommentSlice = cursorId == null
+            ? memorialCommentRepository.findRootCommentWithLikes(memorialId, userId, pageable)
+            : memorialCommentRepository.findRootCommentWithLikesByCursorId(memorialId, userId, cursorId, pageable);
     return memorialRootCommentSlice;
   }
 
