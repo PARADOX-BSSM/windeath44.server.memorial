@@ -70,17 +70,6 @@ public class MemorialCommentService {
     return memorialRootCommentSlice;
   }
 
-  public void connectChild(List<MemorialComment> memorialRootCommentList, List<Long> rootIds) {
-    List<MemorialComment> memorialChildCommentList = memorialCommentRepository.findAllByParentCommentId(rootIds);
-
-    Map<Long, List<MemorialComment>> memorialChildCommentMap = memorialChildCommentList.stream()
-            .collect(Collectors.groupingBy(MemorialComment::getParentCommentId));
-
-    for (MemorialComment root : memorialRootCommentList) {
-      root.addChild(memorialChildCommentMap.getOrDefault(root.getCommentId(), List.of()));
-    }
-  }
-
   public List<MemorialCommentCountResponse> getCommentCountByMemorial(Integer size) {
     Pageable pageable = PageRequest.of(0, size);
 

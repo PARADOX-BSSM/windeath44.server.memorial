@@ -28,10 +28,6 @@ public class MemorialCommentGetUseCase {
 
     List<MemorialComment> memorialRootCommentList = memorialRootCommentListSlice.getContent();
 
-    List<Long> rootIds = memorialRootCommentList.stream()
-            .map(MemorialComment::getCommentId)
-            .toList();
-    memorialCommentService.connectChild(memorialRootCommentList, rootIds);
     List<MemorialCommentResponse> memorialCommentResponseList = transformMemorialCommentResponse(userId, memorialRootCommentList);
 
     return new CursorPage<>(memorialRootCommentListSlice.hasNext(), memorialCommentResponseList);

@@ -17,16 +17,13 @@ public interface MemorialCommentRepository extends JpaRepository<MemorialComment
 
 
 
-  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.parentComment is null and mc.memorial.memorialId = :memorialId and mc.commentId <= :cursorId order by mc.commentId desc")
+  @Query("select mc from MemorialComment mc where mc.parentComment is null and mc.memorial.memorialId = :memorialId and mc.commentId <= :cursorId order by mc.commentId desc")
   Slice<MemorialComment> findRootCommentByCursorId(@Param("memorialId") Long memorialId, @Param("cursorId") Long cursorId, Pageable pageable);
 
   @Query("select mc from MemorialComment mc where mc.parentComment is null and mc.memorial.memorialId = :memorialId order by mc.commentId desc")
   Slice<MemorialComment> findRootComment(Long memorialId, Pageable pageable);
 
-  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.parentComment.commentId in :rootIds")
-  List<MemorialComment> findAllByParentCommentId(List<Long> rootIds);
-
-  @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.commentId = :commentId")
+  @Query("select mc from MemorialComment mc left join fetch mc.parentComment where mc.commentId = :commentId")
   Optional<MemorialComment> findFetchById(@Param("commentId") Long commentId);
 
   @Query("select mc.memorial.memorialId as memorialId, count(mc) as commentCount from MemorialComment mc group by mc.memorial.memorialId order by count(mc) asc")
