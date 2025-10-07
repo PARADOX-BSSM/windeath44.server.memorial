@@ -1,9 +1,11 @@
 package windeath44.server.memorial.domain.memorial.mapper;
 
 import org.springframework.stereotype.Component;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentCountResponse;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentResponse;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialComment;
+import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentCountProjection;
 
 import java.util.List;
 import java.util.Set;
@@ -35,4 +37,12 @@ public class MemorialCommentMapper {
             .children(children)
             .build();
   }
+
+    public MemorialCommentCountResponse toMemorialCommentCountResponse(MemorialCommentCountProjection memorialCommentCountProjection) {
+      MemorialCommentCountResponse memorialCommentCountResponse = MemorialCommentCountResponse.builder()
+              .memorialId(memorialCommentCountProjection.getMemorialId())
+              .commentCount(memorialCommentCountProjection.getCommentCount())
+              .build();
+      return memorialCommentCountResponse;
+    }
 }

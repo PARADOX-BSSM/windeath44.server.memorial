@@ -8,6 +8,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentUpdateRequestDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentCountResponse;
 import windeath44.server.memorial.domain.memorial.exception.MemorialCommentNotFoundException;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialCommentMapper;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
@@ -78,6 +79,15 @@ public class MemorialCommentService {
     for (MemorialComment root : memorialRootCommentList) {
       root.addChild(memorialChildCommentMap.getOrDefault(root.getCommentId(), List.of()));
     }
+  }
 
+  public List<MemorialCommentCountResponse> getCommentCountByMemorial(Integer size) {
+    Pageable pageable = PageRequest.of(0, size);
+
+    List<MemorialCommentCountResponse> memorialCommentCountResponsesList =  memorialCommentRepository.countCommentsByMemorial(pageable)
+            .stream()
+            .map(memorialCommentMapper::toMemorialCommentCountResponse)
+            .toList();
+    return memorialCommentCountResponsesList;
   }
 }

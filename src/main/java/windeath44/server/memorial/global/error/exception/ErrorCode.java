@@ -21,7 +21,8 @@ public enum ErrorCode {
   AUTHENTICATION_FAILED(401, "Authentication Failed"),
   UNDEFINED_ORDER_BY(400, "Order By is not defined"),
   BOWED_WITHIN_24_HOURS(403, "You can bow only once within 24 hours"),
-  INVALID_CURSOR_FORMAT(400, "Invalid cursor format"),;
+  INVALID_CURSOR_FORMAT(400, "Invalid cursor format"),
+  ;
   private int status;
   private String message;
 }

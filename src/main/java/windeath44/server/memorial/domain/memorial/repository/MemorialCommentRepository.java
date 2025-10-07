@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import windeath44.server.memorial.domain.memorial.model.MemorialComment;
+import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentCountProjection;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,7 @@ public interface MemorialCommentRepository extends JpaRepository<MemorialComment
 
   @Query("select mc from MemorialComment mc join fetch mc.parentComment where mc.commentId = :commentId")
   Optional<MemorialComment> findFetchById(@Param("commentId") Long commentId);
+
+  @Query("select mc.memorial.memorialId as memorialId, count(mc) as commentCount from MemorialComment mc group by mc.memorial.memorialId order by count(mc) asc")
+  List<MemorialCommentCountProjection> countCommentsByMemorial(Pageable pageable);
 }

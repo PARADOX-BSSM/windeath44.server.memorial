@@ -7,10 +7,13 @@ import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentUpdateRequestDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentCountResponse;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentResponse;
 import windeath44.server.memorial.domain.memorial.service.MemorialCommentService;
 import windeath44.server.memorial.domain.memorial.service.usecase.MemorialCommentGetUseCase;
 import windeath44.server.memorial.global.dto.CursorPage;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,4 +45,11 @@ public class MemorialCommentController {
     memorialCommentService.delete(commentId);
     return ResponseEntity.status(200).body(HttpUtil.success("Memorial comment is successfully delete."));
   }
+
+  @GetMapping("/count")
+  public ResponseEntity<ResponseDto<List<MemorialCommentCountResponse>>> getCommentCount(@RequestParam(value = "size", defaultValue = "10") Integer size) {
+    List<MemorialCommentCountResponse> commentCounts = memorialCommentService.getCommentCountByMemorial(size);
+    return ResponseEntity.status(200).body(HttpUtil.success("Memorial comment count is successfully retrieved.", commentCounts));
+  }
+
 }
