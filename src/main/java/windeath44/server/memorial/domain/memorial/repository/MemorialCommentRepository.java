@@ -43,4 +43,11 @@ public interface MemorialCommentRepository extends JpaRepository<MemorialComment
          "where mc.memorial.memorialId = :memorialId and mc.parentComment is null " +
          "order by mc.commentId desc")
   Slice<MemorialCommentWithLikeProjection> findRootCommentWithLikes(@Param("memorialId") Long memorialId, @Param("userId") String userId, Pageable pageable);
+
+  @Query("select mc as comment, case when mcl.memorialCommentLikesPrimaryKey.userId is not null then true else false end as isLiked " +
+         "from MemorialComment mc " +
+         "left join MemorialCommentLikes mcl on mc.commentId = mcl.memorialCommentLikesPrimaryKey.comment.commentId and mcl.memorialCommentLikesPrimaryKey.userId = :userId " +
+         "where mc.memorial.memorialId = :memorialId and mc.parentComment is null " +
+         "order by (size(mc.children) * 0.3 + mc.likesCount * 0.7) desc")
+  List<MemorialCommentWithLikeProjection> findPopularRootCommentWithLikes(@Param("memorialId") Long memorialId, @Param("userId") String userId, Pageable pageable);
 }

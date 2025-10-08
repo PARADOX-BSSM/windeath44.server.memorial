@@ -79,4 +79,9 @@ public class MemorialCommentService {
             .toList();
     return memorialCommentCountResponsesList;
   }
+
+  public List<MemorialCommentWithLikeProjection> getPopularRootCommentWithLikes(String userId, Long memorialId, Integer size) {
+    Pageable pageable = PageRequest.of(0, size);
+    return memorialCommentRepository.findPopularRootCommentWithLikes(memorialId, userId, pageable);
+  }
 }
