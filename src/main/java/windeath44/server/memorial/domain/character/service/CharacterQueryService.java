@@ -7,14 +7,19 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
+import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
 import windeath44.server.memorial.domain.character.exception.NotFoundCharacterException;
 import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
+import windeath44.server.memorial.domain.character.model.QCharacter;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
 import windeath44.server.memorial.domain.character.repository.CharacterRepository;
 import windeath44.server.memorial.global.dto.CursorPage;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.core.types.dsl.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -23,6 +28,7 @@ import java.util.List;
 public class CharacterQueryService {
     private final CharacterRepository characterRepository;
     private final CharacterMapper characterMapper;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public windeath44.server.memorial.domain.character.model.Character findById(Long characterId) {
         windeath44.server.memorial.domain.character.model.Character character = findCharacterById(characterId);
@@ -118,4 +124,16 @@ public class CharacterQueryService {
         return new CursorPage<>(characterSlice.hasNext(), characterList);
     }
 
+    public TodayAnniversariesResponse findAllByAnniversaries() {
+        QCharacter character = QCharacter.character;
+
+        List<Long> characterIds = jpaQueryFactory
+                .select(character.characterId)
+                .from(character)
+                .where(character.deathOfDay.month().eq(LocalDate.now().getMonthValue())
+                        .and(character.deathOfDay.dayOfMonth().eq(LocalDate.now().getDayOfMonth())))
+                .fetch();
+
+        return new TodayAnniversariesResponse(characterIds);
+    }
 }

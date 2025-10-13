@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCharacterFilterRequestDto;
@@ -42,5 +43,12 @@ public class MemorialGetController {
     List<Long> characters = memorialCharacterFilterRequestDto.characters();
     List<MemorialListResponseDto> memorialListResponseDtoList = memorialGetService.findMemorialsFiltered(orderBy, page, characters);
     return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page + ", With Filter : " + characters, memorialListResponseDtoList));
+  }
+
+  @GetMapping("/today-best")
+  public ResponseEntity<ResponseDto<TodayMemorialResponse>> getTodayBest() {
+    TodayMemorialResponse todayMemorialResponse = memorialGetService.getTodayMemorial();
+    ResponseDto<TodayMemorialResponse> responseDto = HttpUtil.success("find memorial id by comments count", todayMemorialResponse);
+    return ResponseEntity.ok(responseDto);
   }
 }
