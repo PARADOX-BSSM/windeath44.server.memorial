@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.character.controller;
 
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
+import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
 import windeath44.server.memorial.domain.character.service.CharacterQueryService;
 import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.global.dto.OffsetPage;
@@ -85,6 +86,13 @@ public class CharacterQueryController {
     public ResponseEntity<ResponseDto<CursorPage<CharacterResponse>>> findCharacterResponsesByCharacterName(@RequestParam("name") String name, @RequestParam(value = "cursorId", required = false) Long cursorId, @RequestParam int size) {
         CursorPage<CharacterResponse> characterResponses = characterQueryService.findAllByName(name, cursorId, size);
         ResponseDto<CursorPage<CharacterResponse>> responseDto = HttpUtil.success("find characters", characterResponses);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("today-anniversary")
+    public ResponseEntity<ResponseDto<TodayAnniversariesResponse>> findIdsByTodayAnniversaries() {
+        TodayAnniversariesResponse todayAnniversariesResponse = characterQueryService.findAllByAnniversaries();
+        ResponseDto<TodayAnniversariesResponse> responseDto = HttpUtil.success("find character ids by anniversary", todayAnniversariesResponse);
         return ResponseEntity.ok(responseDto);
     }
 }

@@ -3,20 +3,25 @@ package windeath44.server.memorial.domain.memorial.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
+import windeath44.server.memorial.domain.memorial.model.QMemorialComment;
 import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEvent;
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
 import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.memorial.exception.UndefinedOrderByException;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
-import windeath44.server.memorial.global.dto.OffsetPage;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Service
 @RequiredArgsConstructor
 public class MemorialGetService {
+  private final JPAQueryFactory jpaQueryFactory;
   private final MemorialRepository memorialRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -32,20 +37,19 @@ public class MemorialGetService {
     return memorial;
   }
 
-  public OffsetPage<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
+  public List<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
     validateOrderBy(orderBy);
-    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
-    if (memorialListResponseDtoPage.values().isEmpty()) {
+    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
+    if (memorialListResponseDtoList.isEmpty()) {
       throw new MemorialNotFoundException();
     }
-
-    return memorialListResponseDtoPage;
+    return memorialListResponseDtoList;
   }
  
-  public OffsetPage<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
+  public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
-    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
-    return memorialListResponseDtoPage;
+    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
+    return memorialListResponseDtoList;
   }
 
   private void validateOrderBy(String orderBy) {
@@ -62,7 +66,20 @@ public class MemorialGetService {
             .orElseThrow(MemorialNotFoundException::new);
   }
 
-  public List<MemorialResponseDto> findMemorialByIds(List<Long> memorialIds) {
-    return memorialRepository.findByIds(memorialIds);
+  public TodayMemorialResponse getTodayMemorial() {
+    QMemorialComment memorialComment = QMemorialComment.memorialComment;
+
+    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
+    LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+
+    Long topMemorialId = jpaQueryFactory
+            .select(memorialComment.memorial.memorialId)
+            .from(memorialComment)
+            .where(memorialComment.createdAt.between(startOfDay, endOfDay))
+            .groupBy(memorialComment.memorial.memorialId)
+            .orderBy(memorialComment.count().desc())
+            .fetchFirst();
+
+    return new TodayMemorialResponse(topMemorialId);
   }
 }

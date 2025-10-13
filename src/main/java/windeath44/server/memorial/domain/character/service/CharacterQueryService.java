@@ -7,15 +7,19 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
+import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
 import windeath44.server.memorial.domain.character.exception.NotFoundCharacterException;
 import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
+import windeath44.server.memorial.domain.character.model.QCharacter;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
 import windeath44.server.memorial.domain.character.repository.CharacterRepository;
 import windeath44.server.memorial.global.dto.CursorPage;
-import windeath44.server.memorial.global.dto.OffsetPage;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.core.types.dsl.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +28,7 @@ import java.util.List;
 public class CharacterQueryService {
     private final CharacterRepository characterRepository;
     private final CharacterMapper characterMapper;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public windeath44.server.memorial.domain.character.model.Character findById(Long characterId) {
         windeath44.server.memorial.domain.character.model.Character character = findCharacterById(characterId);
@@ -119,22 +124,16 @@ public class CharacterQueryService {
         return new CursorPage<>(characterSlice.hasNext(), characterList);
     }
 
-    public OffsetPage<CharacterResponse> findAllIntegratedOffset(String name, List<Long> animeId, String deathReason, String memorialState, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+    public TodayAnniversariesResponse findAllByAnniversaries() {
+        QCharacter character = QCharacter.character;
 
-        // 사인 변환
-        boolean isNotNullDeathOfReason = deathReason != null;
-        CauseOfDeath causeOfDeath = isNotNullDeathOfReason ? CauseOfDeath.valueOfDeathReason(deathReason) : null;
+        List<Long> characterIds = jpaQueryFactory
+                .select(character.characterId)
+                .from(character)
+                .where(character.deathOfDay.month().eq(LocalDate.now().getMonthValue())
+                        .and(character.deathOfDay.dayOfMonth().eq(LocalDate.now().getDayOfMonth())))
+                .fetch();
 
-        // 캐릭터 추모 상태 변환
-        boolean isNotNullMemorialState = memorialState != null;
-        CharacterState characterState = isNotNullMemorialState ? CharacterState.valueOf(memorialState) : null;
-
-        List<Long> animeIds = (animeId == null || animeId.isEmpty()) ? null : animeId;
-        org.springframework.data.domain.Page<Character> characterPage = characterRepository.findAllWithOffset(name, animeIds, causeOfDeath, characterState, pageable);
-
-        List<CharacterResponse> characterList = characterMapper.toCharacterListResponse(characterPage);
-        return new OffsetPage<>((int) characterPage.getTotalElements(), characterList);
+        return new TodayAnniversariesResponse(characterIds);
     }
-
 }
