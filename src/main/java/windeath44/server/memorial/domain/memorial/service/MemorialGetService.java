@@ -3,18 +3,26 @@ package windeath44.server.memorial.domain.memorial.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
+import windeath44.server.memorial.domain.memorial.model.QMemorialComment;
 import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEvent;
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
 import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.memorial.exception.UndefinedOrderByException;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Service
 @RequiredArgsConstructor
 public class MemorialGetService {
+  private final JPAQueryFactory jpaQueryFactory;
   private final MemorialRepository memorialRepository;
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -57,5 +65,22 @@ public class MemorialGetService {
   public Memorial findById(Long memorialId) {
     return memorialRepository.findById(memorialId)
             .orElseThrow(MemorialNotFoundException::new);
+  }
+
+  public TodayMemorialResponse getTodayMemorial() {
+    QMemorialComment memorialComment = QMemorialComment.memorialComment;
+
+    LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).atStartOfDay();
+    LocalDateTime endOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).plusDays(1).atStartOfDay();
+
+    Long topMemorialId = jpaQueryFactory
+            .select(memorialComment.memorial.memorialId)
+            .from(memorialComment)
+            .where(memorialComment.createdAt.between(startOfDay, endOfDay))
+            .groupBy(memorialComment.memorial.memorialId)
+            .orderBy(memorialComment.count().desc())
+            .fetchFirst();
+
+    return new TodayMemorialResponse(topMemorialId);
   }
 }
