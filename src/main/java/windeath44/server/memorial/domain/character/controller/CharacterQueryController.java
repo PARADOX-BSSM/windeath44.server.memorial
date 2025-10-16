@@ -89,12 +89,9 @@ public class CharacterQueryController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("today-anniversary") 
+    @GetMapping("/today-anniversary")
     public ResponseEntity<ResponseDto<TodayAnniversariesResponse>> findIdsByTodayAnniversaries() {
         TodayAnniversariesResponse todayAnniversariesResponse = characterQueryService.findAllByAnniversaries();
-        if (todayAnniversariesResponse.characterIds() == null) {
-            return ResponseEntity.status(404).body(HttpUtil.success("characters not found", null));
-        }
         ResponseDto<TodayAnniversariesResponse> responseDto = HttpUtil.success("find character ids by anniversary", todayAnniversariesResponse);
         return ResponseEntity.ok(responseDto);
     }
