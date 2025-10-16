@@ -20,6 +20,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.core.types.dsl.*;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -130,8 +131,8 @@ public class CharacterQueryService {
         List<Long> characterIds = jpaQueryFactory
                 .select(character.characterId)
                 .from(character)
-                .where(character.deathOfDay.month().eq(LocalDate.now().getMonthValue())
-                        .and(character.deathOfDay.dayOfMonth().eq(LocalDate.now().getDayOfMonth())))
+                .where(character.deathOfDay.month().eq(LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue())
+                        .and(character.deathOfDay.dayOfMonth().eq(LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfMonth())))
                 .fetch();
 
         return new TodayAnniversariesResponse(characterIds);
