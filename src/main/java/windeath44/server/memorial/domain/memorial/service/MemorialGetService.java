@@ -15,6 +15,7 @@ import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseD
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -69,8 +70,8 @@ public class MemorialGetService {
   public TodayMemorialResponse getTodayMemorial() {
     QMemorialComment memorialComment = QMemorialComment.memorialComment;
 
-    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-    LocalDateTime endOfDay = LocalDate.now().plusDays(1).atStartOfDay();
+    LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).atStartOfDay();
+    LocalDateTime endOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).plusDays(1).atStartOfDay();
 
     Long topMemorialId = jpaQueryFactory
             .select(memorialComment.memorial.memorialId)
