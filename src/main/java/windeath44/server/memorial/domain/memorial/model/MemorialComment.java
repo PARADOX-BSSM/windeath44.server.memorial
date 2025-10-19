@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -37,6 +38,7 @@ public class MemorialComment {
 
   @Builder.Default
   @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+  @BatchSize(size = 100)
   private List<MemorialComment> children = new ArrayList<>();
 
   public static MemorialComment of(final Memorial memorial, final String userId, final String content, final MemorialComment parentComment) {

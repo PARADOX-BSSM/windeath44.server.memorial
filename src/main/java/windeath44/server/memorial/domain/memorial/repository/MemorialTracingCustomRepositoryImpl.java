@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.memorial.repository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -21,6 +22,7 @@ public class MemorialTracingCustomRepositoryImpl implements MemorialTracingCusto
 
   @Override
   public List<MemorialTracing> findRecentByUserId(String userId, int size) {
+
     Aggregation aggregation = newAggregation(
         match(Criteria.where("userId").is(userId)),
         sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed"),
@@ -33,16 +35,20 @@ public class MemorialTracingCustomRepositoryImpl implements MemorialTracingCusto
     AggregationResults<MemorialTracing> results = mongoTemplate.aggregate(
         aggregation, "user_memorial_tracing", MemorialTracing.class);
 
-    return results.getMappedResults();
+    List<MemorialTracing> mappedResults = results.getMappedResults();
+
+    return mappedResults;
   }
 
   @Override
   public List<MemorialTracing> findRecentByUserIdWithCursor(String userId, Date cursor, int size) {
+
     Aggregation aggregation = newAggregation(
-        match(Criteria.where("userId").is(userId).and("viewed").lt(cursor)),
+        match(Criteria.where("userId").is(userId)),
         sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed"),
         group("memorialId").first("$$ROOT").as("latestDoc"),
         replaceRoot("latestDoc"),
+        match(Criteria.where("viewed").lt(cursor)),
         sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed"),
         limit(size)
     );
