@@ -18,7 +18,7 @@ import java.util.List;
 public class MemorialGetController {
   private final MemorialGetService memorialGetService;
 
-  @GetMapping("/{memorialId}")
+  @GetMapping("/{memorialId:\\d+}")
   public ResponseEntity<ResponseDto<MemorialResponseDto>> findByMemorialId(@PathVariable Long memorialId, @RequestHeader(value = "user-id", required = false) String userId) {
     MemorialResponseDto memorialResponseDto = memorialGetService.findMemorialById(memorialId, userId);
     return ResponseEntity.ok(HttpUtil.success("memorialId: " + memorialId + " Successfully Found", memorialResponseDto));
