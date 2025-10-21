@@ -18,7 +18,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/memorial-tracing")
+@RequestMapping("/memorials/tracing")
 public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 
