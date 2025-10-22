@@ -30,9 +30,8 @@ public class MemorialTraceService {
     List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserId(userId, size + 1);
 
     boolean hasNext = memorialTracings.size() > size;
-    if (hasNext) {
-      memorialTracings = memorialTracings.subList(0, size);
-    }
+    if (hasNext) memorialTracings = memorialTracings.subList(0, size);
+
 
     List<MemorialTracingResponse> responses = memorialTracings.stream()
             .map(memorialTracingMapper::toMemorialTracingResponse)

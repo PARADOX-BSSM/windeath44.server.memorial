@@ -58,4 +58,8 @@ public class MemorialGetService {
     return memorialRepository.findById(memorialId)
             .orElseThrow(MemorialNotFoundException::new);
   }
+
+  public List<MemorialResponseDto> findMemorialByIds(List<Long> memorialIds) {
+    return memorialRepository.findByIds(memorialIds);
+  }
 }

@@ -24,6 +24,12 @@ public class MemorialGetController {
     return ResponseEntity.ok(HttpUtil.success("memorialId: " + memorialId + " Successfully Found", memorialResponseDto));
   }
 
+  @GetMapping("/memorialIds")
+  public ResponseEntity<ResponseDto<List<MemorialResponseDto>>> findByMemorialIds(@RequestParam List<Long> memorialIds) {
+    List<MemorialResponseDto> memorialResponseDto = memorialGetService.findMemorialByIds(memorialIds);
+    return ResponseEntity.ok(HttpUtil.success("memorialId: " + memorialResponseDto.getFirst().memorialId() + " Successfully Found", memorialResponseDto));
+  }
+
   @GetMapping("")
   public ResponseEntity<ResponseDto<List<MemorialListResponseDto>>> findAll(
           @RequestParam String orderBy,

@@ -101,4 +101,38 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .fetch();
     return memorialMapper.toMemorialListResponseDto(result, memorial);
   }
+
+  @Override
+  public List<MemorialResponseDto> findByIds(List<Long> memorialIds) {
+    List<Tuple> results = queryFactory
+            .select(memorial.memorialId,
+                    memorial.characterId,
+                    memorial.bowCount,
+                    memorialCommit.memorialCommitId,
+                    memorialCommit.content,
+                    memorialCommit.userId,
+                    memorialCommit.createdAt,
+                    memorialPullRequest.userId,
+                    memorialPullRequest.updatedAt)
+            .from(memorial)
+            .where(memorial.memorialId.in(memorialIds))
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+            )
+            .fetch();
+
+    return results.stream()
+            .map(result -> {
+                Long memorialId = result.get(memorial.memorialId);
+                List<String> chiefList = queryFactory
+                        .select(memorialChiefs.userId)
+                        .from(memorialChiefs)
+                        .where(memorialChiefs.memorial.memorialId.eq(memorialId))
+                        .fetch();
+                return memorialMapper.toMemorialResponseDto(result, memorial, memorialPullRequest, memorialCommit, chiefList);
+            })
+            .toList();
+  }
 }

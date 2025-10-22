@@ -9,4 +9,5 @@ public interface MemorialRepositoryCustom {
   MemorialResponseDto findMemorialById(Long memorialId);
   List<MemorialListResponseDto> findMemorialsOrderByAndPage(String orderBy, Long page, Long pageSize);
   List<MemorialListResponseDto> findMemorialsOrderByAndPageCharacterFiltered(String orderBy, Long page, Long pageSize, List<Long> characters);
+  List<MemorialResponseDto> findByIds(List<Long> memorialIds);
 }
