@@ -29,11 +29,4 @@ public class KafkaEventListener {
     memorializingCharacterUseCase.memorializing(characterId);
     kafkaTemplate.send("memorial-creation-response", new MemorialAvroSchema(memorialId, memorialApplicationAvroSchema.getApplicantId(), memorialApplicationAvroSchema.getContent(), characterId));
   }
-
-  @KafkaListener(topics = "memorial-deletion-request", groupId = "memorial")
-  @Transactional
-  public void memorialDeletion(CharacterAvroSchema characterAvroSchema) {
-    memorialDeleteService.deleteMemorial(characterAvroSchema);
-    kafkaTemplate.send("memorial-deletion-response", new MemorialAvroSchema(null, null, null, null)); // 일단 임시로
-  }
 }
