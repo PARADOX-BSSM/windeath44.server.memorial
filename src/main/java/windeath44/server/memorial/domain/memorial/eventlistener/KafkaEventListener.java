@@ -1,8 +1,9 @@
 package windeath44.server.memorial.domain.memorial.eventlistener;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import com.example.avro.CharacterAvroSchema;
 import com.example.avro.MemorialAvroSchema;
-import windeath44.server.memorial.avro.MemorialApplicationAvroSchema;
+import com.example.avro.MemorialApplicationAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,7 +20,7 @@ public class KafkaEventListener {
   private final MemorialDeleteService memorialDeleteService;
   private final MemorializingCharacterUseCase memorializingCharacterUseCase;
 
-  private final KafkaTemplate<String, Object> kafkaTemplate;
+  private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
 
   @KafkaListener(topics = "memorial-creation-request", groupId = "memorial")
   @Transactional
