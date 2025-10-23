@@ -1,10 +1,9 @@
 package windeath44.server.memorial.domain.memorial.service;
 
-import com.example.avro.MemorialAvroSchema;
-import com.example.avro.MemorialBowedAvroSchema;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.avro.MemorialBowedAvroSchema;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowResponseDto;
 import windeath44.server.memorial.domain.memorial.exception.BowedWithin24HoursException;
