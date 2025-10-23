@@ -29,7 +29,7 @@ public class MemorialCreateService {
     MemorialPullRequestRequestDto memorialPullRequestRequestDto = new MemorialPullRequestRequestDto(memorialCommitResponseDto.memorialCommitId());
 
     String approvedId = memorialCreationAvroSchema.getApproverId();
-    memorialPullRequestService.createMemorialPullRequest(approvedId, memorialPullRequestRequestDto);
+    memorialPullRequestService.createMemorialPullRequestApproved(approvedId, memorialPullRequestRequestDto);
     return memorial.getMemorialId();
   }
 }

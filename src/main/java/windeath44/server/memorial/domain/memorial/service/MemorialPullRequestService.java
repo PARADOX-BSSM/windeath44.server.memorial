@@ -43,6 +43,24 @@ public class MemorialPullRequestService {
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
 
+  @Transactional
+  public MemorialPullRequestResponseDto createMemorialPullRequestApproved(String userId, MemorialPullRequestRequestDto memorialPullRequestRequestDto) {
+    MemorialCommit memorialCommit = memorialCommitRepository.findById(memorialPullRequestRequestDto.memorialCommitId())
+            .orElseThrow(MemorialCommitNotFoundException::new);
+    Memorial memorial = memorialCommit.getMemorial();
+
+    MemorialPullRequest memorialPullRequestExists = memorialPullRequestRepository.findByMemorialCommit(memorialCommit);
+    if (memorialPullRequestExists != null) {
+      MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, userId, MemorialPullRequestState.REJECTED);
+      memorialPullRequestRepository.save(memorialPullRequest);
+      throw new MemorialPullRequestAlreadySentException();
+    }
+
+    MemorialPullRequest memorialPullRequest = new MemorialPullRequest(memorialCommit, memorial, userId, MemorialPullRequestState.APPROVED);
+    memorialPullRequestRepository.save(memorialPullRequest);
+    return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
+  }
+
   public MemorialPullRequestResponseDto findMemorialPullRequestById(Long memorialPullRequestId) {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialPullRequestId)
             .orElseThrow(MemorialPullRequestNotFoundException::new);

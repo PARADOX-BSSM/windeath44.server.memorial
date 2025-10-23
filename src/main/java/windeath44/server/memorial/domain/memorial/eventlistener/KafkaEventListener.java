@@ -16,7 +16,7 @@ public class KafkaEventListener {
   private final MemorialCreateService memorialCreateService;
   private final MemorializingCharacterUseCase memorializingCharacterUseCase;
 
-  private final KafkaTemplate<String, Object> kafkaTemplate;
+  private final KafkaTemplate<String, SpecificRecordBase> kafkaTemplate;
 
   @KafkaListener(topics = "memorial-creation-request", groupId = "memorial")
   @Transactional
