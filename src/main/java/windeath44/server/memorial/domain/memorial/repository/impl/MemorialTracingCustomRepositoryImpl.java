@@ -1,13 +1,13 @@
-package windeath44.server.memorial.domain.memorial.repository;
+package windeath44.server.memorial.domain.memorial.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 import windeath44.server.memorial.domain.memorial.model.MemorialTracing;
+import windeath44.server.memorial.domain.memorial.repository.MemorialTracingCustomRepository;
 
 import java.util.Date;
 import java.util.List;

@@ -10,6 +10,8 @@ import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundExce
 import windeath44.server.memorial.domain.memorial.exception.UndefinedOrderByException;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.global.dto.OffsetPage;
+
 import java.util.List;
 
 @Service
@@ -30,19 +32,20 @@ public class MemorialGetService {
     return memorial;
   }
 
-  public List<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
+  public OffsetPage<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
     validateOrderBy(orderBy);
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
-    if (memorialListResponseDtoList.isEmpty()) {
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
+    if (memorialListResponseDtoPage.values().isEmpty()) {
       throw new MemorialNotFoundException();
     }
-    return memorialListResponseDtoList;
+
+    return memorialListResponseDtoPage;
   }
  
-  public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
+  public OffsetPage<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
-    return memorialListResponseDtoList;
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
+    return memorialListResponseDtoPage;
   }
 
   private void validateOrderBy(String orderBy) {
@@ -57,5 +60,9 @@ public class MemorialGetService {
   public Memorial findById(Long memorialId) {
     return memorialRepository.findById(memorialId)
             .orElseThrow(MemorialNotFoundException::new);
+  }
+
+  public List<MemorialResponseDto> findMemorialByIds(List<Long> memorialIds) {
+    return memorialRepository.findByIds(memorialIds);
   }
 }

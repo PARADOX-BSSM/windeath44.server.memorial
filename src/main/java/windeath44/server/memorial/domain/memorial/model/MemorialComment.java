@@ -77,4 +77,12 @@ public class MemorialComment {
   public void downLikes() {
     if (likesCount > 0) this.likesCount--;
   }
+
+  public void deleteByParents() {
+    this.parentComment.removeChild(this);
+  }
+
+  private void removeChild(MemorialComment memorialComment) {
+    this.children.remove(memorialComment);
+  }
 }

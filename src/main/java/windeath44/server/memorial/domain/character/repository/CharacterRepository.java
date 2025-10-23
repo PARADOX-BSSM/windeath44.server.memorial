@@ -65,4 +65,19 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
           @Param("cursorId") Long cursorId,
           Pageable pageable
   );
+
+  @Query(
+          "SELECT c FROM Character c " +
+          "WHERE (:name IS NULL OR c.name like %:name%) " +
+          "AND (:animeId IS NULL OR c.anime.animeId in (:animeId)) " +
+          "AND (:deathReason IS NULL OR c.deathReason = :deathReason) " +
+          "AND (:characterState IS NULL OR c.state = :characterState)"
+  )
+  Page<Character> findAllWithOffset(
+          @Param("name") String name,
+          @Param("animeId") List<Long> animeId,
+          @Param("deathReason") CauseOfDeath deathReason,
+          @Param("characterState") CharacterState characterState,
+          Pageable pageable
+  );
 }

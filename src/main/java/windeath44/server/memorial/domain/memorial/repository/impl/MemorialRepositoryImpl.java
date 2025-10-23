@@ -9,6 +9,7 @@ import windeath44.server.memorial.domain.memorial.repository.MemorialRepositoryC
 import windeath44.server.memorial.domain.memorial.mapper.MemorialMapper;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.global.dto.OffsetPage;
 
 import java.util.List;
 import java.util.Map;
@@ -54,13 +55,20 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
   }
 
   @Override
-  public List<MemorialListResponseDto> findMemorialsOrderByAndPage(String orderBy, Long page, Long pageSize) {
+  public OffsetPage<MemorialListResponseDto> findMemorialsOrderByAndPage(String orderBy, Long page, Long pageSize) {
     Map<String, OrderSpecifier<? extends Comparable<? extends Comparable<?>>>> orderSpecifiers = Map.of(
             "recently-updated", memorialPullRequest.updatedAt.desc(),
             "lately-updated", memorialPullRequest.updatedAt.asc(),
             "ascending-bow-count", memorial.bowCount.asc(),
             "descending-bow-count", memorial.bowCount.desc()
     );
+    Long total = queryFactory
+            .select(memorial.count())
+            .from(memorial)
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED))
+            .fetchOne();
     List<Tuple> result = queryFactory
             .select(memorial.memorialId,
                     memorial.characterId,
@@ -73,17 +81,27 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .orderBy(orderSpecifiers.get(orderBy))
             .limit(10).offset((page-1) * pageSize)
             .fetch();
-    return memorialMapper.toMemorialListResponseDto(result, memorial);
+    return memorialMapper.toMemorialListResponseDto(result, memorial, total);
   }
 
   @Override
-  public List<MemorialListResponseDto> findMemorialsOrderByAndPageCharacterFiltered(String orderBy, Long page, Long pageSize, List<Long> characters) {
+  public OffsetPage<MemorialListResponseDto> findMemorialsOrderByAndPageCharacterFiltered(String orderBy, Long page, Long pageSize, List<Long> characters) {
     Map<String, OrderSpecifier<? extends Comparable<? extends Comparable<?>>>> orderSpecifiers = Map.of(
             "recently-updated", memorialPullRequest.updatedAt.desc(),
             "lately-updated", memorialPullRequest.updatedAt.asc(),
             "ascending-bow-count", memorial.bowCount.asc(),
             "descending-bow-count", memorial.bowCount.desc()
     );
+    Long total = queryFactory
+            .select(memorial.count())
+            .from(memorial)
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+                            .and(memorial.characterId.in(characters))
+            )
+            .fetchOne();
     List<Tuple> result = queryFactory
             .select(memorial.memorialId,
                     memorial.characterId,
@@ -99,6 +117,40 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .orderBy(orderSpecifiers.get(orderBy))
             .limit(10).offset((page-1) * pageSize)
             .fetch();
-    return memorialMapper.toMemorialListResponseDto(result, memorial);
+    return memorialMapper.toMemorialListResponseDto(result, memorial, total);
+  }
+
+  @Override
+  public List<MemorialResponseDto> findByIds(List<Long> memorialIds) {
+    List<Tuple> results = queryFactory
+            .select(memorial.memorialId,
+                    memorial.characterId,
+                    memorial.bowCount,
+                    memorialCommit.memorialCommitId,
+                    memorialCommit.content,
+                    memorialCommit.userId,
+                    memorialCommit.createdAt,
+                    memorialPullRequest.userId,
+                    memorialPullRequest.updatedAt)
+            .from(memorial)
+            .where(memorial.memorialId.in(memorialIds))
+            .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .where(
+                    memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
+            )
+            .fetch();
+
+    return results.stream()
+            .map(result -> {
+                Long memorialId = result.get(memorial.memorialId);
+                List<String> chiefList = queryFactory
+                        .select(memorialChiefs.userId)
+                        .from(memorialChiefs)
+                        .where(memorialChiefs.memorial.memorialId.eq(memorialId))
+                        .fetch();
+                return memorialMapper.toMemorialResponseDto(result, memorial, memorialPullRequest, memorialCommit, chiefList);
+            })
+            .toList();
   }
 }
