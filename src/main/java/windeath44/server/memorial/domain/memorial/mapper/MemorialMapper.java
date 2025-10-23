@@ -8,6 +8,7 @@ import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseD
 import windeath44.server.memorial.domain.memorial.model.QMemorial;
 import windeath44.server.memorial.domain.memorial.model.QMemorialCommit;
 import windeath44.server.memorial.domain.memorial.model.QMemorialPullRequest;
+import windeath44.server.memorial.global.dto.OffsetPage;
 
 import java.util.List;
 
@@ -33,11 +34,13 @@ public interface MemorialMapper {
     );
   };
 
-  default List<MemorialListResponseDto> toMemorialListResponseDto(List<Tuple> tuples,
-                                                                  @Context QMemorial memorial) {
-    return tuples.stream().map(x -> new MemorialListResponseDto(
+  default OffsetPage<MemorialListResponseDto> toMemorialListResponseDto(List<Tuple> tuples,
+                                                                         @Context QMemorial memorial,
+                                                                         Long total) {
+    List<MemorialListResponseDto> memorialList = tuples.stream().map(x -> new MemorialListResponseDto(
             x.get(memorial.memorialId),
             x.get(memorial.characterId)
     )).toList();
+    return OffsetPage.of(total.intValue(), memorialList);
   }
 }

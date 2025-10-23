@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import windeath44.server.memorial.global.dto.OffsetPage;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCharacterFilterRequestDto;
@@ -31,22 +32,23 @@ public class MemorialGetController {
   }
 
   @GetMapping("")
-  public ResponseEntity<ResponseDto<List<MemorialListResponseDto>>> findAll(
+  public ResponseEntity<ResponseDto<OffsetPage<MemorialListResponseDto>>> findAll(
           @RequestParam String orderBy,
           @RequestParam Long page
   ) {
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialGetService.findMemorials(orderBy, page);
-    return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page, memorialListResponseDtoList));
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialGetService.findMemorials(orderBy, page);
+
+    return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page, memorialListResponseDtoPage));
   }
 
   @PostMapping("/character-filtered")
-  public ResponseEntity<ResponseDto<List<MemorialListResponseDto>>> findFiltered(
+  public ResponseEntity<ResponseDto<OffsetPage<MemorialListResponseDto>>> findFiltered(
           @RequestBody MemorialCharacterFilterRequestDto memorialCharacterFilterRequestDto
           ) {
     String orderBy = memorialCharacterFilterRequestDto.orderBy();
     Long page = memorialCharacterFilterRequestDto.page();
     List<Long> characters = memorialCharacterFilterRequestDto.characters();
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialGetService.findMemorialsFiltered(orderBy, page, characters);
-    return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page + ", With Filter : " + characters, memorialListResponseDtoList));
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialGetService.findMemorialsFiltered(orderBy, page, characters);
+    return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page + ", With Filter : " + characters, memorialListResponseDtoPage));
   }
 }
