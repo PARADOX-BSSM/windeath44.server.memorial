@@ -18,7 +18,7 @@ public class CharacterImageUploadUseCase {
   @Transactional
   public FileUploadUrlResponse upload(String userId, MultipartFile image) {
     String uuid = UUID.randomUUID().toString();
-    String characterObjectName = "/characters/" + userId + "/" + uuid;
+    String characterObjectName = "characters/" + userId + "/" + uuid;
     FileUploadUrlResponse fileUploadUrlResponse = fileUploader.upload(characterObjectName, image);
     return fileUploadUrlResponse;
   }
