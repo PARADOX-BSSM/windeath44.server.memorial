@@ -1,21 +1,23 @@
 package windeath44.server.memorial.domain.memorial.model;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemorialCommentLikesPrimaryKey {
-  @ManyToOne
-  @JoinColumn(name="commentId")
-  private MemorialComment comment;
+@Getter
+@EqualsAndHashCode
+public class MemorialCommentLikesPrimaryKey implements Serializable {
+  private Long commentId;
   private String userId;
 
-  public static MemorialCommentLikesPrimaryKey of(MemorialComment comment, String userId) {
-    return new MemorialCommentLikesPrimaryKey(comment, userId);
+  public static MemorialCommentLikesPrimaryKey of(Long commentId, String userId) {
+    return new MemorialCommentLikesPrimaryKey(commentId, userId);
   }
 }

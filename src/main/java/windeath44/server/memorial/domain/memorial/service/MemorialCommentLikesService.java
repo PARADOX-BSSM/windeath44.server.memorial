@@ -9,9 +9,6 @@ import windeath44.server.memorial.domain.memorial.model.MemorialCommentLikes;
 import windeath44.server.memorial.domain.memorial.model.MemorialCommentLikesPrimaryKey;
 import windeath44.server.memorial.domain.memorial.repository.MemorialCommentLikesRepository;
 
-import java.util.Collections;
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
 public class MemorialCommentLikesService {
@@ -23,10 +20,10 @@ public class MemorialCommentLikesService {
   public void like(Long commentId, String userId) {
     MemorialComment comment = memorialCommentService.findCommentById(commentId);
 
-    MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey = comment.likesKey(userId);
-    if (memorialCommentLikesRepository.existsById(memorialCommentLikesPrimaryKey)) return;
+    MemorialCommentLikesPrimaryKey key = MemorialCommentLikesPrimaryKey.of(commentId, userId);
+    if (memorialCommentLikesRepository.existsById(key)) return;
 
-    MemorialCommentLikes memorialCommentLikes = memorialCommentLikesMapper.toMemorialCommentLikes(memorialCommentLikesPrimaryKey);
+    MemorialCommentLikes memorialCommentLikes = memorialCommentLikesMapper.toMemorialCommentLikes(userId, comment);
     memorialCommentLikesRepository.save(memorialCommentLikes);
     comment.upLikes();
   }
@@ -40,12 +37,5 @@ public class MemorialCommentLikesService {
 
     memorialCommentLikesRepository.deleteById(memorialCommentLikesPrimaryKey);
     comment.downLikes();
-  }
-
-  public Set<Long> getLikedCommentIds(String userId, Set<Long> commentIds) {
-    if (commentIds == null || commentIds.isEmpty()) {
-      return Collections.emptySet();
-    }
-    return memorialCommentLikesRepository.findLikedCommentIdsByUserIdAndCommentIds(userId, commentIds);
   }
 }

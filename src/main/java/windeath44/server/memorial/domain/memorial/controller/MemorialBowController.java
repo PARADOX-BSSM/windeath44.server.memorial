@@ -27,7 +27,7 @@ public class MemorialBowController {
     return ResponseEntity.ok(HttpUtil.success("Memorial id: " + memorialId + " bow count: " + bowCount, bowCount));
   }
 
-  @GetMapping("/bow/{userId]}/{memorialId}")
+  @GetMapping("/bow/{userId}/{memorialId}")
   public ResponseEntity<ResponseDto<MemorialBowResponseDto>> getBowByUserIdAndMemorialId(@PathVariable String userId, @PathVariable Long memorialId) {
     MemorialBowResponseDto memorialBowResponseDto = memorialBowService.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
     return ResponseEntity.ok(HttpUtil.success("Memorial id: " + memorialId + " and user id: " + userId, memorialBowResponseDto));
