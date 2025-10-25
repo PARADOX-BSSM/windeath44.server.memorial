@@ -1,29 +1,25 @@
 package windeath44.server.memorial.domain.character.service.usecase;
 
 import org.springframework.transaction.annotation.Transactional;
-import windeath44.server.memorial.domain.character.exception.UploadFileFailException;
-import windeath44.server.memorial.domain.character.service.CharacterCommandService;
-import windeath44.server.memorial.global.storage.FileStorage;
+import windeath44.server.memorial.global.dto.FileUploadUrlResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import windeath44.server.memorial.global.storage.FileUploader;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
 public class CharacterImageUploadUseCase {
-  private final FileStorage fileStorage;
-  private final CharacterCommandService characterService;
+  private final FileUploader fileUploader;
 
   @Transactional
-  public void upload(Long characterId, MultipartFile image) {
-    String imageUrl = "";
-    try {
-      imageUrl = fileStorage.upload(characterId.toString(), image);
-    } catch(IOException e) {
-      throw UploadFileFailException.getInstance();
-    }
-    characterService.updateImage(characterId, imageUrl);
+  public FileUploadUrlResponse upload(String userId, MultipartFile image) {
+    String uuid = UUID.randomUUID().toString();
+    String characterObjectName = "/characters/" + userId + "/" + uuid;
+    FileUploadUrlResponse fileUploadUrlResponse = fileUploader.upload(characterObjectName, image);
+    return fileUploadUrlResponse;
   }
 }
