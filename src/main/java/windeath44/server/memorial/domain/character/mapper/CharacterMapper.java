@@ -23,6 +23,7 @@ public class CharacterMapper {
     String deathOfDay = characterRequest.deathOfDay();
     String saying = characterRequest.saying();
     String causeOfDeathDetails = characterRequest.causeOfDeathDetails();
+    String imageUrl = characterRequest.imageUrl();
 
     return Character.builder()
             .anime(anime)
@@ -32,6 +33,7 @@ public class CharacterMapper {
             .deathReason(deathReason)
             .causeOfDeathDetails(causeOfDeathDetails)
             .deathOfDay(deathOfDay)
+            .imageUrl(imageUrl)
             .build();
   }
 
