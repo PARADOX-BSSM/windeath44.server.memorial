@@ -79,6 +79,7 @@ public class MemorialComment {
   }
 
   public void deleteByParents() {
+    if (parentComment == null) return;
     this.parentComment.removeChild(this);
   }
 
