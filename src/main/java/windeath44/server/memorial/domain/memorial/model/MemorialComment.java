@@ -41,6 +41,9 @@ public class MemorialComment {
   @BatchSize(size = 100)
   private List<MemorialComment> children = new ArrayList<>();
 
+  @OneToMany(mappedBy = "memorialComment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private  List<MemorialCommentLikes> likes = new ArrayList<>();
+
   public static MemorialComment of(final Memorial memorial, final String userId, final String content, final MemorialComment parentComment) {
     return MemorialComment.builder()
             .memorial(memorial)
@@ -59,7 +62,7 @@ public class MemorialComment {
   }
 
   public MemorialCommentLikesPrimaryKey likesKey(String userId) {
-    return MemorialCommentLikesPrimaryKey.of(this, userId);
+    return MemorialCommentLikesPrimaryKey.of(this.commentId, userId);
   }
 
   public Long getParentCommentId() {

@@ -30,23 +30,23 @@ public interface MemorialCommentRepository extends JpaRepository<MemorialComment
   @Query("select mc.memorial.memorialId as memorialId, count(mc) as commentCount from MemorialComment mc group by mc.memorial.memorialId order by count(mc) asc")
   List<MemorialCommentCountProjection> countCommentsByMemorial(Pageable pageable);
 
-  @Query("select mc as comment, case when mcl.memorialCommentLikesPrimaryKey.userId is not null then true else false end as isLiked " +
+  @Query("select mc as comment, case when mcl.id.userId is not null then true else false end as isLiked " +
          "from MemorialComment mc " +
-         "left join MemorialCommentLikes mcl on mc.commentId = mcl.memorialCommentLikesPrimaryKey.comment.commentId and mcl.memorialCommentLikesPrimaryKey.userId = :userId " +
+         "left join MemorialCommentLikes mcl on mc.commentId = mcl.id.commentId and mcl.id.userId = :userId " +
          "where mc.memorial.memorialId = :memorialId and mc.commentId <= :cursorId and mc.parentComment is null " +
          "order by mc.commentId desc")
   Slice<MemorialCommentWithLikeProjection> findRootCommentWithLikesByCursorId(@Param("memorialId") Long memorialId, @Param("userId") String userId, @Param("cursorId") Long cursorId, Pageable pageable);
 
-  @Query("select mc as comment, case when mcl.memorialCommentLikesPrimaryKey.userId is not null then true else false end as isLiked " +
+  @Query("select mc as comment, case when mcl.id.userId is not null then true else false end as isLiked " +
          "from MemorialComment mc " +
-         "left join MemorialCommentLikes mcl on mc.commentId = mcl.memorialCommentLikesPrimaryKey.comment.commentId and mcl.memorialCommentLikesPrimaryKey.userId = :userId " +
+         "left join MemorialCommentLikes mcl on mc.commentId = mcl.id.commentId and mcl.id.userId = :userId " +
          "where mc.memorial.memorialId = :memorialId and mc.parentComment is null " +
          "order by mc.commentId desc")
   Slice<MemorialCommentWithLikeProjection> findRootCommentWithLikes(@Param("memorialId") Long memorialId, @Param("userId") String userId, Pageable pageable);
 
-  @Query("select mc as comment, case when mcl.memorialCommentLikesPrimaryKey.userId is not null then true else false end as isLiked " +
+  @Query("select mc as comment, case when mcl.id.userId is not null then true else false end as isLiked " +
          "from MemorialComment mc " +
-         "left join MemorialCommentLikes mcl on mc.commentId = mcl.memorialCommentLikesPrimaryKey.comment.commentId and mcl.memorialCommentLikesPrimaryKey.userId = :userId " +
+         "left join MemorialCommentLikes mcl on mc.commentId = mcl.id.commentId and mcl.id.userId = :userId " +
          "where mc.memorial.memorialId = :memorialId and mc.parentComment is null " +
          "order by (size(mc.children) * 0.3 + mc.likesCount * 0.7) desc")
   List<MemorialCommentWithLikeProjection> findPopularRootCommentWithLikes(@Param("memorialId") Long memorialId, @Param("userId") String userId, Pageable pageable);
