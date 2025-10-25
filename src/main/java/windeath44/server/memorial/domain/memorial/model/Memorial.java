@@ -25,4 +25,5 @@ public class Memorial {
   public void plusBowCount() {
     bowCount++;
   }
+
 }
