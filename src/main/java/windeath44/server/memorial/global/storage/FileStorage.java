@@ -6,5 +6,5 @@ import java.io.IOException;
 
 public interface FileStorage {
   String upload(String objectName, MultipartFile file) throws IOException;
-
+  void delete(String objectName);
 }

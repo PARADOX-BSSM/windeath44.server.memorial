@@ -9,6 +9,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -20,6 +21,11 @@ public class S3FileStorage implements FileStorage {
 
   public String upload(String objectName, MultipartFile file) throws IOException {
     return putObject(objectName, file);
+  }
+
+  @Override
+  public void delete(String objectName) {
+    deleteObject(objectName);
   }
 
   private String putObject(String objectName, MultipartFile file) throws IOException {
@@ -44,6 +50,28 @@ public class S3FileStorage implements FileStorage {
       s3.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
       return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + objectName;
+    }
+  }
+
+  private void deleteObject(String objectName) {
+    String accessKey = storageProperties.getAccessKey();
+    String secretKey = storageProperties.getSecretKey();
+    String bucketName = storageProperties.getBucketName();
+    String region = storageProperties.getRegion();
+
+    AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
+
+    try (S3Client s3 = S3Client.builder()
+            .region(Region.of(region))
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .build()) {
+
+      DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+              .bucket(bucketName)
+              .key(objectName)
+              .build();
+
+      s3.deleteObject(deleteObjectRequest);
     }
   }
 }
