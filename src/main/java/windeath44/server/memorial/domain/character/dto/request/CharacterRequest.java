@@ -18,6 +18,7 @@ public record CharacterRequest (
         String causeOfDeathDetails,
         String deathOfDay,
         @NotNull(message="character image is null")
+        @NotEmpty(message="image url is empty")
         String imageUrl
 ) {
 
