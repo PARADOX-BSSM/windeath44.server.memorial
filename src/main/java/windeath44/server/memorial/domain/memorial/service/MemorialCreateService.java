@@ -19,7 +19,7 @@ public class MemorialCreateService {
 
   @Transactional
   public Long createMemorial(MemorialApplicationAvroSchema memorialCreationAvroSchema) {
-    Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId());
+    Memorial memorial = new Memorial(memorialCreationAvroSchema.getCharacterId(), memorialCreationAvroSchema.getApplicantId());
     memorialRepository.save(memorial);
     MemorialCommitRequestDto memorialCommitRequestDto = new MemorialCommitRequestDto(memorial.getMemorialId(), memorialCreationAvroSchema.getContent());
 
