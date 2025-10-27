@@ -60,6 +60,7 @@ public class Character {
     String deathOfDay = characterUpdateRequest.deathOfDay();
     String saying = characterUpdateRequest.saying();
     String causeOfDeathDetails = characterUpdateRequest.causeOfDeathDetails();
+    String imageUrl = characterUpdateRequest.imageUrl();
 
     this.name = name;
     this.age = age;
@@ -67,6 +68,7 @@ public class Character {
     this.deathOfDay = deathOfDay;
     this.saying = saying;
     this.causeOfDeathDetails = causeOfDeathDetails;
+    this.imageUrl = imageUrl;
   }
 
   public void updateImage(String imageUrl) {
