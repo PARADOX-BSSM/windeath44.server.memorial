@@ -9,6 +9,7 @@ import windeath44.server.memorial.domain.memorial.model.MemorialPullRequestState
 import windeath44.server.memorial.domain.memorial.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestAlreadyApprovedException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestNotFoundException;
+import windeath44.server.memorial.domain.memorial.exception.MemorialMergePermissionDeniedException;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialMergeRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.CompareContentsResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialMergeableResponseDto;
@@ -20,6 +21,7 @@ import java.util.LinkedList;
 @RequiredArgsConstructor
 public class MemorialMergeService {
   private final MemorialPullRequestRepository memorialPullRequestRepository;
+  private final MemorialChiefService memorialChiefService;
   private final diff_match_patch dmp = new diff_match_patch();
 
   public MemorialMergeableResponseDto validateMergeable(String userId, MemorialMergeRequestDto memorialMergeRequestDto) {
@@ -52,6 +54,11 @@ public class MemorialMergeService {
     MemorialPullRequest memorialPullRequest = memorialPullRequestRepository.findById(memorialMergeRequestDto.memorialPullRequestId())
             .orElseThrow(MemorialPullRequestNotFoundException::new);
     Memorial memorial = memorialPullRequest.getMemorial();
+
+    // Check if user is a chief of this memorial
+    if (!memorialChiefService.getChiefs(memorial.getMemorialId()).contains(userId)) {
+      throw new MemorialMergePermissionDeniedException();
+    }
 
     if(memorialPullRequest.isAlreadyApproved())
       throw new MemorialPullRequestAlreadyApprovedException();
