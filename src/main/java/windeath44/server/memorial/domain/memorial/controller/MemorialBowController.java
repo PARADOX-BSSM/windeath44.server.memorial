@@ -21,7 +21,7 @@ public class MemorialBowController {
     return ResponseEntity.status(201).body(HttpUtil.success("User id: " + userId + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId()));
   }
 
-  @GetMapping("/bow/{memorialId}")
+  @GetMapping("/bow/count/{memorialId}")
   public ResponseEntity<ResponseDto<Long>> getBowByUserId(@PathVariable Long memorialId) {
     Long bowCount = memorialBowService.bowCountByMemorialId(memorialId);
     return ResponseEntity.ok(HttpUtil.success("Memorial id: " + memorialId + " bow count: " + bowCount, bowCount));
