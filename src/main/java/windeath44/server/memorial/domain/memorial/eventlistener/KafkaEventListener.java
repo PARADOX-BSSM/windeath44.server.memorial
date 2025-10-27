@@ -1,7 +1,6 @@
 package windeath44.server.memorial.domain.memorial.eventlistener;
 
 import org.apache.avro.specific.SpecificRecordBase;
-import com.example.avro.CharacterAvroSchema;
 import com.example.avro.MemorialAvroSchema;
 import com.example.avro.MemorialApplicationAvroSchema;
 import jakarta.transaction.Transactional;
