@@ -8,8 +8,6 @@ import windeath44.server.memorial.domain.character.dto.response.CharacterRespons
 import windeath44.server.memorial.domain.character.model.Character;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
-import com.example.avro.CharacterAvroSchema;
-import com.example.avro.MemorialAvroSchema;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +23,7 @@ public class CharacterMapper {
     String deathOfDay = characterRequest.deathOfDay();
     String saying = characterRequest.saying();
     String causeOfDeathDetails = characterRequest.causeOfDeathDetails();
+    String imageUrl = characterRequest.imageUrl();
 
     return Character.builder()
             .anime(anime)
@@ -34,6 +33,7 @@ public class CharacterMapper {
             .deathReason(deathReason)
             .causeOfDeathDetails(causeOfDeathDetails)
             .deathOfDay(deathOfDay)
+            .imageUrl(imageUrl)
             .build();
   }
 
@@ -83,25 +83,6 @@ public class CharacterMapper {
             .build();
     return response;
 
-  }
-
-  public CharacterAvroSchema toCharacterAvroSchema(Character character, MemorialAvroSchema memorialAvroSchema) {
-    Long characterId = character.getCharacterId();
-    String name = character.getName();
-    String content = "";
-    String deathReason = character.getDeathReason();
-    String state = character.getState().toString();
-    String applicantId = memorialAvroSchema.getWriterId();
-
-    CharacterAvroSchema characterAvroSchema = CharacterAvroSchema.newBuilder()
-            .setCharacterId(characterId)
-            .setName(name)
-            .setContent(content)
-            .setDeathReason(deathReason)
-            .setState(state)
-            .setApplicantId(applicantId)
-            .build();
-    return characterAvroSchema;
   }
 
   public List<CharacterResponse> toCharacterListResponse(Slice<Character> characterSlice) {

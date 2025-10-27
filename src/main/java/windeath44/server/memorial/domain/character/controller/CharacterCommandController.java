@@ -5,6 +5,7 @@ import windeath44.server.memorial.domain.character.dto.response.CharacterIdRespo
 import windeath44.server.memorial.domain.character.service.CharacterCommandService;
 import windeath44.server.memorial.domain.character.service.usecase.CharacterImageUploadUseCase;
 import windeath44.server.memorial.domain.character.service.usecase.CreateCharacterUseCase;
+import windeath44.server.memorial.global.dto.FileUploadUrlResponse;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import jakarta.validation.Valid;
@@ -30,10 +31,10 @@ public class CharacterCommandController {
     return ResponseEntity.ok(responseDto);
   }
 
-  @PatchMapping(value="/image/{character-id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public ResponseEntity<ResponseDto<Void>> uploadImage(@PathVariable("character-id") Long characterId, @RequestParam("image") MultipartFile image) {
-    characterImageUploadUseCase.upload(characterId, image);
-    ResponseDto<Void> responseDto = HttpUtil.success("upload image");
+  @PostMapping(value="/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<ResponseDto<FileUploadUrlResponse>> uploadImage(@RequestHeader("user-id") String userId, @RequestParam("image") MultipartFile image) {
+    FileUploadUrlResponse characterImageUrlResponse = characterImageUploadUseCase.upload(userId, image);
+    ResponseDto<FileUploadUrlResponse> responseDto = HttpUtil.success("upload image", characterImageUrlResponse);
     return ResponseEntity.ok(responseDto);
   }
 

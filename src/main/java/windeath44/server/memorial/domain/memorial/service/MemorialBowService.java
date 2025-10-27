@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.avro.MemorialBowedAvroSchema;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowResponseDto;
 import windeath44.server.memorial.domain.memorial.exception.BowedWithin24HoursException;
@@ -12,6 +13,7 @@ import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialBow;
 import windeath44.server.memorial.domain.memorial.repository.MemorialBowRepository;
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
+import windeath44.server.memorial.global.infrastructure.KafkaProducer;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +23,7 @@ public class MemorialBowService {
   private final MemorialBowRepository memorialBowRepository;
   private final MemorialRepository memorialRepository;
   private final MemorialBowMapper memorialBowMapper;
+  private final KafkaProducer kafkaProducer;
 
   @Transactional
   public void bow(String userId, MemorialBowRequestDto memorialBowRequestDto) {
@@ -43,6 +46,10 @@ public class MemorialBowService {
     }
     memorial.plusBowCount();
     memorialRepository.save(memorial);
+
+    // 절 이벤트
+    MemorialBowedAvroSchema memorialBowedAvroSchema = new MemorialBowedAvroSchema(memorialId, memorial.getBowCount(), userId);
+    kafkaProducer.send("memorial-bowed-request", memorialBowedAvroSchema);
   }
 
   public Long bowCountByMemorialId(Long memorialId) {

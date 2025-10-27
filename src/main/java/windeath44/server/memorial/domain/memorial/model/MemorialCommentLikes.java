@@ -15,8 +15,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemorialCommentLikes {
+
   @EmbeddedId
-  private MemorialCommentLikesPrimaryKey memorialCommentLikesPrimaryKey;
+  private MemorialCommentLikesPrimaryKey id;
+
+  @MapsId("commentId")
+  @ManyToOne
+  @JoinColumn(name = "comment_id")
+  private MemorialComment memorialComment;
+
   @CreatedDate
   private LocalDateTime likedAt;
 }

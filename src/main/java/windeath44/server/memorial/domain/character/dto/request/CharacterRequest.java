@@ -16,7 +16,10 @@ public record CharacterRequest (
         @NotNull(message="deathReason is null")
         String deathReason,
         String causeOfDeathDetails,
-        String deathOfDay
+        String deathOfDay,
+        @NotNull(message="character image is null")
+        @NotEmpty(message="image url is empty")
+        String imageUrl
 ) {
 
 }
