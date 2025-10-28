@@ -10,7 +10,6 @@ import java.util.Date;
 public record MemorialTracingResponse (
         Long memorialId,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd/HH:mm", timezone = "Asia/Seoul")
-        Date viewedAt,
-        int durationSeconds
+        Date viewedAt
 ) {
 }
