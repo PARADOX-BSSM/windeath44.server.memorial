@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.memorial.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -66,10 +67,10 @@ public class MemorialTracingCustomRepositoryImpl implements MemorialTracingCusto
 
     Aggregation aggregation = newAggregation(
         match(Criteria.where("userId").is(userId).and("viewed").gte(startDate)),
-        sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed"),
+        sort(Sort.Direction.DESC, "viewed"),
         group("memorialId").first("$$ROOT").as("latestDoc"),
         replaceRoot("latestDoc"),
-        sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed")
+        sort(Sort.Direction.DESC, "viewed")
     );
 
     AggregationResults<MemorialTracing> results = mongoTemplate.aggregate(
