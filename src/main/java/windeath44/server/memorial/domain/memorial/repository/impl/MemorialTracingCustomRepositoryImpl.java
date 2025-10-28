@@ -58,4 +58,23 @@ public class MemorialTracingCustomRepositoryImpl implements MemorialTracingCusto
 
     return results.getMappedResults();
   }
+
+
+  @Override
+  public List<MemorialTracing> findRecentByUserIdWithinDays(String userId, int days) {
+    Date startDate = new Date(System.currentTimeMillis() - (long) days * 24 * 60 * 60 * 1000);
+
+    Aggregation aggregation = newAggregation(
+        match(Criteria.where("userId").is(userId).and("viewed").gte(startDate)),
+        sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed"),
+        group("memorialId").first("$$ROOT").as("latestDoc"),
+        replaceRoot("latestDoc"),
+        sort(org.springframework.data.domain.Sort.Direction.DESC, "viewed")
+    );
+
+    AggregationResults<MemorialTracing> results = mongoTemplate.aggregate(
+        aggregation, "user_memorial_tracing", MemorialTracing.class);
+
+    return results.getMappedResults();
+  }
 }

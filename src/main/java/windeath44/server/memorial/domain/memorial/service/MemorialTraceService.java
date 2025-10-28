@@ -57,7 +57,7 @@ public class MemorialTraceService {
 
 
   public List<MemorialTracingResponse> findRecentMemorialTracingByDay(String userId, int day) {
-    List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserId(userId, day);
+    List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserIdWithinDays(userId, day);
 
     return memorialTracings.stream()
             .map(memorialTracingMapper::toMemorialTracingResponse)
