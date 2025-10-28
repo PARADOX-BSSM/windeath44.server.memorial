@@ -54,4 +54,13 @@ public class MemorialTraceService {
 
     return new CursorPage<>(hasNext, responses);
   }
+
+
+  public List<MemorialTracingResponse> findRecentMemorialTracingByDay(String userId, int day) {
+    List<MemorialTracing> memorialTracings = memorialTracingRepository.findRecentByUserId(userId, day);
+
+    return memorialTracings.stream()
+            .map(memorialTracingMapper::toMemorialTracingResponse)
+            .toList();
+  }
 }

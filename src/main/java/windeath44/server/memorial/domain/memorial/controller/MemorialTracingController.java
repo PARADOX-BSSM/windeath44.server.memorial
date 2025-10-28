@@ -41,4 +41,13 @@ public class MemorialTracingController {
 
     return ResponseEntity.ok(HttpUtil.success("Memorial Tracing is Successfully Found", cursorPage));
   }
+
+  @GetMapping("/recent")
+  public ResponseEntity<ResponseDto<List<MemorialTracingResponse>>> getRecentMemorialTracing(
+          @RequestHeader("user-id") String userId,
+          @RequestParam(value = "day", defaultValue = "5") int day
+  ) {
+    List<MemorialTracingResponse> responses = memorialTraceService.findRecentMemorialTracingByDay(userId, day);
+    return ResponseEntity.ok(HttpUtil.success("Recent Memorial Tracing is Successfully Found", responses));
+  }
 }
