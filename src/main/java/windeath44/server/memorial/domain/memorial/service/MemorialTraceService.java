@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import windeath44.server.memorial.domain.memorial.dto.request.MemorialTracingUpdateDurationRequestDto;
 import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialTracingResponse;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialTracingMapper;
@@ -62,5 +63,13 @@ public class MemorialTraceService {
     return memorialTracings.stream()
             .map(memorialTracingMapper::toMemorialTracingResponse)
             .toList();
+  }
+
+
+  public void updateDurationSeconds(MemorialTracingUpdateDurationRequestDto requestDto) {
+    String memorialTracingId = requestDto.memorialTracingId();
+    int durationSeconds = requestDto.durationSeconds();
+
+    memorialTracingRepository.updateDurationSeconds(memorialTracingId, durationSeconds);
   }
 }

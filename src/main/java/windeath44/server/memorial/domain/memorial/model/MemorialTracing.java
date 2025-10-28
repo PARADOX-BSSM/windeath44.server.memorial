@@ -17,6 +17,8 @@ public class MemorialTracing {
   private Long memorialId;
   @Builder.Default
   private Date viewed = new Date();
+  @Builder.Default
+  private int durationSeconds = 0;
 
   public static MemorialTracing of(Long memorialId, String userId) {
     return MemorialTracing.builder()

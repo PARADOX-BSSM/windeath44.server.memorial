@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import windeath44.server.memorial.domain.memorial.dto.request.MemorialTracingUpdateDurationRequestDto;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.global.util.HttpUtil;
@@ -49,5 +50,14 @@ public class MemorialTracingController {
   ) {
     List<MemorialTracingResponse> responses = memorialTraceService.findRecentMemorialTracingByDay(userId, day);
     return ResponseEntity.ok(HttpUtil.success("Recent Memorial Tracing is Successfully Found", responses));
+  }
+
+
+  @PatchMapping("/duration")
+  public ResponseEntity<ResponseDto<Void>> updateDurationSeconds(
+          @RequestBody MemorialTracingUpdateDurationRequestDto requestDto
+  ) {
+    memorialTraceService.updateDurationSeconds(requestDto);
+    return ResponseEntity.ok(HttpUtil.success("Duration updated successfully", null));
   }
 }

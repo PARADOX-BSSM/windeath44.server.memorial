@@ -18,10 +18,12 @@ public class MemorialTracingMapper {
   public MemorialTracingResponse toMemorialTracingResponse(MemorialTracing memorialTracing) {
     Long memorialId = memorialTracing.getMemorialId();
     Date viewedAt = memorialTracing.getViewed();
+    int durationSeconds = memorialTracing.getDurationSeconds();
 
     return MemorialTracingResponse.builder()
             .memorialId(memorialId)
             .viewedAt(viewedAt)
+            .durationSeconds(durationSeconds)
             .build();
   }
 

@@ -10,4 +10,6 @@ public interface MemorialTracingCustomRepository {
   List<MemorialTracing> findRecentByUserIdWithCursor(String userId, Date cursor, int size);
 
   List<MemorialTracing> findRecentByUserIdWithinDays(String userId, int days);
+
+  void updateDurationSeconds(String memorialTracingId, int durationSeconds);
 }

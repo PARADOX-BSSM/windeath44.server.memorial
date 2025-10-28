@@ -78,4 +78,17 @@ public class MemorialTracingCustomRepositoryImpl implements MemorialTracingCusto
 
     return results.getMappedResults();
   }
+
+
+  @Override
+  public void updateDurationSeconds(String memorialTracingId, int durationSeconds) {
+    org.springframework.data.mongodb.core.query.Query query = new org.springframework.data.mongodb.core.query.Query(
+        Criteria.where("_id").is(memorialTracingId)
+    );
+
+    org.springframework.data.mongodb.core.query.Update update = new org.springframework.data.mongodb.core.query.Update()
+        .set("durationSeconds", durationSeconds);
+
+    mongoTemplate.updateFirst(query, update, MemorialTracing.class);
+  }
 }
