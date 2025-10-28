@@ -18,12 +18,16 @@ public class MemorialTracing {
   @Builder.Default
   private Date viewed = new Date();
   @Builder.Default
-  private int durationSeconds = 0;
+  private Integer durationSeconds = 0;
 
   public static MemorialTracing of(Long memorialId, String userId) {
     return MemorialTracing.builder()
             .userId(userId)
             .memorialId(memorialId)
             .build();
+  }
+
+  public boolean checkOwner(String userId) {
+    return this.userId.equals(userId);
   }
 }

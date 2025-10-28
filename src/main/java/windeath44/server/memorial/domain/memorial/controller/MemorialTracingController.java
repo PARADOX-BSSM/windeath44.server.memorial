@@ -55,9 +55,10 @@ public class MemorialTracingController {
 
   @PatchMapping("/duration")
   public ResponseEntity<ResponseDto<Void>> updateDurationSeconds(
+          @RequestHeader("user-id") String userId,
           @RequestBody MemorialTracingUpdateDurationRequestDto requestDto
   ) {
-    memorialTraceService.updateDurationSeconds(requestDto);
+    memorialTraceService.updateDurationSeconds(userId, requestDto);
     return ResponseEntity.ok(HttpUtil.success("Duration updated successfully", null));
   }
 }
