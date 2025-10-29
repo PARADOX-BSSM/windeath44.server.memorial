@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.memorial.eventlistener;
 
+import org.apache.avro.specific.SpecificRecordBase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
