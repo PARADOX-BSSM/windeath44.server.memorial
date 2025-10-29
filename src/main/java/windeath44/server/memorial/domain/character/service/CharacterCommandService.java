@@ -44,7 +44,7 @@ public class CharacterCommandService {
     
     character.update(characterUpdateRequest);
     boolean equalsImageUrl = newImageUrl.equals(oldImageUrl);
-    if (equalsImageUrl) return;
+    if (equalsImageUrl || oldImageUrl == null) return;
     // image가 다를 시, 기존 이미지 버킷에서 삭제
     deleteImageFromStorage(oldImageUrl);
   }
