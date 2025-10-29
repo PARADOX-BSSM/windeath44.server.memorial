@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface MemorialRepository extends JpaRepository<Memorial, Long>, MemorialRepositoryCustom {
   Memorial findMemorialByCharacterId(Long characterId);
+  List<Memorial> findByCreatorId(String creatorId);
 }

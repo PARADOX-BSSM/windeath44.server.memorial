@@ -1,6 +1,5 @@
 package windeath44.server.memorial.domain.character.mapper;
 
-//import windeath44.server.memorial.grpc.GetCharacterResponse;
 import com.example.grpc.GetCharacterResponse;
 import windeath44.server.memorial.domain.anime.model.Anime;
 import windeath44.server.memorial.domain.character.dto.request.CharacterRequest;

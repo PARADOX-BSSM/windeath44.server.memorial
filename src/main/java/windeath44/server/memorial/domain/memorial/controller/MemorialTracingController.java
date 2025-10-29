@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import windeath44.server.memorial.domain.memorial.dto.request.MemorialTracingUpdateDurationRequestDto;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.dto.CursorPage;
 import windeath44.server.memorial.global.util.HttpUtil;
@@ -22,7 +23,7 @@ import java.util.List;
 public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 
-  @GetMapping
+  @GetMapping // 삭제 예정(deprecated)
   public ResponseEntity<ResponseDto<CursorPage<MemorialTracingResponse>>> getMemorialTracing(@RequestHeader("user-id") String userId, @RequestParam(value = "size", defaultValue = "5") int size, @RequestParam(value = "cursor", required = false) String cursor) {
     CursorPage<MemorialTracingResponse> cursorPage;
 
@@ -40,5 +41,24 @@ public class MemorialTracingController {
     }
 
     return ResponseEntity.ok(HttpUtil.success("Memorial Tracing is Successfully Found", cursorPage));
+  }
+
+  @GetMapping("/recent")
+  public ResponseEntity<ResponseDto<List<MemorialTracingResponse>>> getRecentMemorialTracing(
+          @RequestHeader("user-id") String userId,
+          @RequestParam(value = "day", defaultValue = "5") int day
+  ) {
+    List<MemorialTracingResponse> responses = memorialTraceService.findRecentMemorialTracingByDay(userId, day);
+    return ResponseEntity.ok(HttpUtil.success("Recent Memorial Tracing is Successfully Found", responses));
+  }
+
+
+  @PatchMapping("/duration")
+  public ResponseEntity<ResponseDto<Void>> updateDurationSeconds(
+          @RequestHeader("user-id") String userId,
+          @RequestBody MemorialTracingUpdateDurationRequestDto requestDto
+  ) {
+    memorialTraceService.updateDurationSeconds(userId, requestDto);
+    return ResponseEntity.ok(HttpUtil.success("Duration updated successfully", null));
   }
 }

@@ -15,8 +15,11 @@ public class MemorialRejectController {
   private final MemorialRejectService memorialRejectService;
 
   @PatchMapping("/reject")
-  public ResponseEntity<ResponseDto<Void>> reject(@RequestBody MemorialRejectRequestDto memorialRejectRequestDto) {
-    memorialRejectService.rejectMemorialPullRequest(memorialRejectRequestDto);
+  public ResponseEntity<ResponseDto<Void>> reject(
+          @RequestHeader("user-id") String userId,
+          @RequestBody MemorialRejectRequestDto memorialRejectRequestDto
+  ) {
+    memorialRejectService.rejectMemorialPullRequest(userId, memorialRejectRequestDto);
     return ResponseEntity.ok(HttpUtil.success("Memorial Pull Request is Successfully Rejected"));
   }
 }
