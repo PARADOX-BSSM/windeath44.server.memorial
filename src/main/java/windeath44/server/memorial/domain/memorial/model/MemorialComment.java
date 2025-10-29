@@ -27,7 +27,10 @@ public class MemorialComment {
   @JoinColumn(name="memorialId")
   private Memorial memorial;
   private String userId;
+
+  @Column(nullable = false, columnDefinition = "TEXT")
   private String content;
+
   @ManyToOne
   @JoinColumn(name="parentId")
   private MemorialComment parentComment;

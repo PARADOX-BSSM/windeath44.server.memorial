@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.eventlistener;
 import org.apache.avro.specific.SpecificRecordBase;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
