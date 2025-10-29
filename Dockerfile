@@ -14,7 +14,7 @@ RUN ./gradlew dependencies --no-daemon --stacktrace
 COPY . .
 
 # 테스트가 원인일 수 있으므로, 우선 테스트 생략
-RUN ./gradlew generateAvroJava bootJar --no-daemon -x test --stacktrace
+RUN ./gradlew generateAvroJava generateProto bootJar --no-daemon -x test --stacktrace
 
 # 2단계: Runtime
 FROM openjdk:21-jdk
