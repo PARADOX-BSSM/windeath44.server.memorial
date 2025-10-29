@@ -23,7 +23,7 @@ import java.util.List;
 public class MemorialTracingController {
   private final MemorialTraceService memorialTraceService;
 
-  @GetMapping // 삭제 예쩡(deprecated)
+  @GetMapping // 삭제 예정(deprecated)
   public ResponseEntity<ResponseDto<CursorPage<MemorialTracingResponse>>> getMemorialTracing(@RequestHeader("user-id") String userId, @RequestParam(value = "size", defaultValue = "5") int size, @RequestParam(value = "cursor", required = false) String cursor) {
     CursorPage<MemorialTracingResponse> cursorPage;
 
