@@ -21,11 +21,11 @@ public enum ErrorCode {
   AUTHENTICATION_FAILED(401, "Authentication Failed"),
   MEMORIAL_MERGE_PERMISSION_DENIED(403, "Only memorial chiefs can merge commits"),
   UNDEFINED_ORDER_BY(400, "Order By is not defined"),
-  BOWED_WITHIN_24_HOURS(403, "You can bow only once within 24 hours"),
   INVALID_CURSOR_FORMAT(400, "Invalid cursor format"),
   MEMORIAL_TRACING_NOT_FOUND(404, "Memorial Tracing Not Found"),
   UNAUTHORIZED_MEMORIAL_TRACING_ACCESS(403, "Unauthorized Memorial Tracing Access"),
-  ;
+  BOWED_WITHIN_24_HOURS(403, "You have already bowed to this memorial within the last 24 hours"),
+  MEMORIAL_MERGE_CONFLICT(409, "Memorial merge conflict detected");
   private int status;
   private String message;
 }
