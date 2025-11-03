@@ -7,7 +7,7 @@ import windeath44.server.memorial.domain.memorial.model.MemorialPullRequest;
 import windeath44.server.memorial.domain.memorial.model.MemorialChiefs;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialPullRequestResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommitResponseDto;
-import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialSimpleResponseDto;
 
 @Mapper(componentModel = "spring", uses = {MemorialCommitMapper.class, MemorialMapper.class})
 public interface MemorialPullRequestMapper {
@@ -22,14 +22,8 @@ public interface MemorialPullRequestMapper {
     MemorialCommitResponseDto memorialCommitDto = MemorialCommitMapper.INSTANCE
         .toMemorialCommitResponseDto(pullRequest.getToCommit());
     
-    MemorialResponseDto memorialDto = MemorialMapper.INSTANCE.toMemorialResponseDto(
-        pullRequest.getMemorial(),
-        pullRequest.getMemorial().getChiefs().stream()
-            .map(MemorialChiefs::getUserId)
-            .toList(),
-        pullRequest.getUserId(),
-        pullRequest.getUpdatedAt()
-    );
+    MemorialSimpleResponseDto memorialDto = MemorialMapper.INSTANCE
+        .toMemorialSimpleResponseDto(pullRequest.getMemorial());
     
     return new MemorialPullRequestResponseDto(
         pullRequest.getMemorialPullRequestId(),
