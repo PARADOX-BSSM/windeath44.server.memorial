@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialSimpleResponseDto;
 import windeath44.server.memorial.domain.memorial.model.QMemorial;
 import windeath44.server.memorial.domain.memorial.model.QMemorialCommit;
 import windeath44.server.memorial.domain.memorial.model.QMemorialPullRequest;
@@ -47,23 +48,13 @@ public interface MemorialMapper {
     return OffsetPage.of(total.intValue(), memorialList);
   }
 
-  default MemorialResponseDto toMemorialResponseDto(
-      windeath44.server.memorial.domain.memorial.model.Memorial memorial,
-      List<String> chiefs,
-      String mergerId,
-      java.time.LocalDateTime updatedAt) {
+  default MemorialSimpleResponseDto toMemorialSimpleResponseDto(
+      windeath44.server.memorial.domain.memorial.model.Memorial memorial) {
     if (memorial == null) return null;
-    return new MemorialResponseDto(
+    return new MemorialSimpleResponseDto(
         memorial.getMemorialId(),
         memorial.getCharacterId(),
-        chiefs,
-        memorial.getBowCount(),
-        null, // memorialCommitId
-        null, // content
-        null, // userId
-        null, // createdAt
-        mergerId,
-        updatedAt
+        memorial.getBowCount()
     );
   }
 }
