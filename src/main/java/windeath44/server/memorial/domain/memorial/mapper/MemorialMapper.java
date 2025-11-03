@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.mapper;
 import com.querydsl.core.Tuple;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
 import windeath44.server.memorial.domain.memorial.model.QMemorial;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface MemorialMapper {
+  MemorialMapper INSTANCE = Mappers.getMapper(MemorialMapper.class);
+
   default MemorialResponseDto toMemorialResponseDto(Tuple tuple,
                                                     @Context QMemorial memorial,
                                                     @Context QMemorialPullRequest memorialPullRequest,
@@ -42,5 +45,25 @@ public interface MemorialMapper {
             x.get(memorial.characterId)
     )).toList();
     return OffsetPage.of(total.intValue(), memorialList);
+  }
+
+  default MemorialResponseDto toMemorialResponseDto(
+      windeath44.server.memorial.domain.memorial.model.Memorial memorial,
+      List<String> chiefs,
+      String mergerId,
+      java.time.LocalDateTime updatedAt) {
+    if (memorial == null) return null;
+    return new MemorialResponseDto(
+        memorial.getMemorialId(),
+        memorial.getCharacterId(),
+        chiefs,
+        memorial.getBowCount(),
+        null, // memorialCommitId
+        null, // content
+        null, // userId
+        null, // createdAt
+        mergerId,
+        updatedAt
+    );
   }
 }
