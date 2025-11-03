@@ -1,5 +1,6 @@
 package windeath44.server.memorial.global.error;
 
+import windeath44.server.memorial.domain.memorial.exception.BowedWithin24HoursException;
 import windeath44.server.memorial.global.error.exception.ErrorCode;
 import windeath44.server.memorial.global.error.exception.GlobalException;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,14 @@ public class GlobalExceptionHandler {
     );
   }
 
+  @ExceptionHandler(BowedWithin24HoursException.class)
+  public ResponseEntity<ErrorResponse> bowedWithin24HoursExceptionHandler(BowedWithin24HoursException e) {
+    log.error("error message : {}", e.getMessage());
+    return new ResponseEntity<>(
+            new ErrorResponse(ErrorCode.BOWED_WITHIN_24_HOURS),
+            HttpStatus.valueOf(ErrorCode.BOWED_WITHIN_24_HOURS.getStatus())
+    );
+  }
   private void errorLogging(ErrorCode errorCode, GlobalException e) {
     log.error("error message : {} || error status : {}", errorCode.getMessage(), errorCode.getStatus());
     log.error(e.getStackTrace().toString());

@@ -1,10 +1,9 @@
 package windeath44.server.memorial.domain.memorial.exception;
 
-import windeath44.server.memorial.global.error.exception.ErrorCode;
-import windeath44.server.memorial.global.error.exception.GlobalException;
+import java.time.LocalDateTime;
 
-public class BowedWithin24HoursException extends GlobalException {
-  public BowedWithin24HoursException() {
-    super(ErrorCode.BOWED_WITHIN_24_HOURS);
+public class BowedWithin24HoursException extends RuntimeException {
+  public BowedWithin24HoursException(LocalDateTime dateTime) {
+    super("You can only bow once every 24 hours. Remain Time: " + dateTime.toString());
   }
 }

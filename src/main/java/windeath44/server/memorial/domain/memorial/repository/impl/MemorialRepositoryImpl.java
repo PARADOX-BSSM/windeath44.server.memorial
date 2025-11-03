@@ -39,7 +39,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .from(memorial)
             .where(memorial.memorialId.eq(memorialId))
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(
                     memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
             )
@@ -66,7 +66,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .select(memorial.count())
             .from(memorial)
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED))
             .fetchOne();
     List<Tuple> result = queryFactory
@@ -76,7 +76,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
                     memorialPullRequest.updatedAt)
             .from(memorial)
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED))
             .orderBy(orderSpecifiers.get(orderBy))
             .limit(10).offset((page-1) * pageSize)
@@ -96,7 +96,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .select(memorial.count())
             .from(memorial)
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(
                     memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
                             .and(memorial.characterId.in(characters))
@@ -109,7 +109,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
                     memorialPullRequest.updatedAt)
             .from(memorial)
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(
                     memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
                             .and(memorial.characterId.in(characters))
@@ -135,7 +135,7 @@ public class MemorialRepositoryImpl implements MemorialRepositoryCustom {
             .from(memorial)
             .where(memorial.memorialId.in(memorialIds))
             .join(memorialPullRequest).on(memorialPullRequest.memorial.memorialId.eq(memorial.memorialId))
-            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.memorialCommit.memorialCommitId))
+            .join(memorialCommit).on(memorialCommit.memorialCommitId.eq(memorialPullRequest.toCommit.memorialCommitId))
             .where(
                     memorialPullRequest.state.eq(MemorialPullRequestState.APPROVED)
             )

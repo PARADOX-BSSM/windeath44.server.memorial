@@ -18,8 +18,12 @@ public class MemorialPullRequest {
   private String userId = null;
 
   @ManyToOne
-  @JoinColumn(name = "memorial_commit_id")
-  private MemorialCommit memorialCommit;
+  @JoinColumn(name = "from_id")
+  private MemorialCommit fromCommit;
+
+  @ManyToOne
+  @JoinColumn(name = "to_id")
+  private MemorialCommit toCommit;
 
   @ManyToOne
   @JoinColumn(name = "memorial_id")
@@ -29,16 +33,23 @@ public class MemorialPullRequest {
   private MemorialPullRequestState state = MemorialPullRequestState.PENDING;
 
   @UpdateTimestamp
-  private LocalDateTime updatedAt = LocalDateTime.now();
+  @Column(name = "created_at")
+  private LocalDateTime createdAt = LocalDateTime.now();
 
-  public MemorialPullRequest(MemorialCommit memorialCommit, Memorial memorial, String userId) {
-    this.memorialCommit = memorialCommit;
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
+
+  public MemorialPullRequest(MemorialCommit fromCommit, MemorialCommit toCommit, Memorial memorial, String userId) {
+    this.fromCommit = fromCommit;
+    this.toCommit = toCommit;
     this.memorial = memorial;
     this.userId = userId;
   }
 
-  public MemorialPullRequest(MemorialCommit memorialCommit, Memorial memorial, String userId, MemorialPullRequestState state) {
-    this.memorialCommit = memorialCommit;
+  public MemorialPullRequest(MemorialCommit fromCommit, MemorialCommit toCommit, Memorial memorial, String userId, MemorialPullRequestState state) {
+    this.fromCommit = fromCommit;
+    this.toCommit = toCommit;
     this.memorial = memorial;
     this.userId = userId;
     this.state = state;

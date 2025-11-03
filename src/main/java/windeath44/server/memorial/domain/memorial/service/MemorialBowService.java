@@ -26,7 +26,7 @@ public class MemorialBowService {
   private final KafkaProducer kafkaProducer;
 
   @Transactional
-  public void bow(String userId, MemorialBowRequestDto memorialBowRequestDto) {
+  public void bow(String userId, MemorialBowRequestDto memorialBowRequestDto) throws BowedWithin24HoursException {
     Long memorialId = memorialBowRequestDto.memorialId();
     Memorial memorial = memorialRepository.findById(memorialId).orElseThrow(MemorialNotFoundException::new);
     MemorialBow memorialBow = memorialBowRepository.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
@@ -39,7 +39,7 @@ public class MemorialBowService {
     }
     else {
       if(memorialBow.getLastBowedAt().isAfter(LocalDateTime.now().minusDays(1))) {
-        throw new BowedWithin24HoursException();
+        throw new BowedWithin24HoursException(LocalDateTime.now().plusDays(1).minusSeconds(memorialBow.getLastBowedAt().getSecond()));
       }
       memorialBow.plusBowCount();
       memorialBowRepository.save(memorialBow);
