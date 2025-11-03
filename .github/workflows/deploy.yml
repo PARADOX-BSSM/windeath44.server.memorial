@@ -13,6 +13,7 @@ jobs:
     uses: PARADOX-BSSM/windeath44.manifest.cicd/.github/workflows/ci.yml@main
     with:
       deploy_repo: 'PARADOX-BSSM/windeath44.manifest.values'
+      
       # deploy_path_prefix: 'charts'  # 기본값 사용시 생략 가능
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
