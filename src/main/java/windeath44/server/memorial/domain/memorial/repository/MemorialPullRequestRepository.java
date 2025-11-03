@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface MemorialPullRequestRepository extends JpaRepository<MemorialPullRequest, Long> {
-  MemorialPullRequest findByMemorialCommit(MemorialCommit commit);
+  MemorialPullRequest findByFromCommitAndToCommit(MemorialCommit fromCommit, MemorialCommit toCommit);
 
   MemorialPullRequest findMemorialPullRequestByMemorialAndState(Memorial memorial, MemorialPullRequestState memorialPullRequestState);
 
