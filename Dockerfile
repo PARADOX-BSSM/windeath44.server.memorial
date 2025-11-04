@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew generateAvroJava generateProto bootJar --no-daemon -x test --stacktrace
 
 # 2단계: Runtime
-FROM amazoncorretto:21-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
