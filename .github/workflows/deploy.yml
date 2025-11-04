@@ -4,6 +4,11 @@ on:
   push:
     branches: [ master ]
 
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  
 jobs:
   build-deploy:
     uses: PARADOX-BSSM/windeath44.manifest.cicd/.github/workflows/ci.yml@master
