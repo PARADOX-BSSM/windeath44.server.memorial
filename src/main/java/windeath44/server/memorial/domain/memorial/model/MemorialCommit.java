@@ -17,6 +17,8 @@ public class MemorialCommit {
   @ManyToOne
   @JoinColumn(name = "memorial_id")
   private Memorial memorial;
+
+  @Column(nullable = false, columnDefinition = "TEXT")
   private String content;
   private LocalDateTime createdAt = LocalDateTime.now();
 

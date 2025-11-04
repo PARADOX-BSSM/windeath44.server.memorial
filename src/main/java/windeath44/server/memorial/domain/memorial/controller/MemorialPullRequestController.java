@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialPullRequestResponseDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialPullRequestDiffResponseDto;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialPullRequestRequestDto;
@@ -33,5 +34,11 @@ public class MemorialPullRequestController {
   public ResponseEntity<ResponseDto> getPullRequest(@PathVariable Long requestId) {
     MemorialPullRequestResponseDto memorialPullRequestResponseDto = memorialPullRequestService.findMemorialPullRequestById(requestId);
     return ResponseEntity.ok(new ResponseDto("Memorial Pull Request is successfully found.", memorialPullRequestResponseDto));
+  }
+
+  @GetMapping("/pull-request/{requestId}/diff")
+  public ResponseEntity<ResponseDto> getPullRequestDiff(@PathVariable Long requestId) {
+    MemorialPullRequestDiffResponseDto diffResponseDto = memorialPullRequestService.getMemorialPullRequestDiff(requestId);
+    return ResponseEntity.ok(new ResponseDto("Memorial Pull Request diff is successfully found.", diffResponseDto));
   }
 }

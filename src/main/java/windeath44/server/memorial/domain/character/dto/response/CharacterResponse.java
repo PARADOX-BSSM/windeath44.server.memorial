@@ -2,18 +2,16 @@ package windeath44.server.memorial.domain.character.dto.response;
 
 import lombok.Builder;
 
-import java.time.LocalDate;
-
 @Builder
 public record CharacterResponse (
         Long characterId,
         Long animeId,
         String name,
         Integer age,
-        Long lifeTime,
         String deathReason,
+        String causeOfDeathDetails,
         String imageUrl,
-        LocalDate deathOfDay,
+        String deathOfDay,
         Long bowCount,
         String state,
         String saying

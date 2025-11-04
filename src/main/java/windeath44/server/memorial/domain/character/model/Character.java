@@ -29,15 +29,15 @@ public class Character {
   private Anime anime;
   private String name;
   private Integer age;
-  private Long lifeTime;
   @Enumerated(EnumType.STRING)
   private CauseOfDeath deathReason;
+  private String causeOfDeathDetails;
   private String imageUrl;
   private String saying;
   @Enumerated(EnumType.STRING)
   private CharacterState state;
   private Long bowCount;
-  private LocalDate deathOfDay;
+  private String deathOfDay;
 
   @PrePersist
   public void init() {
@@ -55,16 +55,20 @@ public class Character {
 
   public void update(CharacterRequest characterUpdateRequest) {
     String name = characterUpdateRequest.name();
-    CauseOfDeath deathReason = CauseOfDeath.valueOf(characterUpdateRequest.deathReason());
-    Long lifeTime = characterUpdateRequest.lifeTime();
+    CauseOfDeath deathReason = CauseOfDeath.valueOfDeathReason(characterUpdateRequest.deathReason());
     Integer age = characterUpdateRequest.age();
-    LocalDate deathOfDay = characterUpdateRequest.deathOfDay();
+    String deathOfDay = characterUpdateRequest.deathOfDay();
+    String saying = characterUpdateRequest.saying();
+    String causeOfDeathDetails = characterUpdateRequest.causeOfDeathDetails();
+    String imageUrl = characterUpdateRequest.imageUrl();
 
     this.name = name;
     this.age = age;
     this.deathReason = deathReason;
-    this.lifeTime = lifeTime;
     this.deathOfDay = deathOfDay;
+    this.saying = saying;
+    this.causeOfDeathDetails = causeOfDeathDetails;
+    this.imageUrl = imageUrl;
   }
 
   public void updateImage(String imageUrl) {

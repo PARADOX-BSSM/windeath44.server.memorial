@@ -6,14 +6,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentResponse;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialCommentMapper;
-import windeath44.server.memorial.domain.memorial.model.MemorialComment;
-import windeath44.server.memorial.domain.memorial.service.MemorialCommentLikesService;
+import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentWithLikeProjection;
 import windeath44.server.memorial.domain.memorial.service.MemorialCommentService;
 import windeath44.server.memorial.global.dto.CursorPage;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -21,41 +18,16 @@ import java.util.Set;
 public class MemorialCommentGetUseCase {
   private final MemorialCommentService memorialCommentService;
   private final MemorialCommentMapper memorialCommentMapper;
-  private final MemorialCommentLikesService memorialCommentLikesService;
 
   public CursorPage<MemorialCommentResponse> getComment(String userId, Long memorialId, Long cursorId, Integer size) {
-    Slice<MemorialComment> memorialRootCommentListSlice = memorialCommentService.getRootComment(memorialId, cursorId, size);
+    Slice<MemorialCommentWithLikeProjection> projectionSlice = memorialCommentService.getRootCommentWithLikes(userId, memorialId, cursorId, size);
 
-    List<MemorialComment> memorialRootCommentList = memorialRootCommentListSlice.getContent();
-
-    List<Long> rootIds = memorialRootCommentList.stream()
-            .map(MemorialComment::getCommentId)
+    List<MemorialCommentResponse> memorialCommentResponseList = projectionSlice.getContent()
+            .stream()
+            .map(memorialCommentMapper::toMemorialCommentResponse)
             .toList();
-    memorialCommentService.connectChild(memorialRootCommentList, rootIds);
-    List<MemorialCommentResponse> memorialCommentResponseList = transformMemorialCommentResponse(userId, memorialRootCommentList);
 
-    return new CursorPage<>(memorialRootCommentListSlice.hasNext(), memorialCommentResponseList);
-}
-
-  private List<MemorialCommentResponse> transformMemorialCommentResponse(
-          String userId,
-          List<MemorialComment> rootComments
-  ) {
-    Set<Long> allCommentIds = extractAllCommentIds(rootComments);
-    Set<Long> likedCommentIds = memorialCommentLikesService.getLikedCommentIds(userId, allCommentIds);
-
-    return rootComments.stream()
-            .map(comment -> memorialCommentMapper.toMemorialCommentResponse(comment, likedCommentIds))
-            .toList();
-  }
-
-  private Set<Long> extractAllCommentIds(List<MemorialComment> comments) {
-    Set<Long> ids = new HashSet<>();
-    for (MemorialComment comment : comments) {
-      ids.add(comment.getCommentId());
-      ids.addAll(extractAllCommentIds(comment.getChildren()));
-    }
-    return ids;
+    return new CursorPage<>(projectionSlice.hasNext(), memorialCommentResponseList);
   }
 
 }

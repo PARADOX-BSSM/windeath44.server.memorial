@@ -7,6 +7,7 @@ import windeath44.server.memorial.domain.character.exception.NotFoundCharacterEx
 import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
 import windeath44.server.memorial.domain.character.repository.CharacterRepository;
+import windeath44.server.memorial.global.storage.FileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CharacterCommandService {
   private final CharacterRepository characterRepository;
   private final CharacterMapper characterMapper;
+  private final FileStorage fileStorage;
 
   public CharacterIdResponse create(CharacterRequest characterRequest, Anime anime) {
     Character character = characterMapper.toCharacter(characterRequest, anime);
@@ -37,13 +39,16 @@ public class CharacterCommandService {
 
   public void update(CharacterRequest characterUpdateRequest, Long characterId) {
     Character character = findCharacterById(characterId);
+    String oldImageUrl = character.getImageUrl();
+    String newImageUrl = characterUpdateRequest.imageUrl();
+    
     character.update(characterUpdateRequest);
+    boolean equalsImageUrl = newImageUrl.equals(oldImageUrl);
+    if (equalsImageUrl || oldImageUrl == null) return;
+    // image가 다를 시, 기존 이미지 버킷에서 삭제
+    deleteImageFromStorage(oldImageUrl);
   }
 
-  public void updateImage(Long characterId, String imageUrl) {
-    Character character = findCharacterById(characterId);
-    character.updateImage(imageUrl);
-  }
 
   public Character findById(Long characterId) {
     return findCharacterById(characterId);
@@ -52,5 +57,14 @@ public class CharacterCommandService {
   private Character findCharacterById(Long characterId) {
     return characterRepository.findById(characterId)
             .orElseThrow(NotFoundCharacterException::getInstance);
+  }
+
+  private void deleteImageFromStorage(String imageUrl) {
+    String objectName = extractObjectNameFromUrl(imageUrl);
+    fileStorage.delete(objectName);
+  }
+
+  private String extractObjectNameFromUrl(String imageUrl) {
+    return imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
   }
 }

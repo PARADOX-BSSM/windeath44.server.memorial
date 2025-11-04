@@ -7,10 +7,14 @@ import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialCommentUpdateRequestDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentCountResponse;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialCommentResponse;
 import windeath44.server.memorial.domain.memorial.service.MemorialCommentService;
 import windeath44.server.memorial.domain.memorial.service.usecase.MemorialCommentGetUseCase;
+import windeath44.server.memorial.domain.memorial.service.usecase.MemorialPopularCommentGetUseCase;
 import windeath44.server.memorial.global.dto.CursorPage;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ import windeath44.server.memorial.global.dto.CursorPage;
 public class MemorialCommentController {
   private final MemorialCommentService memorialCommentService;
   private final MemorialCommentGetUseCase memorialCommentGetUseCase;
+  private final MemorialPopularCommentGetUseCase memorialPopularCommentGetUseCase;
 
   @PostMapping("/{memorial-id}")
   public ResponseEntity<ResponseDto<Void>> comment(@RequestBody MemorialCommentRequestDto dto, @RequestHeader("user-id") String userId, @PathVariable("memorial-id") Long memorialId) {
@@ -42,4 +47,17 @@ public class MemorialCommentController {
     memorialCommentService.delete(commentId);
     return ResponseEntity.status(200).body(HttpUtil.success("Memorial comment is successfully delete."));
   }
+
+  @GetMapping("/{memorial-id}/popular")
+  public ResponseEntity<ResponseDto<List<MemorialCommentResponse>>> getPopularComments(@RequestHeader(value = "user-id", required = false) String userId, @PathVariable("memorial-id") Long memorialId, @RequestParam(value = "size", defaultValue = "10") Integer size) {
+    List<MemorialCommentResponse> popularComments = memorialPopularCommentGetUseCase.getPopularComment(userId, memorialId, size);
+    return ResponseEntity.status(200).body(HttpUtil.success("Popular memorial comments are successfully retrieved.", popularComments));
+  }
+
+  @GetMapping("/count")
+  public ResponseEntity<ResponseDto<List<MemorialCommentCountResponse>>> getCommentCount(@RequestParam(value = "size", defaultValue = "10") Integer size) {
+    List<MemorialCommentCountResponse> commentCounts = memorialCommentService.getCommentCountByMemorial(size);
+    return ResponseEntity.status(200).body(HttpUtil.success("Memorial comment count is successfully retrieved.", commentCounts));
+  }
+
 }

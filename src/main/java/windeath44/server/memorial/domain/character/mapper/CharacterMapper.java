@@ -8,12 +8,9 @@ import windeath44.server.memorial.domain.character.dto.response.CharacterRespons
 import windeath44.server.memorial.domain.character.model.Character;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
-import com.example.avro.CharacterAvroSchema;
-import com.example.avro.MemorialAvroSchema;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -22,11 +19,11 @@ public class CharacterMapper {
   public Character toCharacter(CharacterRequest characterRequest, Anime anime) {
     String name = characterRequest.name();
     CauseOfDeath deathReason = CauseOfDeath.valueOfDeathReason(characterRequest.deathReason());
-    Long lifeTime = characterRequest.lifeTime();
     Integer age = characterRequest.age();
-    LocalDate deathOfDay = characterRequest.deathOfDay();
-
-    String saying =  characterRequest.saying();
+    String deathOfDay = characterRequest.deathOfDay();
+    String saying = characterRequest.saying();
+    String causeOfDeathDetails = characterRequest.causeOfDeathDetails();
+    String imageUrl = characterRequest.imageUrl();
 
     return Character.builder()
             .anime(anime)
@@ -34,19 +31,20 @@ public class CharacterMapper {
             .age(age)
             .saying(saying)
             .deathReason(deathReason)
-            .lifeTime(lifeTime)
+            .causeOfDeathDetails(causeOfDeathDetails)
             .deathOfDay(deathOfDay)
+            .imageUrl(imageUrl)
             .build();
   }
 
   public CharacterResponse toCharacterResponse(Character character) {
     Long characterId = character.getCharacterId();
     String name = character.getName();
-    Long lifeTime = character.getLifeTime();
     String deathReason = character.getDeathReason();
+    String causeOfDeathDetails = character.getCauseOfDeathDetails();
     String imageUrl = character.getImageUrl();
     Long bow_count = character.getBowCount();
-    LocalDate deathOfDay = character.getDeathOfDay();
+    String deathOfDay = character.getDeathOfDay();
     CharacterState state = character.getState();
     Long animeId = character.getAnimeId();
     Integer age = character.getAge();
@@ -56,8 +54,8 @@ public class CharacterMapper {
             .characterId(characterId)
             .animeId(animeId)
             .name(name)
-            .lifeTime(lifeTime)
             .deathReason(deathReason)
+            .causeOfDeathDetails(causeOfDeathDetails)
             .imageUrl(imageUrl)
             .bowCount(bow_count)
             .deathOfDay(deathOfDay)
@@ -74,34 +72,17 @@ public class CharacterMapper {
 
     String name = character.getName();
     String state = character.getState().toString();
+    String characterSaying = character.getSaying();
 
     GetCharacterResponse response = GetCharacterResponse.newBuilder()
             .setAnimeId(animeId)
             .setAnimeName(animeName)
             .setName(name)
+            .setContent(characterSaying)
             .setState(state)
             .build();
     return response;
 
-  }
-
-  public CharacterAvroSchema toCharacterAvroSchema(Character character, MemorialAvroSchema memorialAvroSchema) {
-    Long characterId = character.getCharacterId();
-    String name = character.getName();
-    String content = "";
-    String deathReason = character.getDeathReason();
-    String state = character.getState().toString();
-    String applicantId = memorialAvroSchema.getWriterId();
-
-    CharacterAvroSchema characterAvroSchema = CharacterAvroSchema.newBuilder()
-            .setCharacterId(characterId)
-            .setName(name)
-            .setContent(content)
-            .setDeathReason(deathReason)
-            .setState(state)
-            .setApplicantId(applicantId)
-            .build();
-    return characterAvroSchema;
   }
 
   public List<CharacterResponse> toCharacterListResponse(Slice<Character> characterSlice) {

@@ -14,6 +14,7 @@ import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
 import windeath44.server.memorial.domain.character.repository.CharacterRepository;
 import windeath44.server.memorial.global.dto.CursorPage;
+import windeath44.server.memorial.global.dto.OffsetPage;
 
 import java.util.List;
 
@@ -116,6 +117,24 @@ public class CharacterQueryService {
         System.out.println(characterSlice.toString());
         List<CharacterResponse> characterList = characterMapper.toCharacterListResponse(characterSlice);
         return new CursorPage<>(characterSlice.hasNext(), characterList);
+    }
+
+    public OffsetPage<CharacterResponse> findAllIntegratedOffset(String name, List<Long> animeId, String deathReason, String memorialState, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 사인 변환
+        boolean isNotNullDeathOfReason = deathReason != null;
+        CauseOfDeath causeOfDeath = isNotNullDeathOfReason ? CauseOfDeath.valueOfDeathReason(deathReason) : null;
+
+        // 캐릭터 추모 상태 변환
+        boolean isNotNullMemorialState = memorialState != null;
+        CharacterState characterState = isNotNullMemorialState ? CharacterState.valueOf(memorialState) : null;
+
+        List<Long> animeIds = (animeId == null || animeId.isEmpty()) ? null : animeId;
+        org.springframework.data.domain.Page<Character> characterPage = characterRepository.findAllWithOffset(name, animeIds, causeOfDeath, characterState, pageable);
+
+        List<CharacterResponse> characterList = characterMapper.toCharacterListResponse(characterPage);
+        return new OffsetPage<>((int) characterPage.getTotalElements(), characterList);
     }
 
 }

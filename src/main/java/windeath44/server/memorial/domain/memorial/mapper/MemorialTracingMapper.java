@@ -7,6 +7,7 @@ import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEve
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class MemorialTracingMapper {
@@ -22,5 +23,11 @@ public class MemorialTracingMapper {
             .memorialId(memorialId)
             .viewedAt(viewedAt)
             .build();
+  }
+
+  public List<MemorialTracingResponse> toMemorialTracingResponse(List<MemorialTracing> memorialTracings) {
+    return memorialTracings.stream()
+            .map(this::toMemorialTracingResponse)
+            .toList();
   }
 }

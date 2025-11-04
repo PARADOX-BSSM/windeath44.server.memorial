@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.character.controller;
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
 import windeath44.server.memorial.domain.character.service.CharacterQueryService;
 import windeath44.server.memorial.global.dto.CursorPage;
+import windeath44.server.memorial.global.dto.OffsetPage;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,20 @@ public class CharacterQueryController {
     ) {
         CursorPage<CharacterResponse> characterResponses = characterQueryService.findAllIntegrated(name, animeId, deathReason, memorialState, cursorId, size);
         ResponseDto<CursorPage<CharacterResponse>> responseDto = HttpUtil.success("find character ids integrated", characterResponses);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/search/integrated/offset")
+    public ResponseEntity<ResponseDto<OffsetPage<CharacterResponse>>> findIdsIntegratedOffset(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "animeId", required = false) List<Long> animeId,
+            @RequestParam(value = "deathReason", required = false) String deathReason,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size") int size,
+            @RequestParam(value = "memorialState", required = false) String memorialState // NOT_MEMORIALIZING, MEMORIALIZING
+    ) {
+        OffsetPage<CharacterResponse> characterResponses = characterQueryService.findAllIntegratedOffset(name, animeId, deathReason, memorialState, page, size);
+        ResponseDto<OffsetPage<CharacterResponse>> responseDto = HttpUtil.success("find character ids integrated", characterResponses);
         return ResponseEntity.ok(responseDto);
     }
 

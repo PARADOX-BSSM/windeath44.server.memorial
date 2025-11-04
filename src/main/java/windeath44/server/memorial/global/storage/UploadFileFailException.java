@@ -1,4 +1,4 @@
-package windeath44.server.memorial.domain.character.exception;
+package windeath44.server.memorial.global.storage;
 
 import windeath44.server.memorial.global.error.exception.ErrorCode;
 import windeath44.server.memorial.global.error.exception.GlobalException;

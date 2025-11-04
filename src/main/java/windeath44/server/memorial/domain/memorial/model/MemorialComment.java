@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,7 +27,10 @@ public class MemorialComment {
   @JoinColumn(name="memorialId")
   private Memorial memorial;
   private String userId;
+
+  @Column(nullable = false, columnDefinition = "TEXT")
   private String content;
+
   @ManyToOne
   @JoinColumn(name="parentId")
   private MemorialComment parentComment;
@@ -37,7 +41,11 @@ public class MemorialComment {
 
   @Builder.Default
   @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+  @BatchSize(size = 100)
   private List<MemorialComment> children = new ArrayList<>();
+
+  @OneToMany(mappedBy = "memorialComment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private  List<MemorialCommentLikes> likes = new ArrayList<>();
 
   public static MemorialComment of(final Memorial memorial, final String userId, final String content, final MemorialComment parentComment) {
     return MemorialComment.builder()
@@ -57,7 +65,7 @@ public class MemorialComment {
   }
 
   public MemorialCommentLikesPrimaryKey likesKey(String userId) {
-    return MemorialCommentLikesPrimaryKey.of(this, userId);
+    return MemorialCommentLikesPrimaryKey.of(this.commentId, userId);
   }
 
   public Long getParentCommentId() {
@@ -74,5 +82,14 @@ public class MemorialComment {
 
   public void downLikes() {
     if (likesCount > 0) this.likesCount--;
+  }
+
+  public void deleteByParents() {
+    if (parentComment == null) return;
+    this.parentComment.removeChild(this);
+  }
+
+  private void removeChild(MemorialComment memorialComment) {
+    this.children.remove(memorialComment);
   }
 }
