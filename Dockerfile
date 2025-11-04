@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew generateAvroJava generateProto bootJar --no-daemon -x test --stacktrace
 
 # 2단계: Runtime
-FROM openjdk:21-jdk
+FROM amazoncorretto:21-alpine
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
