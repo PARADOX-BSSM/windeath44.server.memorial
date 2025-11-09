@@ -6,6 +6,8 @@ import windeath44.server.memorial.domain.character.dto.request.CharacterChangeRe
 import windeath44.server.memorial.domain.character.dto.response.CharacterChangeRequestResponse;
 import windeath44.server.memorial.domain.character.model.Character;
 import windeath44.server.memorial.domain.character.model.CharacterChangeRequest;
+import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
+import windeath44.server.memorial.domain.character.model.type.CharacterState;
 import windeath44.server.memorial.domain.memorial.model.MemorialCommit;
 
 @Component
@@ -23,10 +25,10 @@ public class CharacterChangeRequestMapper {
                 .memorialCommit(memorialCommit)
                 .name(dto.name())
                 .age(dto.age())
-                .state(dto.state())
                 .imageUrl(dto.imageUrl())
-                .bowCount(dto.bowCount())
-                .dateOfDeath(dto.dateOfDeath())
+                .deathOfDay(dto.deathOfDay())
+                .deathReason(CauseOfDeath.valueOfDeathReason(dto.deathReason()))
+                .causeOfDeathDetails(dto.causeOfDeathDetails())
                 .saying(dto.saying())
                 .build();
     }
@@ -39,10 +41,10 @@ public class CharacterChangeRequestMapper {
                 request.getMemorialCommit().getMemorialCommitId(),
                 request.getName(),
                 request.getAge(),
-                request.getState(),
                 request.getImageUrl(),
-                request.getBowCount(),
-                request.getDateOfDeath(),
+                request.getDeathOfDay(),
+                request.getDeathReason() != null ? request.getDeathReason().getDeathReason() : null,
+                request.getCauseOfDeathDetails(),
                 request.getSaying()
         );
     }

@@ -37,8 +37,6 @@ public class CharacterChangeRequest {
 
     private String name;
     private Integer age;
-    @Enumerated(EnumType.STRING)
-    private CharacterState state;
     private String imageUrl;
     private String deathOfDay;
     @Enumerated(EnumType.STRING)

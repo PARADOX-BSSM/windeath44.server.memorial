@@ -15,10 +15,10 @@ public record CharacterChangeRequestDto(
         String name,
         @NotNull(message = "age is null")
         Integer age,
-        String state,
         String imageUrl,
-        Long bowCount,
-        String dateOfDeath,
+        String deathOfDay,
+        String deathReason,
+        String causeOfDeathDetails,
         String saying
 ) {
 }

@@ -9,10 +9,10 @@ public record CharacterChangeRequestResponse(
         Long memorialCommitId,
         String name,
         Integer age,
-        String state,
         String imageUrl,
-        Long bowCount,
-        String dateOfDeath,
+        String deathOfDay,
+        String deathReason,
+        String causeOfDeathDetails,
         String saying
 ) {
 }

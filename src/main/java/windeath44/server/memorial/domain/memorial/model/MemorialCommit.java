@@ -23,7 +23,7 @@ public class MemorialCommit {
   private String content;
   private LocalDateTime createdAt = LocalDateTime.now();
 
-  @OneToOne(mappedBy = "characterApplicationId")
+  @OneToOne(mappedBy = "memorialCommit")
   private CharacterChangeRequest characterChangeRequest;
 
   public MemorialCommit(String userId, Memorial memorial, String content) {
