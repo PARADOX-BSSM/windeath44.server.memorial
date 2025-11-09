@@ -23,10 +23,11 @@ public class AnimeTitleSet {
         });
     }
 
-    private String normalizeTitle(String name) {
-        Matcher matcher = pattern.matcher(name);
-        String normalizeTitle =  matcher.replaceAll("").trim();
-        return normalizeTitle;
+    private String normalizeTitle(String title) {
+        if (title == null) return "";
+        title = title.replaceAll("[\\s\\u200B-\\u200D\\uFEFF\\u00A0]+", "");
+        title = pattern.matcher(title).replaceAll(""); // 패턴에 맞는 부분 제거
+        return title.trim(); // 앞뒤 공백 제거
     }
 
     public LaftelResultResponse filter(LaftelResultResponse animes) {

@@ -23,6 +23,5 @@ public class RestHttpClient {
             .retrieve()
             .body(LaftelResultResponse.class);
     return laftelResultResponseResponse;
-
   }
 }
