@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import windeath44.server.memorial.domain.anime.model.Anime;
+import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
+import windeath44.server.memorial.domain.character.model.type.CharacterState;
 import windeath44.server.memorial.domain.memorial.model.MemorialCommit;
 
 import java.time.LocalDateTime;
@@ -35,9 +37,12 @@ public class CharacterChangeRequest {
 
     private String name;
     private Integer age;
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private CharacterState state;
     private String imageUrl;
-    private Long bowCount;
-    private String dateOfDeath;
+    private String deathOfDay;
+    @Enumerated(EnumType.STRING)
+    private CauseOfDeath deathReason;
+    private String causeOfDeathDetails;
     private String saying;
 }

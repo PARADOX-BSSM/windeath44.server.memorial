@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
+import windeath44.server.memorial.domain.character.dto.request.CharacterRequest;
+import windeath44.server.memorial.domain.character.model.CharacterChangeRequest;
 
 import java.time.LocalDateTime;
 
@@ -78,5 +80,13 @@ public class MemorialPullRequest {
 
   public boolean isChangedCharacter() {
     return null != this.fromCommit.getCharacterChangeRequest();
+  }
+
+  public Long getCharacterId() {
+    return this.memorial.getCharacterId();
+  }
+
+  public CharacterChangeRequest getCharacterUpdateRequest() {
+    return this.fromCommit.getCharacterChangeRequest();
   }
 }

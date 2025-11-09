@@ -71,6 +71,24 @@ public class Character {
     this.imageUrl = imageUrl;
   }
 
+  public void update(CharacterChangeRequest characterChangeRequest) {
+    String name = characterChangeRequest.getName();
+    CauseOfDeath deathReason = characterChangeRequest.getDeathReason();
+    Integer age = characterChangeRequest.getAge();
+    String deathOfDay = characterChangeRequest.getDeathOfDay();
+    String saying = characterChangeRequest.getSaying();
+    String causeOfDeathDetails = characterChangeRequest.getCauseOfDeathDetails();
+    String imageUrl = characterChangeRequest.getImageUrl();
+
+    this.name = name;
+    this.age = age;
+    this.deathReason = deathReason;
+    this.deathOfDay = deathOfDay;
+    this.saying = saying;
+    this.causeOfDeathDetails = causeOfDeathDetails;
+    this.imageUrl = imageUrl;
+  }
+
   public void updateImage(String imageUrl) {
     this.imageUrl = imageUrl;
   }
