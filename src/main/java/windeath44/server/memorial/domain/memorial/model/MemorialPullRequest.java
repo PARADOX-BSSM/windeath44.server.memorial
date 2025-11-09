@@ -75,4 +75,8 @@ public class MemorialPullRequest {
   public Boolean isAlreadyApproved() {
     return this.state == MemorialPullRequestState.APPROVED;
   }
+
+  public boolean isChangedCharacter() {
+    return null != this.fromCommit.getCharacterChangeRequest();
+  }
 }
