@@ -79,7 +79,7 @@ public class MemorialPullRequest {
   }
 
   public boolean isChangedCharacter() {
-    return null != this.fromCommit.getCharacterChangeRequest();
+    return null != this.toCommit.getCharacterChangeRequest();
   }
 
   public Long getCharacterId() {
@@ -87,6 +87,6 @@ public class MemorialPullRequest {
   }
 
   public CharacterChangeRequest getCharacterUpdateRequest() {
-    return this.fromCommit.getCharacterChangeRequest();
+    return this.toCommit.getCharacterChangeRequest();
   }
 }
