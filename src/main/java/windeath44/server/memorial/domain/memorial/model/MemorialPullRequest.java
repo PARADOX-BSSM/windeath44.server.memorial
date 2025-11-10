@@ -19,11 +19,11 @@ public class MemorialPullRequest {
   private Long memorialPullRequestId;
   private String userId = null;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "from_id")
   private MemorialCommit fromCommit;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "to_id")
   private MemorialCommit toCommit;
 
