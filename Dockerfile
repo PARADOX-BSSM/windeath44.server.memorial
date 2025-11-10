@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew generateAvroJava generateProto bootJar --no-daemon -x test --stacktrace
 
 # 2단계: Runtime
-FROM openjdk:21-jdk
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar app.jar
