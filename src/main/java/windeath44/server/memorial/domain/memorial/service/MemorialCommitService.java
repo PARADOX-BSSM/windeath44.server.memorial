@@ -35,6 +35,11 @@ public class MemorialCommitService {
     return memorialCommitMapper.toMemorialCommitResponseDto(memorialCommit, memorialCommit.getMemorial());
   }
 
+  public MemorialCommit findById(Long memorialCommitId) {
+    return memorialCommitRepository.findById(memorialCommitId)
+            .orElseThrow(MemorialCommitNotFoundException::new);
+  }
+
   public List<MemorialCommitResponseDto> findMemorialCommitsByMemorialId(Long memorialId) {
     List<MemorialCommit> memorialCommits = memorialCommitRepository.findMemorialCommitsByMemorial_MemorialId(memorialId);
     return memorialCommits.stream().map(x -> memorialCommitMapper.toMemorialCommitResponseDto(x, x.getMemorial())).toList();

@@ -2,6 +2,7 @@ package windeath44.server.memorial.domain.memorial.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialPullRequest;
@@ -12,13 +13,8 @@ import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestN
 import windeath44.server.memorial.domain.memorial.exception.MemorialMergeConflictException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialMergePermissionDeniedException;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialMergeRequestDto;
-import windeath44.server.memorial.domain.memorial.dto.response.CompareContentsResponseDto;
-import windeath44.server.memorial.domain.memorial.dto.response.MemorialMergeableResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialPullRequestDiffResponseDto;
-import windeath44.server.memorial.domain.memorial.service.MemorialPullRequestService;
-import windeath44.server.memorial.global.diff_match_patch;
-
-import java.util.LinkedList;
+import windeath44.server.memorial.domain.memorial.model.event.MemorialMergedEvent;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +22,7 @@ public class MemorialMergeService {
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final MemorialChiefService memorialChiefService;
   private final MemorialPullRequestService memorialPullRequestService;
+  private final ApplicationEventPublisher applicationEventPublisher;
   
   @Transactional
   public void mergeMemorialCommit(String userId, MemorialMergeRequestDto memorialMergeRequestDto) {
@@ -57,6 +54,9 @@ public class MemorialMergeService {
     }
 
     memorialPullRequestRepository.save(memorialPullRequest);
+    applicationEventPublisher.publishEvent(
+            MemorialMergedEvent.of(memorialPullRequest)
+    );
   }
 
 

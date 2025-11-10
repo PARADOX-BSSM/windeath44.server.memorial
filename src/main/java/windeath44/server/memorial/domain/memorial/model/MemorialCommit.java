@@ -2,6 +2,7 @@ package windeath44.server.memorial.domain.memorial.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import windeath44.server.memorial.domain.character.model.CharacterChangeRequest;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,9 @@ public class MemorialCommit {
   @Column(nullable = false, columnDefinition = "TEXT")
   private String content;
   private LocalDateTime createdAt = LocalDateTime.now();
+
+  @OneToOne(mappedBy = "memorialCommit", cascade = CascadeType.ALL)
+  private CharacterChangeRequest characterChangeRequest;
 
   public MemorialCommit(String userId, Memorial memorial, String content) {
     this.userId = userId;

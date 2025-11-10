@@ -27,6 +27,12 @@ public class Memorial {
   @OneToMany(mappedBy = "memorial", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<MemorialChiefs> chiefs = new ArrayList<>();
 
+  @OneToMany(mappedBy = "memorial", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<MemorialCommit> commits = new ArrayList<>();
+
+  @OneToMany(mappedBy = "memorial", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<MemorialPullRequest> pullRequests = new ArrayList<>();
+
   public Memorial(Long characterId) {
     this.characterId = characterId;
   }
