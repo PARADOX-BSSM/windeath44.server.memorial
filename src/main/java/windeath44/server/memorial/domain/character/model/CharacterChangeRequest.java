@@ -31,7 +31,7 @@ public class CharacterChangeRequest {
     @JoinColumn(name = "anime_id")
     private Anime anime;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "memorial_commit_id")
     private MemorialCommit memorialCommit;
 
