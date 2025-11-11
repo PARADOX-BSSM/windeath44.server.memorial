@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 public class BowedWithin24HoursException extends RuntimeException {
   private String remainTime;
-  public BowedWithin24HoursException(LocalDateTime dateTime) {
+  public BowedWithin24HoursException(String dateTime) {
     super("You can only bow once every 24 hours.");
-    this.remainTime = dateTime.toString();
+    this.remainTime = dateTime;
   }
 }
