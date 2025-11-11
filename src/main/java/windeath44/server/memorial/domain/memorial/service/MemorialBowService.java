@@ -15,6 +15,7 @@ import windeath44.server.memorial.domain.memorial.repository.MemorialBowReposito
 import windeath44.server.memorial.domain.memorial.repository.MemorialRepository;
 import windeath44.server.memorial.global.infrastructure.KafkaProducer;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -39,7 +40,11 @@ public class MemorialBowService {
     }
     else {
       if(memorialBow.getLastBowedAt().isAfter(LocalDateTime.now().minusDays(1))) {
-        throw new BowedWithin24HoursException(LocalDateTime.now().plusDays(1).minusSeconds(memorialBow.getLastBowedAt().getSecond()));
+        Duration remaining = Duration.between(LocalDateTime.now(), memorialBow.getLastBowedAt().plusDays(1));
+        long totalSeconds = Math.max(0, remaining.getSeconds());
+        long hours = totalSeconds / 3600; long minutes = (totalSeconds % 3600) / 60; long seconds = totalSeconds % 60;
+        String formatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        throw new BowedWithin24HoursException(formatted);
       }
       memorialBow.plusBowCount();
       memorialBowRepository.save(memorialBow);
