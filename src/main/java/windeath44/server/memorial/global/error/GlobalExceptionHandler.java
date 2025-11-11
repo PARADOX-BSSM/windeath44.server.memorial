@@ -25,17 +25,16 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(BowedWithin24HoursException.class)
-  public ResponseEntity<ErrorResponse> bowedWithin24HoursExceptionHandler(BowedWithin24HoursException e) {
+  public ResponseEntity<BowedWithin24HoursExceptionResponse> bowedWithin24HoursExceptionHandler(BowedWithin24HoursException e) {
     log.error("error message : {}", e.getMessage());
     return new ResponseEntity<>(
-            new ErrorResponse(ErrorCode.BOWED_WITHIN_24_HOURS),
+            BowedWithin24HoursExceptionResponse.from(ErrorCode.BOWED_WITHIN_24_HOURS, e.getRemainTime()),
             HttpStatus.valueOf(ErrorCode.BOWED_WITHIN_24_HOURS.getStatus())
     );
   }
+  
   private void errorLogging(ErrorCode errorCode, GlobalException e) {
     log.error("error message : {} || error status : {}", errorCode.getMessage(), errorCode.getStatus());
     log.error(e.getStackTrace().toString());
   }
-
-
 }
