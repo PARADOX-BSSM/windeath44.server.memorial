@@ -40,7 +40,12 @@ public class MemorialChiefService {
     Optional<Memorial> memorial = memorialRepository.findById(memorialId);
     List<String> top3UserIds = memorialBowRepository.top3UserIds(memorialId);
 
-    memorial.ifPresent(value -> top3UserIds.add(value.getCreatorId()));
+    memorial.ifPresent(value -> {
+      String creatorId = value.getCreatorId();
+      if (!top3UserIds.contains(creatorId)) {
+        top3UserIds.add(creatorId);
+      }
+    });
     
     return top3UserIds;
   }
