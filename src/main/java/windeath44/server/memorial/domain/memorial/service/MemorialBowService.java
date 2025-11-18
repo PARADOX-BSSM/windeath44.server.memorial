@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import windeath44.server.memorial.avro.MemorialBowedAvroSchema;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowResponseDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowStatusResponseDto;
 import windeath44.server.memorial.domain.memorial.exception.BowedWithin24HoursException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialNotFoundException;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialBowMapper;
@@ -17,10 +18,12 @@ import windeath44.server.memorial.global.infrastructure.KafkaProducer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
 public class MemorialBowService {
+  private static final DateTimeFormatter BOW_STATUS_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
   private final MemorialBowRepository memorialBowRepository;
   private final MemorialRepository memorialRepository;
   private final MemorialBowMapper memorialBowMapper;
@@ -47,6 +50,7 @@ public class MemorialBowService {
         throw new BowedWithin24HoursException(formatted);
       }
       memorialBow.plusBowCount();
+      memorialBow.updateLastBowedAt(LocalDateTime.now());
       memorialBowRepository.save(memorialBow);
     }
     memorial.plusBowCount();
@@ -69,7 +73,27 @@ public class MemorialBowService {
     return memorialBowMapper.toMemorialBowResponseDto(memorialBow);
   }
 
+  public MemorialBowStatusResponseDto getBowStatus(String userId, Long memorialId) {
+    validateMemorial(memorialId);
+    MemorialBow memorialBow = memorialBowRepository.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
+    LocalDateTime now = LocalDateTime.now();
+
+    if (memorialBow == null) {
+      return new MemorialBowStatusResponseDto(true, formatDateTime(now));
+    }
+
+    LocalDateTime availableAt = memorialBow.getLastBowedAt().plusDays(1);
+    boolean canBow = !now.isBefore(availableAt);
+    LocalDateTime displayTime = canBow ? now : availableAt;
+
+    return new MemorialBowStatusResponseDto(canBow, formatDateTime(displayTime));
+  }
+
   private void validateMemorial(Long memorialId) {
     memorialRepository.findById(memorialId).orElseThrow(MemorialNotFoundException::new);
+  }
+
+  private String formatDateTime(LocalDateTime dateTime) {
+    return dateTime.format(BOW_STATUS_FORMATTER);
   }
 }

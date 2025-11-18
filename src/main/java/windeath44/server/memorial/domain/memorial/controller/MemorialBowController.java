@@ -7,6 +7,7 @@ import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialBowRequestDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowResponseDto;
+import windeath44.server.memorial.domain.memorial.dto.response.MemorialBowStatusResponseDto;
 import windeath44.server.memorial.domain.memorial.service.MemorialBowService;
 
 @RestController
@@ -31,5 +32,11 @@ public class MemorialBowController {
   public ResponseEntity<ResponseDto<MemorialBowResponseDto>> getBowByUserIdAndMemorialId(@PathVariable String userId, @PathVariable Long memorialId) {
     MemorialBowResponseDto memorialBowResponseDto = memorialBowService.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
     return ResponseEntity.ok(HttpUtil.success("Memorial id: " + memorialId + " and user id: " + userId, memorialBowResponseDto));
+  }
+
+  @GetMapping("/bow/status/{userId}/{memorialId}")
+  public ResponseEntity<ResponseDto<MemorialBowStatusResponseDto>> getBowStatus(@PathVariable String userId, @PathVariable Long memorialId) {
+    MemorialBowStatusResponseDto bowStatus = memorialBowService.getBowStatus(userId, memorialId);
+    return ResponseEntity.ok(HttpUtil.success("Bow status for memorial id: " + memorialId + " and user id: " + userId, bowStatus));
   }
 }
