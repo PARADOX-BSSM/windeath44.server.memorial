@@ -33,4 +33,8 @@ public class MemorialBow {
   public void plusBowCount() {
     this.bowCount++;
   }
+
+  public void updateLastBowedAt(LocalDateTime lastBowedAt) {
+    this.lastBowedAt = lastBowedAt;
+  }
 }
