@@ -10,10 +10,8 @@ import windeath44.server.memorial.domain.memorial.model.MemorialPullRequestState
 import windeath44.server.memorial.domain.memorial.repository.MemorialPullRequestRepository;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestAlreadyApprovedException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestNotFoundException;
-import windeath44.server.memorial.domain.memorial.exception.MemorialMergeConflictException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialMergePermissionDeniedException;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialMergeRequestDto;
-import windeath44.server.memorial.domain.memorial.dto.response.MemorialPullRequestDiffResponseDto;
 import windeath44.server.memorial.domain.memorial.model.event.MemorialMergedEvent;
 
 @Service
@@ -21,7 +19,6 @@ import windeath44.server.memorial.domain.memorial.model.event.MemorialMergedEven
 public class MemorialMergeService {
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final MemorialChiefService memorialChiefService;
-  private final MemorialPullRequestService memorialPullRequestService;
   private final ApplicationEventPublisher applicationEventPublisher;
   
   @Transactional
@@ -37,12 +34,6 @@ public class MemorialMergeService {
 
     if(memorialPullRequest.isAlreadyApproved())
       throw new MemorialPullRequestAlreadyApprovedException();
-
-    // Check for conflicts before merging using getPullRequestDiff
-    MemorialPullRequestDiffResponseDto diffResult = memorialPullRequestService.getMemorialPullRequestDiff(memorialMergeRequestDto.memorialPullRequestId());
-    if (diffResult.hasConflicts()) {
-      throw new MemorialMergeConflictException();
-    }
 
     MemorialPullRequest latestApprovedMemorialPullRequest = memorialPullRequestRepository.findMemorialPullRequestByMemorialAndState(memorial, MemorialPullRequestState.APPROVED);
     memorialPullRequest.approve();
