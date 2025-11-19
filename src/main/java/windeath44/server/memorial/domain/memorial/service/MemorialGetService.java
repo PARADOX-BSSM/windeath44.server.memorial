@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import windeath44.server.memorial.global.dto.OffsetPage;
 
 @Service
 @RequiredArgsConstructor
@@ -38,18 +39,18 @@ public class MemorialGetService {
     return memorial;
   }
 
-  public List<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
+  public OffsetPage<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
     validateOrderBy(orderBy);
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
-    if (memorialListResponseDtoList.isEmpty()) {
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
+    if (memorialListResponseDtoList.values().isEmpty()) {
       throw new MemorialNotFoundException();
     }
     return memorialListResponseDtoList;
   }
  
-  public List<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
+  public OffsetPage<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
-    List<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
     return memorialListResponseDtoList;
   }
 

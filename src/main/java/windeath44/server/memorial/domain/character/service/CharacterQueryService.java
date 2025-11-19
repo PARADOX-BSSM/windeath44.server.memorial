@@ -18,6 +18,7 @@ import windeath44.server.memorial.domain.character.repository.CharacterRepositor
 import windeath44.server.memorial.global.dto.CursorPage;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.core.types.dsl.*;
+import windeath44.server.memorial.global.dto.OffsetPage;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -125,14 +126,33 @@ public class CharacterQueryService {
         return new CursorPage<>(characterSlice.hasNext(), characterList);
     }
 
+    public OffsetPage<CharacterResponse> findAllIntegratedOffset(String name, List<Long> animeId, String deathReason, String memorialState, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        // 사인 변환
+        boolean isNotNullDeathOfReason = deathReason != null;
+        CauseOfDeath causeOfDeath = isNotNullDeathOfReason ? CauseOfDeath.valueOfDeathReason(deathReason) : null;
+
+        // 캐릭터 추모 상태 변환
+        boolean isNotNullMemorialState = memorialState != null;
+        CharacterState characterState = isNotNullMemorialState ? CharacterState.valueOf(memorialState) : null;
+
+        List<Long> animeIds = (animeId == null || animeId.isEmpty()) ? null : animeId;
+        org.springframework.data.domain.Page<Character> characterPage = characterRepository.findAllWithOffset(name, animeIds, causeOfDeath, characterState, pageable);
+
+        List<CharacterResponse> characterList = characterMapper.toCharacterListResponse(characterPage);
+        return new OffsetPage<>((int) characterPage.getTotalElements(), characterList);
+    }
+
     public TodayAnniversariesResponse findAllByAnniversaries() {
         QCharacter character = QCharacter.character;
+
+        String today = LocalDate.now(ZoneId.of("Asia/Seoul")).toString();
 
         List<Long> characterIds = jpaQueryFactory
                 .select(character.characterId)
                 .from(character)
-                .where(character.deathOfDay.month().eq(LocalDate.now(ZoneId.of("Asia/Seoul")).getMonthValue())
-                        .and(character.deathOfDay.dayOfMonth().eq(LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfMonth())))
+                .where(character.deathOfDay.substring(5).eq(today.substring(5)))
                 .fetch();
 
         return new TodayAnniversariesResponse(characterIds);
