@@ -42,17 +42,17 @@ public class MemorialGetService {
 
   public OffsetPage<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
     validateOrderBy(orderBy);
-    OffsetPage<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
-    if (memorialListResponseDtoList.values().isEmpty()) {
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
+    if (memorialListResponseDtoPage.values().isEmpty()) {
       throw new MemorialNotFoundException();
     }
-    return memorialListResponseDtoList;
+    return memorialListResponseDtoPage;
   }
  
   public OffsetPage<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
-    OffsetPage<MemorialListResponseDto> memorialListResponseDtoList = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
-    return memorialListResponseDtoList;
+    OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
+    return memorialListResponseDtoPage;
   }
 
   private void validateOrderBy(String orderBy) {
@@ -67,6 +67,10 @@ public class MemorialGetService {
   public Memorial findById(Long memorialId) {
     return memorialRepository.findById(memorialId)
             .orElseThrow(MemorialNotFoundException::new);
+  }
+
+  public List<MemorialResponseDto> findMemorialByIds(List<Long> memorialIds) {
+    return memorialRepository.findByIds(memorialIds);
   }
 
   public TodayMemorialResponse getTodayMemorial() {
