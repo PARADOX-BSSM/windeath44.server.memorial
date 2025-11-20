@@ -1,5 +1,6 @@
 package windeath44.server.memorial.domain.memorial.service;
 
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -74,14 +75,16 @@ public class MemorialGetService {
     LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).atStartOfDay();
     LocalDateTime endOfDay = LocalDate.now(ZoneId.of("Asia/Seoul")).plusDays(1).atStartOfDay();
 
-    Long topMemorialId = jpaQueryFactory
-            .select(memorialComment.memorial.memorialId)
+    Tuple topMemorial = jpaQueryFactory
+            .select(memorialComment.memorial.memorialId, memorialComment.memorial.characterId)
             .from(memorialComment)
             .where(memorialComment.createdAt.between(startOfDay, endOfDay))
             .groupBy(memorialComment.memorial.memorialId)
             .orderBy(memorialComment.count().desc())
             .fetchFirst();
+    Long topMemorialId = topMemorial.get(memorialComment.memorial.memorialId);
+    Long topCharacterId = topMemorial.get(memorialComment.memorial.characterId);
 
-    return new TodayMemorialResponse(topMemorialId);
+    return new TodayMemorialResponse(topMemorialId, topCharacterId);
   }
 }
