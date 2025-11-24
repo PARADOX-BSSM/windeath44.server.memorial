@@ -6,10 +6,16 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: ${JDBC_DRIVER_SOURCE}
     url: ${DB_URL}
+  cache:
+    type: redis
   data:
     mongodb:
       uri: mongodb://${MONGODB_URL}
       database: windeath44
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
@@ -58,3 +64,5 @@ storage:
   secret-key: ${STORAGE_SECRET_KEY}
   bucket-name: ${STORAGE_BUCKET_NAME}
   region: ap-northeast-2
+
+
