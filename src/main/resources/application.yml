@@ -47,6 +47,9 @@ spring:
         spring.deserializer.value.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
         spring.kafka.consumer.value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
 
+  jackson:
+    time-zone: Asia/Seoul
+
 server:
   port: ${SERVER_PORT}
 

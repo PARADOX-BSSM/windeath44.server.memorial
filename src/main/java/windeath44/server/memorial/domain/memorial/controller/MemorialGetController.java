@@ -3,6 +3,7 @@ package windeath44.server.memorial.domain.memorial.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
 import windeath44.server.memorial.global.dto.OffsetPage;
 import windeath44.server.memorial.global.dto.ResponseDto;
 import windeath44.server.memorial.global.util.HttpUtil;
@@ -39,7 +40,6 @@ public class MemorialGetController {
           @RequestParam Long page
   ) {
     OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialGetService.findMemorials(orderBy, page);
-
     return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page, memorialListResponseDtoPage));
   }
 
@@ -52,5 +52,15 @@ public class MemorialGetController {
     List<Long> characters = memorialCharacterFilterRequestDto.characters();
     OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialGetService.findMemorialsFiltered(orderBy, page, characters);
     return ResponseEntity.ok(HttpUtil.success("Memorials Successfully Found Order By : " + orderBy + ", Page : " + page + ", With Filter : " + characters, memorialListResponseDtoPage));
+  }
+
+  @GetMapping("/today-best")
+  public ResponseEntity<ResponseDto<TodayMemorialResponse>> getTodayBest() {
+    TodayMemorialResponse todayMemorialResponse = memorialGetService.getTodayMemorial();
+    if (todayMemorialResponse.memorialId() == null) {
+        return ResponseEntity.status(404).body(HttpUtil.success("memorial not found", null));
+    }
+    ResponseDto<TodayMemorialResponse> responseDto = HttpUtil.success("find memorial id by comments count", todayMemorialResponse);
+    return ResponseEntity.ok(responseDto);
   }
 }
