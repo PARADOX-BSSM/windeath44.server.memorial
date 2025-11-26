@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
 import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
@@ -107,6 +108,10 @@ public class CharacterQueryService {
         return new CursorPage<>(characterSlice.hasNext(), characterList);
     }
 
+    @Cacheable(
+            cacheNames = "characterIntegrated",
+            key = "'search:' + #name + ':' + #animeId + ':' + #deathReason + ':' + #memorialState + ':' + #cursorId + ':' + #size"
+    )
     public CursorPage<CharacterResponse> findAllIntegrated(String name, List<Long> animeId, String deathReason, String memorialState, Long cursorId, int size) {
         Pageable pageable = PageRequest.of(0, size);
 

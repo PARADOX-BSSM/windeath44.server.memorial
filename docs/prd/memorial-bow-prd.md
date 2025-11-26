@@ -23,7 +23,7 @@
 | `/memorials/bow` | POST | Perform bow for authenticated user. | Requires `user-id` header. | `ResponseDto<Void>` success message; 201 status. Throws 403 with remain time if within cooldown.
 | `/memorials/bow/{memorialId}` | GET | Retrieve total bow count for memorial. | Public. | `ResponseDto<Long>` returning total bow count.
 | `/memorials/bow/status/{userId}/{memorialId}` | GET | Determine if user can bow now and return formatted timestamp. | Public but typically same user; optional header `user-id` for tracing. | `ResponseDto<MemorialBowStatusResponseDto>`.
-| `/memorials/bow/{userId}/{memorialId}` | GET | Debug endpoint returning raw entity info. | Public; used internally. | `ResponseDto<MemorialBowResponseDto>`.
+| `/memorials/bow/{userId}/{memorialId}` | GET | Debug endpoint returning raw entity info and the current jeol/season rank. | Public; used internally. | `ResponseDto<MemorialBowResponseDto>` including `curruntBowRanking`.
 
 ## 4. Business Logic
 - **Cooldown Enforcement:** `MemorialBow.lastBowedAt` tracked per (user, memorial). Service rejects bow attempts if `lastBowedAt > now - 24h`, returning formatted `remainTime` in exception message.
@@ -44,7 +44,7 @@
 
 ## 6. Data Contracts
 - **MemorialBowStatusResponseDto**: `{ "canBow": boolean, "availableAt": "yyyy-MM-dd HH:mm:ss" }`.
-- **MemorialBowResponseDto**: raw entity fields (IDs, counts, `lastBowedAt`).
+- **MemorialBowResponseDto**: raw entity fields (IDs, counts, `lastBowedAt`) plus `curruntBowRanking` (current term/jeol rank for this memorial).
 - **Exception payload**: `ResponseDto` envelope with error message and optional data.
 
 ## 7. Observability
