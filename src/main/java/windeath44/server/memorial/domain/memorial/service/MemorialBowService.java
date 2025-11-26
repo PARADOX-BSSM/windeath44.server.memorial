@@ -34,18 +34,18 @@ public class MemorialBowService {
     Long memorialId = memorialBowRequestDto.memorialId();
     Memorial memorial = memorialRepository.findById(memorialId).orElseThrow(MemorialNotFoundException::new);
     MemorialBow memorialBow = memorialBowRepository.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
-    if(memorialBow == null) {
+    if (memorialBow == null) {
       MemorialBow newMemorialBow = new MemorialBow(
-              userId,
-              memorialId
-      );
+          userId,
+          memorialId);
       memorialBowRepository.save(newMemorialBow);
-    }
-    else {
-      if(memorialBow.getLastBowedAt().isAfter(LocalDateTime.now().minusDays(1))) {
+    } else {
+      if (memorialBow.getLastBowedAt().isAfter(LocalDateTime.now().minusDays(1))) {
         Duration remaining = Duration.between(LocalDateTime.now(), memorialBow.getLastBowedAt().plusDays(1));
         long totalSeconds = Math.max(0, remaining.getSeconds());
-        long hours = totalSeconds / 3600; long minutes = (totalSeconds % 3600) / 60; long seconds = totalSeconds % 60;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
         String formatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
         throw new BowedWithin24HoursException(formatted);
       }
@@ -57,7 +57,8 @@ public class MemorialBowService {
     memorialRepository.save(memorial);
 
     // 절 이벤트
-    MemorialBowedAvroSchema memorialBowedAvroSchema = new MemorialBowedAvroSchema(memorialId, memorial.getBowCount(), userId);
+    MemorialBowedAvroSchema memorialBowedAvroSchema = new MemorialBowedAvroSchema(memorialId, memorial.getBowCount(),
+        userId);
     kafkaProducer.send("memorial-bowed-request", memorialBowedAvroSchema);
   }
 
@@ -70,7 +71,8 @@ public class MemorialBowService {
   public MemorialBowResponseDto findMemorialBowByUserIdAndMemorialId(String userId, Long memorialId) {
     validateMemorial(memorialId);
     MemorialBow memorialBow = memorialBowRepository.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
-    return memorialBowMapper.toMemorialBowResponseDto(memorialBow);
+    Long currentBowRanking = memorialBowRepository.findCurrentBowRanking(userId, memorialId);
+    return memorialBowMapper.toMemorialBowResponseDto(memorialBow, currentBowRanking);
   }
 
   public MemorialBowStatusResponseDto getBowStatus(String userId, Long memorialId) {

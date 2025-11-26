@@ -2,6 +2,7 @@ package windeath44.server.memorial.domain.memorial.service;
 
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
@@ -26,20 +27,19 @@ import windeath44.server.memorial.global.dto.OffsetPage;
 public class MemorialGetService {
   private final JPAQueryFactory jpaQueryFactory;
   private final MemorialRepository memorialRepository;
-  private final ApplicationEventPublisher applicationEventPublisher;
 
-  public MemorialResponseDto findMemorialById(Long memorialId, String userId) {
+  @Cacheable(cacheNames = "memorial", key = "#memorialId")
+  public MemorialResponseDto findMemorialById(Long memorialId) {
     MemorialResponseDto memorial = memorialRepository.findMemorialById(memorialId);
 
-    if (memorial==null) {
+    if (memorial == null) {
       throw new MemorialNotFoundException();
     }
-
-    if (userId != null) applicationEventPublisher.publishEvent(new MemorialTracingEvent(memorialId, userId));
 
     return memorial;
   }
 
+  @Cacheable(cacheNames = "memorialList", key = "#orderBy + ':' + #page")
   public OffsetPage<MemorialListResponseDto> findMemorials(String orderBy, Long page) {
     validateOrderBy(orderBy);
     OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPage(orderBy, page, 10L);
@@ -49,6 +49,7 @@ public class MemorialGetService {
     return memorialListResponseDtoPage;
   }
  
+  @Cacheable(cacheNames = "memorialListFiltered", key = "#orderBy + ':' + #page + ':' + #characters")
   public OffsetPage<MemorialListResponseDto> findMemorialsFiltered(String orderBy, Long page, List<Long> characters) {
     validateOrderBy(orderBy);
     OffsetPage<MemorialListResponseDto> memorialListResponseDtoPage = memorialRepository.findMemorialsOrderByAndPageCharacterFiltered(orderBy, page, 10L, characters);
@@ -69,6 +70,7 @@ public class MemorialGetService {
             .orElseThrow(MemorialNotFoundException::new);
   }
 
+  @Cacheable(cacheNames = "memorialByIds", key = "#memorialIds")
   public List<MemorialResponseDto> findMemorialByIds(List<Long> memorialIds) {
     return memorialRepository.findByIds(memorialIds);
   }

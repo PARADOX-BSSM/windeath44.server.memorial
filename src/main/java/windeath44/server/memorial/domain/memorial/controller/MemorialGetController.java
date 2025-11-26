@@ -11,6 +11,7 @@ import windeath44.server.memorial.domain.memorial.dto.request.MemorialCharacterF
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialListResponseDto;
 import windeath44.server.memorial.domain.memorial.dto.response.MemorialResponseDto;
 import windeath44.server.memorial.domain.memorial.service.MemorialGetService;
+import windeath44.server.memorial.domain.memorial.service.MemorialGetServiceCacheProxy;
 
 import java.util.List;
 
@@ -19,10 +20,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemorialGetController {
   private final MemorialGetService memorialGetService;
+  private final MemorialGetServiceCacheProxy memorialGetServiceCacheProxy;
 
   @GetMapping("/{memorialId:\\d+}")
   public ResponseEntity<ResponseDto<MemorialResponseDto>> findByMemorialId(@PathVariable Long memorialId, @RequestHeader(value = "user-id", required = false) String userId) {
-    MemorialResponseDto memorialResponseDto = memorialGetService.findMemorialById(memorialId, userId);
+    MemorialResponseDto memorialResponseDto = memorialGetServiceCacheProxy.findMemorialById(memorialId, userId);
     return ResponseEntity.ok(HttpUtil.success("memorialId: " + memorialId + " Successfully Found", memorialResponseDto));
   }
 
