@@ -17,9 +17,11 @@ public class MemorialBowController {
   private final MemorialBowService memorialBowService;
 
   @PostMapping("/bow")
-  public ResponseEntity<ResponseDto<Void>> bow(@RequestHeader("user-id") String userId, @RequestBody MemorialBowRequestDto memorialBowRequestDto) {
+  public ResponseEntity<ResponseDto<Void>> bow(@RequestHeader("user-id") String userId,
+      @RequestBody MemorialBowRequestDto memorialBowRequestDto) {
     memorialBowService.bow(userId, memorialBowRequestDto);
-    return ResponseEntity.status(201).body(HttpUtil.success("User id: " + userId + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId()));
+    return ResponseEntity.status(201).body(HttpUtil
+        .success("User id: " + userId + " successfully bowed to memorial id:" + memorialBowRequestDto.memorialId()));
   }
 
   @GetMapping("/bow/{memorialId}")
@@ -29,14 +31,19 @@ public class MemorialBowController {
   }
 
   @GetMapping("/bow/{userId}/{memorialId}")
-  public ResponseEntity<ResponseDto<MemorialBowResponseDto>> getBowByUserIdAndMemorialId(@PathVariable String userId, @PathVariable Long memorialId) {
-    MemorialBowResponseDto memorialBowResponseDto = memorialBowService.findMemorialBowByUserIdAndMemorialId(userId, memorialId);
-    return ResponseEntity.ok(HttpUtil.success("Memorial id: " + memorialId + " and user id: " + userId, memorialBowResponseDto));
+  public ResponseEntity<ResponseDto<MemorialBowResponseDto>> getBowByUserIdAndMemorialId(@PathVariable String userId,
+      @PathVariable Long memorialId) {
+    MemorialBowResponseDto memorialBowResponseDto = memorialBowService.findMemorialBowByUserIdAndMemorialId(userId,
+        memorialId);
+    return ResponseEntity
+        .ok(HttpUtil.success("Memorial id: " + memorialId + " and user id: " + userId, memorialBowResponseDto));
   }
 
   @GetMapping("/bow/status/{userId}/{memorialId}")
-  public ResponseEntity<ResponseDto<MemorialBowStatusResponseDto>> getBowStatus(@PathVariable String userId, @PathVariable Long memorialId) {
+  public ResponseEntity<ResponseDto<MemorialBowStatusResponseDto>> getBowStatus(@PathVariable String userId,
+      @PathVariable Long memorialId) {
     MemorialBowStatusResponseDto bowStatus = memorialBowService.getBowStatus(userId, memorialId);
-    return ResponseEntity.ok(HttpUtil.success("Bow status for memorial id: " + memorialId + " and user id: " + userId, bowStatus));
+    return ResponseEntity
+        .ok(HttpUtil.success("Bow status for memorial id: " + memorialId + " and user id: " + userId, bowStatus));
   }
 }
