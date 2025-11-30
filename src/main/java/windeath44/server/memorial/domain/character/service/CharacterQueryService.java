@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
+import windeath44.server.memorial.domain.character.dto.response.CharacterWithAnimeResponse;
 import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
+import windeath44.server.memorial.domain.anime.dto.response.AnimeResponse;
+import windeath44.server.memorial.domain.anime.mapper.AnimeMapper;
 import windeath44.server.memorial.domain.character.exception.NotFoundCharacterException;
 import windeath44.server.memorial.domain.character.mapper.CharacterMapper;
 import windeath44.server.memorial.domain.character.model.Character;
@@ -32,14 +35,15 @@ public class CharacterQueryService {
     private final CharacterRepository characterRepository;
     private final CharacterMapper characterMapper;
     private final JPAQueryFactory jpaQueryFactory;
+    private final AnimeMapper animeMapper;
 
-    public windeath44.server.memorial.domain.character.model.Character findById(Long characterId) {
-        windeath44.server.memorial.domain.character.model.Character character = findCharacterById(characterId);
+    public Character findById(Long characterId) {
+        Character character = findCharacterById(characterId);
         return character;
     }
 
-    public windeath44.server.memorial.domain.character.model.Character findCharacterById(Long characterId) {
-        windeath44.server.memorial.domain.character.model.Character character = characterRepository.findById(characterId)
+    public Character findCharacterById(Long characterId) {
+        Character character = characterRepository.findById(characterId)
                 .orElseThrow(NotFoundCharacterException::getInstance);
         return character;
     }
@@ -86,6 +90,19 @@ public class CharacterQueryService {
                 .map(characterMapper::toCharacterResponse)
                 .toList();
         return characterList;
+    }
+
+    public List<CharacterWithAnimeResponse> findCharactersWithAnimeByCharacterIds(List<Long> characterIds) {
+        // fetch join으로 캐릭터와 애니메이션을 한 번에 조회
+        List<Character> characters = characterRepository.findAllByIdsWithAnime(characterIds);
+        
+        // Character 엔티티를 CharacterWithAnimeResponse로 변환
+        return characters.stream()
+                .map(character -> CharacterWithAnimeResponse.builder()
+                        .character(characterMapper.toCharacterResponse(character))
+                        .anime(animeMapper.toAnimeResponse(character.getAnime()))
+                        .build())
+                .toList();
     }
 
     public CursorPage<CharacterResponse> findAllByName(String name, Long cursorId, int size) {

@@ -37,6 +37,9 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
   @Query("select c from Character c where c.characterId in :characterIds")
   List<Character> findAllByIds(List<Long> characterIds);
 
+  @Query("select c from Character c join fetch c.anime where c.characterId in :characterIds")
+  List<Character> findAllByIdsWithAnime(@Param("characterIds") List<Long> characterIds);
+
   @Query("select c from Character c where c.name like concat('%', :name, '%') order by c.characterId desc")
   Slice<Character> findAllPageableByName(String name, Pageable pageable);
 
