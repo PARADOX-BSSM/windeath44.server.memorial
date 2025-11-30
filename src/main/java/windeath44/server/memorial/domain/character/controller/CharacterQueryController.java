@@ -1,6 +1,7 @@
 package windeath44.server.memorial.domain.character.controller;
 
 import windeath44.server.memorial.domain.character.dto.response.CharacterResponse;
+import windeath44.server.memorial.domain.character.dto.response.CharacterWithAnimeResponse;
 import windeath44.server.memorial.domain.character.dto.response.TodayAnniversariesResponse;
 import windeath44.server.memorial.domain.character.model.type.CauseOfDeath;
 import windeath44.server.memorial.domain.character.model.type.CharacterState;
@@ -81,6 +82,13 @@ public class CharacterQueryController {
     public ResponseEntity<ResponseDto<List<CharacterResponse>>> findCharacterResponsesByCharacterIds(@RequestParam List<Long> characterIds) {
         List<CharacterResponse> characterResponseList = characterQueryService.findByCharacterIds(characterIds);
         ResponseDto<List<CharacterResponse>> responseDto = HttpUtil.success("find characters by character ids", characterResponseList);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/search/characterIds/with-anime")
+    public ResponseEntity<ResponseDto<List<CharacterWithAnimeResponse>>> findCharactersWithAnimeByCharacterIds(@RequestParam List<Long> characterIds) {
+        List<CharacterWithAnimeResponse> characterWithAnimeResponseList = characterQueryService.findCharactersWithAnimeByCharacterIds(characterIds);
+        ResponseDto<List<CharacterWithAnimeResponse>> responseDto = HttpUtil.success("find characters with anime by character ids", characterWithAnimeResponseList);
         return ResponseEntity.ok(responseDto);
     }
 
