@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import windeath44.server.memorial.domain.memorial.dto.response.TodayMemorialResponse;
+import windeath44.server.memorial.domain.memorial.exception.TopMemorialNotFoundException;
 import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.QMemorialComment;
 import windeath44.server.memorial.domain.memorial.model.event.MemorialTracingEvent;
@@ -86,6 +87,9 @@ public class MemorialGetService {
             .groupBy(memorialComment.memorial.memorialId)
             .orderBy(memorialComment.count().desc())
             .fetchFirst();
+
+    if (topMemorial == null) throw new TopMemorialNotFoundException();
+
     Long topMemorialId = topMemorial.get(memorialComment.memorial.memorialId);
     Long topCharacterId = topMemorial.get(memorialComment.memorial.characterId);
 

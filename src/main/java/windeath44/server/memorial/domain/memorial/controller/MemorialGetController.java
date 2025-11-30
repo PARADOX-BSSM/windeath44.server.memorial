@@ -55,9 +55,7 @@ public class MemorialGetController {
   @GetMapping("/today-best")
   public ResponseEntity<ResponseDto<TodayMemorialResponse>> getTodayBest() {
     TodayMemorialResponse todayMemorialResponse = memorialGetService.getTodayMemorial();
-    if (todayMemorialResponse.memorialId() == null) {
-        return ResponseEntity.status(404).body(HttpUtil.success("memorial not found", null));
-    }
+
     ResponseDto<TodayMemorialResponse> responseDto = HttpUtil.success("find memorial id by comments count", todayMemorialResponse);
     return ResponseEntity.ok(responseDto);
   }
