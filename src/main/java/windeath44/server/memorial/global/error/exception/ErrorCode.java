@@ -26,7 +26,8 @@ public enum ErrorCode {
   MEMORIAL_TRACING_NOT_FOUND(404, "Memorial Tracing Not Found"),
   UNAUTHORIZED_MEMORIAL_TRACING_ACCESS(403, "Unauthorized Memorial Tracing Access"),
   BOWED_WITHIN_24_HOURS(403, "You have already bowed to this memorial within the last 24 hours"),
-  MEMORIAL_MERGE_CONFLICT(409, "Memorial merge conflict detected");
+  MEMORIAL_MERGE_CONFLICT(409, "Memorial merge conflict detected"),
+  TOP_MEMORIAL_NOT_FOUND(404, "Top Memorial Not Found");
   private int status;
   private String message;
 }
