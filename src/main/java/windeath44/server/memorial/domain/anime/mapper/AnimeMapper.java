@@ -27,7 +27,6 @@ public class AnimeMapper {
             .map(this::toAnimeResponse)
             .toList();
   }
-
   public Anime toAnime(RestAnimeResponse animeResponse) {
     Long animeId = animeResponse.id();
     String name = animeResponse.name();
