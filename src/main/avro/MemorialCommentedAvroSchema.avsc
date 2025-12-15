@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "MemorialCommentedAvroSchema",
+  "namespace": "windeath44.server.memorial.avro",
+  "fields": [
+    {"name": "commentId", "type": "long"},
+    {"name": "memorialId", "type": "long"},
+    {"name": "userId", "type": "string"},
+    {"name": "content", "type": "string"},
+    {"name": "parentCommentId", "type": ["null", "long"], "default": null}
+  ]
+}
