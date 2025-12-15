@@ -15,6 +15,8 @@ import windeath44.server.memorial.domain.memorial.model.Memorial;
 import windeath44.server.memorial.domain.memorial.model.MemorialComment;
 import windeath44.server.memorial.domain.memorial.repository.MemorialCommentRepository;
 import windeath44.server.memorial.domain.memorial.repository.projection.MemorialCommentWithLikeProjection;
+import windeath44.server.memorial.global.infrastructure.KafkaProducer;
+import windeath44.server.memorial.avro.MemorialCommentedAvroSchema;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ public class MemorialCommentService {
   private final MemorialCommentMapper memorialCommentMapper;
   private final MemorialGetService memorialGetService;
   private final MemorialCommentRepository memorialCommentRepository;
+  private final KafkaProducer kafkaProducer;
 
   @Transactional
   public void comment(MemorialCommentRequestDto dto, String userId, Long memorialId) {
@@ -39,6 +42,15 @@ public class MemorialCommentService {
 
     MemorialComment comment = memorialCommentMapper.toMemorialComment(memorial, userId, content, parentMemorialComment);
     memorialCommentRepository.save(comment);
+
+    MemorialCommentedAvroSchema memorialCommentedAvroSchema = new MemorialCommentedAvroSchema(
+            comment.getCommentId(),
+            comment.getMemorialId(),
+            comment.getUserId(),
+            comment.getContent(),
+            comment.getParentCommentId()
+    );
+    kafkaProducer.send("memorial-commented-request", memorialCommentedAvroSchema);
   }
 
   @Transactional

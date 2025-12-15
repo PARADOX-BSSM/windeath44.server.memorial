@@ -14,6 +14,8 @@ import windeath44.server.memorial.domain.memorial.exception.MemorialCommitNotFou
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestAlreadySentException;
 import windeath44.server.memorial.domain.memorial.exception.MemorialPullRequestNotFoundException;
 import windeath44.server.memorial.domain.memorial.mapper.MemorialPullRequestMapper;
+import windeath44.server.memorial.global.infrastructure.KafkaProducer;
+import windeath44.server.memorial.avro.MemorialUpdatedApplyAvroSchema;
 import windeath44.server.memorial.global.diff_match_patch;
 import java.util.LinkedList;
 import windeath44.server.memorial.domain.memorial.dto.request.MemorialPullRequestRequestDto;
@@ -28,6 +30,7 @@ public class MemorialPullRequestService {
   private final MemorialCommitRepository memorialCommitRepository;
   private final MemorialPullRequestRepository memorialPullRequestRepository;
   private final MemorialPullRequestMapper memorialPullRequestMapper;
+  private final KafkaProducer kafkaProducer;
   private final diff_match_patch dmp = new diff_match_patch();
 
   @Transactional
@@ -50,6 +53,7 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequest = new MemorialPullRequest(fromCommit, toCommit, memorial, userId, MemorialPullRequestState.PENDING);
     memorialPullRequestRepository.save(memorialPullRequest);
+    sendMemorialUpdatedApplyEvent(memorialPullRequest, toCommit);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
 
@@ -73,6 +77,7 @@ public class MemorialPullRequestService {
 
     MemorialPullRequest memorialPullRequest = new MemorialPullRequest(fromCommit, toCommit, memorial, userId, MemorialPullRequestState.APPROVED);
     memorialPullRequestRepository.save(memorialPullRequest);
+    sendMemorialUpdatedApplyEvent(memorialPullRequest, toCommit);
     return memorialPullRequestMapper.toMemorialPullRequestResponseDto(memorialPullRequest);
   }
 
@@ -149,5 +154,16 @@ public class MemorialPullRequestService {
     }
 
     return new CompareContentsResponseDto(mergeable, conflict.toString());
+  }
+
+  private void sendMemorialUpdatedApplyEvent(MemorialPullRequest memorialPullRequest, MemorialCommit toCommit) {
+    MemorialUpdatedApplyAvroSchema memorialUpdatedApplyAvroSchema = new MemorialUpdatedApplyAvroSchema(
+            memorialPullRequest.getMemorialPullRequestId(),
+            memorialPullRequest.getMemorial().getMemorialId(),
+            memorialPullRequest.getUserId(),
+            toCommit.getContent(),
+            memorialPullRequest.getCharacterId()
+    );
+    kafkaProducer.send("memorial-updated-apply-request", memorialUpdatedApplyAvroSchema);
   }
 }
