@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "MemorialUpdatedApplyAvroSchema",
+  "namespace": "windeath44.server.memorial.avro",
+  "fields": [
+    {"name": "memorialPullRequestId", "type": "long"},
+    {"name": "memorialId", "type": "long"},
+    {"name": "applicantId", "type": "string"},
+    {"name": "content", "type": "string"},
+    {"name": "characterId", "type": "long"}
+  ]
+}
